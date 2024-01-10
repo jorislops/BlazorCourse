@@ -25,6 +25,10 @@
 
 ## State Management
 
+Of is dit te veel/lastig voor studenten?
+Nog even kijken naar oud materiaal (Razor Pages) 
+misschien zitten daar ook wel intressante onderwepen in.
+
 
 
 

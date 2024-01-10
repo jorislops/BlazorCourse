@@ -1,0 +1,42 @@
+@page "/bier"
+@using System.Data
+@using Dapper
+@using MySql.Data.MySqlClient
+<h3>BierPage</h3>
+
+@if(_beers == null)
+{
+    <p>Geen bieren gevonden</p>
+}
+else
+{
+    <h1>Aantal bieren: @(_beers.Count()*2)</h1>
+    @foreach(var bier in _beers)
+    {
+        <p>@bier.Naam</p>
+    }    
+}
+
+
+@code {
+    public class Bier
+    {
+        public int Biercode { get; set; }
+        public string Naam { get; set; }
+        
+    }
+    
+    private List<Bier> _beers;
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        using var connection = new MySqlConnection("Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;");
+        string sql = "SELECT * FROM bier LIMIT 10";
+        
+        _beers = connection.Query<Bier>(sql).ToList();
+        
+    }
+
+}

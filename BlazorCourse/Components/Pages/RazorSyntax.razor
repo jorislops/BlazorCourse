@@ -1,0 +1,103 @@
+@page "/RazorSyntax"
+<h1>Razor Syntax</h1>
+
+<h2>Expressions</h2>
+<p>To switch from HTML mode to C# mode an @@ is used, 
+    when the expression becomes more complex you need to add parentheses around it!</p>
+<p>DateTime: @DateTime.Now</p>
+<p>Some calculation @DateTime.Today.Day *6/3 + 1</p>
+<p>Some calculation @(10*6/3)</p>
+<p>@HelloWorld() + "!!!"</p> <!-- This will not work, use parentheses -->
+<p>@(HelloWorld() + "!!!")</p>
+
+<h2>We can call code from the code block @@code{}, most of the time it's placed after the Html/Razor, 
+    scroll to the bottom of this file to take a look.</h2>
+
+
+<h2>Statements can be placed in code-blocks</h2>
+@{
+    var firstname = "Joris";
+    var lastname = "Lops";
+    string fullname = firstname + " " + lastname;
+    
+    string[] names = [ "Joris", "Jos", "Nick", "  ", "Dick" ];
+}
+
+<p>@fullname</p>
+
+<h2>Control flow</h2>
+<p>The Razor engine is smart, 
+    most of the time it understands when to switch from HTML mode to C# mode.</p>
+<ul>
+@foreach (var name in names)
+{
+    if (string.IsNullOrWhiteSpace(name))
+    {
+        <li>Empty name</li>    
+    }
+    else
+    {
+        <li>@name</li>
+    }
+}
+</ul>
+
+<p>Take a look at the Weather.razor code, here we need to add an @@ sometimes.</p>
+
+<h2>No Html content (bad idea)</h2>
+@if (true)
+{
+    <text>Some text (no html, bad idea)</text>
+}
+@if (true)
+{
+    @: Some text (no html, bad idea)
+}
+
+<h2>Comment, are not displayed (rendered) in the browser</h2>
+<p>Tip: use the comment/uncomment shortcut to create a comment (ctrl + /) in Rider.</p>
+@* This is multi-line 
+comment *@
+
+@* This is better  *@
+@* way to comment *@
+
+@{
+    if (true)
+    {
+        // this block will always be executed
+        /*
+         * another way to comment
+         */
+        @* this block will always be executed *@
+    }
+}
+
+@{
+    var htmlMessage = @"<p>Some html from C# string</p>";
+}
+<p>Display html from C# string.</p>
+@((MarkupString)htmlMessage)
+
+<h2>Render Fragments</h2>
+<p>Render fragments are used to render a part of the page.</p>
+
+@{ 
+    RenderFragment helloWorld = @<p>Hello World!</p>;
+}
+
+@helloWorld
+
+<p>Render fragments with parameters.</p>
+@{ 
+    RenderFragment<string> helloWorldWithName = (name) => @<p>Hello @name!</p>;
+}
+
+@helloWorldWithName("Joris")
+
+@code {
+    private string HelloWorld()
+    {
+        return "Hello World!";
+    }
+}

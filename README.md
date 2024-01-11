@@ -8,6 +8,7 @@ Dit om feeling met het materiaal/strof te krijgen en daarna pas toe te kunnen pa
 ## Les 1 Razor Syntax & Voorbeeld & Structuur van Project
 - Introductie van razor syntax
 - Structuur van Blazor Project
+//les 2 al denk ik (en of herhaling van les 1 om echt die basis er goed in te krijgen)
 - Binding van data
 - Events (Click)
 - Simpel voorbeeld met todo
@@ -31,21 +32,25 @@ Dit om feeling met het materiaal/strof te krijgen en daarna pas toe te kunnen pa
 ## Les 4 Forms & Validatie & Routes & Layout
 - EditForm
   - Validatie
-- Routes + Navigation (Chapter 4)
+- Routes + Navigation (Chapter 4 - [Query strings](https://chrissainty.com/working-with-query-strings-in-blazor/))
    - Route Parameters
    - Query Strings
 - Layouts
 
 
-## State Management (Service)
+## Dependency Injection & Services & State Management (Service) & Repository Pattern
 
 Of is dit te veel/lastig voor studenten?
 Nog even kijken naar oud materiaal (Razor Pages) 
 misschien zitten daar ook wel intressante onderwepen in.
 
+# Opdrachten & Voorbeelden
 
+- Maak een pagina die alle soorten bier toont ook onbekend, als je op een soort klikt ga je naar een pagina die alle bieren van die soort toont.
 
+- Misschien leuk om het volgende te gebruiken (Joke Service):
+- https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service
 
-
-
-# Opdrachten
+# Bronnen
+- [Blazor in Action - Book](https://learning.oreilly.com/library/view/blazor-in-action/9781617298646/)
+- [Blazor Train - Video's concept oriented](https://blazortrain.com/)

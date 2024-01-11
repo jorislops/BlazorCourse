@@ -1,0 +1,63 @@
+@page "/Brouwer"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@using MySql.Data.MySqlClient
+@using Dapper
+<h3>BrouwerPage</h3>
+
+
+
+<ul>
+    @foreach (var brouwer in _brouwers)
+    {
+        <li>
+            <span @onclick="@(() => GoToBeerPage(brouwer.Brouwcode))">@brouwer.Naam (@brouwer.AantalBieren) (@brouwer.AantalBrouwersZelfdeNaam)</span>
+            
+            @{
+                var link = brouwer.Naam;
+                if (brouwer.AantalBrouwersZelfdeNaam > 1)
+                {
+                    link += $"/{brouwer.Land}";
+                }
+            }
+            
+            <a href="/Bier/@link">Show Beers</a>
+        </li>
+    }
+</ul>
+
+@code {
+    public class Brouwer
+    {
+        public int Brouwcode { get; set; }
+        public string Naam { get; set; } = null!;
+        public string Land { get; set; } = null!;
+        public int AantalBieren { get; set; }
+        public int AantalBrouwersZelfdeNaam { get; set; }
+    }
+    
+    private IEnumerable<Brouwer> _brouwers = null!;
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        using var connection = new MySqlConnection("Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;");
+
+        var sql = @"
+                        SELECT br.brouwcode, br.naam, br.land, COUNT(b.biercode) AS AantalBieren,
+       (SELECT COUNT(bb.naam) FROM brouwer bb WHERE bb.naam = br.naam) 
+           AS AantalBrouwersZelfdeNaam
+FROM
+    brouwer as br
+        JOIN bier as b ON br.brouwcode = b.brouwcode
+GROUP BY br.brouwcode, br.naam, br.land
+ORDER BY AantalBieren DESC";
+        
+        _brouwers = connection.Query<Brouwer>(sql);
+    }
+
+    private void GoToBeerPage(int brouwcode)
+    {
+        NavigationManager.NavigateTo($"/Bier/{brouwcode}");
+    }
+}

@@ -1,7 +1,14 @@
 @page "/bier"
+@page "/bier/{Brouwcode:int}"
+@page "/bier/{Brouwnaam}/{Land}"
+@page "/bier/{Brouwnaam}"
 @using System.Data
+@using BlazorCourse.Extensions
 @using Dapper
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Primitives
 @using MySql.Data.MySqlClient
+@using NavigationManagerExtensions = BlazorCourse.Extensions.NavigationManagerExtensions
 <h3>BierPage</h3>
 
 @if(_beers == null)
@@ -10,12 +17,15 @@
 }
 else
 {
-    <h1>Aantal bieren: @(_beers.Count()*2)</h1>
+    <h1>Aantal bieren: @(_beers.Count())</h1>
     @foreach(var bier in _beers)
     {
         <p>@bier.Naam</p>
     }    
+    
 }
+
+<a class="btn btn-primary" href="/brouwer">Back to Brouwers</a>
 
 
 @code {
@@ -23,19 +33,52 @@ else
     {
         public int Biercode { get; set; }
         public string Naam { get; set; }
-        
     }
     
     private List<Bier> _beers;
+    
+    [Parameter]
+    public int? Brouwcode { get; set; }
+    
+    [Parameter]
+    public string Brouwnaam { get; set; }
+    
+    [Parameter]
+    public string Land { get; set; }
+    
+    [Inject] public NavigationManager NavigationManager { get; set; }
     
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        using var connection = new MySqlConnection("Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;");
-        string sql = "SELECT * FROM bier LIMIT 10";
+        if (NavigationManagerExtensions.TryGetQueryString<int>(NavigationManager, "Brouwcode", out int brouwcode))
+        {
+            Brouwcode = brouwcode;
+        }
         
-        _beers = connection.Query<Bier>(sql).ToList();
+        using var connection = new MySqlConnection("Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;");
+        string sql = "SELECT * FROM bier";
+        if (Brouwcode.HasValue)
+        {
+            sql += " WHERE brouwcode = @Brouwcode";
+        }
+        
+        if (!string.IsNullOrWhiteSpace(Brouwnaam))
+        {
+            if (!string.IsNullOrWhiteSpace(Land))
+            {
+                sql += " WHERE brouwcode = (SELECT DISTINCT brouwcode FROM brouwer WHERE naam = @Brouwnaam AND land = @Land)";
+            }
+            else
+            {
+                sql += " WHERE brouwcode = (SELECT DISTINCT brouwcode FROM brouwer WHERE naam = @Brouwnaam)";    
+            }
+        }
+        
+        _beers = connection
+            .Query<Bier>(sql, new { Brouwcode, Brouwnaam, Land })
+            .ToList();
         
     }
 

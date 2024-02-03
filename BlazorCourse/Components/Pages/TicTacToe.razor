@@ -7,6 +7,14 @@
 
 <CurrentPlayer Player="@_currentPlayer" />
 
+@if(_winner == Winner.Draw)
+{
+    <p>Draw!</p>
+}
+else if(_winner != Winner.None)
+{
+    <p>Winner: @_winner</p>
+}
 @if(_winner == Winner.Draw || _winner != Winner.None)
 {
     <button @onclick="@Reset">Reset</button>
@@ -33,14 +41,7 @@ else
     }
 }
 
-@if(_winner == Winner.Draw)
-{
-    <p>Draw!</p>
-}
-else if(_winner != Winner.None)
-{
-    <p>Winner: @_winner</p>
-}
+
 
 @code {
 

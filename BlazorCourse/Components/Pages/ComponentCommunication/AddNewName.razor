@@ -1,0 +1,34 @@
+
+@if (_isVisible)
+{
+    <h3>AddNewName</h3>
+
+    <input type="text" @bind="NewName"/>
+    <button @onclick="AddItems">Add</button>    
+}
+
+
+@code {
+    private bool _isVisible = false;
+    
+    [Parameter, EditorRequired]
+    public EventCallback<string> OnAdd { get; set; }
+    
+    public string NewName { get; set; }
+
+    private void AddItems()
+    {
+        if (!string.IsNullOrWhiteSpace(NewName))
+        {
+            OnAdd.InvokeAsync(NewName);
+            NewName = string.Empty;
+            
+        }
+    }
+    
+    public void ToggleVisibility()
+    {
+        _isVisible = !_isVisible;
+    }
+
+}

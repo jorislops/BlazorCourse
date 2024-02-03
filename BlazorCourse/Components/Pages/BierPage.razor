@@ -2,13 +2,10 @@
 @page "/bier/{Brouwcode:int}"
 @page "/bier/{Brouwnaam}/{Land}"
 @page "/bier/{Brouwnaam}"
-@using System.Data
-@using BlazorCourse.Extensions
 @using Dapper
-@using Microsoft.AspNetCore.WebUtilities
-@using Microsoft.Extensions.Primitives
-@using MySql.Data.MySqlClient
-@using NavigationManagerExtensions = BlazorCourse.Extensions.NavigationManagerExtensions
+@using MySqlConnector
+@using System.Web
+@using System.Collections.Specialized
 <h3>BierPage</h3>
 
 @if(_beers == null)
@@ -52,7 +49,12 @@ else
     {
         base.OnInitialized();
 
-        if (NavigationManagerExtensions.TryGetQueryString<int>(NavigationManager, "Brouwcode", out int brouwcode))
+        string uriAsString = NavigationManager.Uri;
+        Uri url = new Uri(uriAsString);
+        string queryString = url.Query; // returns "?Brouwcode=someInt"
+        NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
+        string brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
+        if (int.TryParse(brouwcodeAsString, out int brouwcode))
         {
             Brouwcode = brouwcode;
         }

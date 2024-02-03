@@ -15,7 +15,17 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.1.28" />
-      <PackageReference Include="MySql.Data" Version="8.2.0" />
+      <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.3.1" />
+      <PackageReference Include="MySqlConnector" Version="2.3.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Controls\DayComponent.razor" />
+      <AdditionalFiles Include="Components\Pages\Databinding\DataBinding.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Controls\DayComponent.razor" />
     </ItemGroup>
 
 </Project>

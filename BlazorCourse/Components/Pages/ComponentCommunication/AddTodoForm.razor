@@ -1,0 +1,37 @@
+@using BlazorCourse.Models
+@if (_show)
+{
+    <h1>Showing</h1>
+    <form>
+        <input @bind="newItem.Title"/>
+        <button @onclick="Add">+</button>
+    </form>
+}
+else
+{
+    <h1>Not Showing</h1>
+}
+
+@code {
+    private bool _show = false;
+    
+    private TodoItem newItem = new TodoItem() { Title = "New Item", IsDone = false };
+    
+    
+    [Parameter, EditorRequired]
+    public EventCallback<TodoItem> OnAdd { get; set; }
+
+    public void Toggle()
+    {
+        _show = !_show;
+    }
+
+    private void Add()
+    { 
+        OnAdd.InvokeAsync(newItem);
+        
+        Toggle();
+        newItem = new TodoItem() { Title = "New Item", IsDone = false };
+    }
+
+}

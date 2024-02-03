@@ -9,11 +9,12 @@
     <link rel="stylesheet" href="app.css"/>
     <link rel="stylesheet" href="BlazorCourse.styles.css"/>
     <link rel="icon" type="image/png" href="favicon.png"/>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@@fluentui/web-components@@2.5.16/dist/web-components.min.js"></script>
     <HeadOutlet/>
 </head>
 
 <body>
-<Routes/>
+<Routes @rendermode="InteractiveServer"/>
 <script src="_framework/blazor.web.js"></script>
 </body>
 

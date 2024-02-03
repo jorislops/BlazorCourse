@@ -1,0 +1,31 @@
+@page "/counter-state-service"
+@inject CounterService CounterService
+<h3>CounterStateService</h3>
+
+<button class="btn btn-primary" @onclick="() => CounterService.Counter++">++</button>
+<h4>@CounterService.Counter</h4>
+<button class="btn btn-primary" @onclick="() => CounterService.Counter--">--</button>
+<div>
+    <button class="btn btn-primary" @onclick="() => CounterService.IncrementCounter()">Increment With StateHasChanged Property</button>
+</div>
+
+@code {
+    // A service like CounterServices can be injected into any component, with the @inject directive.
+    // and it will be the same instance of the service
+    // This injection is below the @page directive.
+    // The service is registered in the Program.cs file.
+    // builder.Services.AddScoped<CounterService>();
+    // The count in the nav menu is also using the same service.
+    // This idea is the same as in the CounterCascadeState.razor example.
+ 
+    // The CounterService is injected by the inject directive (@inject).
+    // When the CounterService changes in one page, it will change in all the pages
+    // ,but only after the page is re-rendered!!!!
+    // Take a look at the top of the nav menu to see the current value of CounterService.Counter (right number).
+    // Only after you click a different page this page will be re-rendered and the value will be updated.
+    // This can be fixed by calling StateHasChanged() in the IncrementCounter() method.
+    // The NavMenu.razor component registers a callback (+=StateHasChanged) to the CounterService.CountHasChanged event
+    // in the OnInitialized() method. StateHasChanged() is called when the event is raised.
+    // This will re-render the NavMenu.razor component.
+
+}

@@ -1,11 +1,9 @@
 @page "/Brouwer"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@using MySql.Data.MySqlClient
 @using Dapper
-<h3>BrouwerPage</h3>
-
-
+@using MySqlConnector
+<h3>Brouwer Page</h3>
 
 <ul>
     @foreach (var brouwer in _brouwers)

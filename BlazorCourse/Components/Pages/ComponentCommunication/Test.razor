@@ -1,0 +1,39 @@
+@page "/test"
+<h3>Test New</h3>
+
+@foreach (var name in Names)
+{
+    <p>@name</p>
+}
+
+<button @onclick="ToggleNewItem">Toggle</button>
+<AddNewName @ref="AddNewNameComponent" 
+            OnAdd="AddItems"></AddNewName>
+
+@code {
+    public AddNewName AddNewNameComponent { get; set; }
+    
+    private List<string> Names = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Names.Add("John");
+        Names.Add("Doe");
+        Console.WriteLine("Test OnInitialized()");
+    }
+
+   
+
+
+    private void ToggleNewItem()
+    {
+        AddNewNameComponent.ToggleVisibility();
+    }
+
+    private void AddItems(string newName)
+    {
+        Names.Add(newName);
+    }
+
+}

@@ -1,0 +1,66 @@
+@page "/todolist"
+@using BlazorCourse.Models
+@using BlazorCourse.Repositories
+<h3>TodoList for @_user.Name</h3>
+
+<CascadingValue Value="_user">
+    <div>
+        @foreach (var todo in _todos)
+        {
+            <div>
+
+                <TodoCard Item=@todo OnDeleteItem="Delete"></TodoCard>
+
+            </div>
+        }
+    </div>
+    <div>
+        <button class="btn btn-primary" @onclick="DisplayAddTodoForm">Add Todo</button>
+    </div>
+</CascadingValue>
+
+<div>
+    <h1>Showing</h1>
+    <form>
+        <input @bind="newItem.Title"/>
+        <button @onclick="Add">+</button>
+    </form>
+    @* <AddTodoForm @ref="_todoForm" OnAdd="AddTodoItem" ></AddTodoForm> *@
+</div>
+
+@code {
+    private AddTodoForm _todoForm = null;
+
+    private List<TodoItem?> _todos;
+    private User _user = new User { Id = 3, Name = "John Doe" };
+
+    private TodoItem newItem = new TodoItem() { Title = "New Item", IsDone = false };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _todos = new TodoRepository().Get();
+    }
+
+    private void Delete(TodoItem? todoItem)
+    {
+        _todos.Remove(todoItem);
+    }
+
+    private void DisplayAddTodoForm()
+    {
+        _todoForm.Toggle();
+    }
+
+    private void AddTodoItem(TodoItem todoItem)
+    {
+        _todos.Add(todoItem);
+    }
+
+    private void Add()
+    {
+        _todos.Add(newItem);
+        newItem = new TodoItem() { Title = "New Item", IsDone = false };
+    }
+
+}

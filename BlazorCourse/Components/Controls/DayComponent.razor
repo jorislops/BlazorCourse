@@ -1,0 +1,14 @@
+<h3>Day - Component</h3>
+
+<h3>@DateTime.Now.DayOfWeek.ToString()</h3>
+
+@code {
+    private DateTime _currentDay;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _currentDay = DateTime.Today;
+    }
+
+}

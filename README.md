@@ -7,15 +7,17 @@ Dit om feeling met het materiaal/strof te krijgen en daarna pas toe te kunnen pa
 
 ## Les 1 Razor Syntax & Voorbeeld & Structuur van Project
 - Introductie van razor syntax (RazorSyntax.razor)
-- Structuur van Blazor Project
-//les 2 al denk ik (en of herhaling van les 1 om echt die basis er goed in te krijgen)
 - Binding van data
 - Events (Click)
 - Simpel voorbeeld met todo
+- Structuur van Blazor Project
 
 ## Les 1 Opdrachten
+  - wat simple opdrachten met razor syntax
+  - wat simple opdrachten met binding van data
+  - wat simple opdrachten met events
+  - wat simple opdrachten met todo demo uitbreiden
   - https://www.learnblazor.com/tutorial/tour-of-heroes/ (Echter dan niet HTTP en met Server Pages)
-  
 
 ## Les 2 Verbinden met database 
 - Dapper herhaling
@@ -43,6 +45,7 @@ Dit om feeling met het materiaal/strof te krijgen en daarna pas toe te kunnen pa
 
 ## Dependency Injection & Services & State Management (Service) & Repository Pattern
 
+Structuur aanbrengen in de code, zodat het overzichtelijk blijft (Repo's, Models, etc)
 Of is dit te veel/lastig voor studenten?
 Nog even kijken naar oud materiaal (Razor Pages) 
 misschien zitten daar ook wel intressante onderwepen in.
@@ -57,3 +60,8 @@ misschien zitten daar ook wel intressante onderwepen in.
 # Bronnen
 - [Blazor in Action - Book](https://learning.oreilly.com/library/view/blazor-in-action/9781617298646/)
 - [Blazor Train - Video's concept oriented](https://blazortrain.com/)
+- [mastering-state-management-in-blazor-a-comprehensive-guide] (https://kaushikroychowdhury.com/blog/mastering-state-management-in-blazor-a-comprehensive-guide/)
+
+## Blazor state management
+- [State management in Blazor - Don Wibier - NDC Porto 2022] (https://www.youtube.com/watch?v=L9p-9dGp-98)
+- [Blazor state management with Fluxor] (https://www.youtube.com/watch?v=yM9F8rxo8L8)

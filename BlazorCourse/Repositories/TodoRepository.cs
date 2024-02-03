@@ -4,7 +4,7 @@ namespace BlazorCourse.Repositories;
 
 public class TodoRepository
 {
-    public List<TodoItem?> Get()
+    public List<TodoItem> Get()
     {
         var todos = new List<TodoItem?>
         {

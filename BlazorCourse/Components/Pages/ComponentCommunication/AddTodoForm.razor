@@ -1,37 +1,49 @@
 @using BlazorCourse.Models
-@if (_show)
+
+@if (_visible)
 {
-    <h1>Showing</h1>
-    <form>
-        <input @bind="newItem.Title"/>
-        <button @onclick="Add">+</button>
-    </form>
-}
-else
-{
-    <h1>Not Showing</h1>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title"
+               @bind="_newTodoItem.Title"/>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description"
+               @bind="_newTodoItem.Description"/>
+    </div>
+    
+    <button class="btn btn-primary" @onclick="Add">+</button>    
 }
 
+
 @code {
-    private bool _show = false;
-    
-    private TodoItem newItem = new TodoItem() { Title = "New Item", IsDone = false };
-    
+    private bool _visible = false;
+
+    private TodoItem _newTodoItem = new()
+    {
+        Title = ""
+    };
     
     [Parameter, EditorRequired]
     public EventCallback<TodoItem> OnAdd { get; set; }
-
-    public void Toggle()
-    {
-        _show = !_show;
-    }
-
+     
     private void Add()
-    { 
-        OnAdd.InvokeAsync(newItem);
+    {
+        if(String.IsNullOrWhiteSpace(_newTodoItem.Title))
+            return;
         
-        Toggle();
-        newItem = new TodoItem() { Title = "New Item", IsDone = false };
+        OnAdd.InvokeAsync(_newTodoItem);
+        _newTodoItem = new TodoItem()
+        {
+            Title = string.Empty
+        };
+        _visible = false;
+    }
+    
+    public void ToggleVisibility()
+    {
+        _visible = !_visible;
     }
 
 }

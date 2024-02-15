@@ -15,7 +15,7 @@ public class TodoRepository
             } },
             new TodoItem
             {
-                Id = 2, Title = "Do that", IsDone = true, CreatedAt = DateTime.Now.AddDays(-1),
+                Id = 2, Title = "Do that", IsDone = false, CreatedAt = DateTime.Now.AddDays(-1),
                 Items = new List<TodoItem>()
                 {
                     new TodoItem() { Id = 6, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now },
@@ -23,7 +23,7 @@ public class TodoRepository
                 }
                 
             },
-            new TodoItem { Id = 3, Title = "Do something else", IsDone = false, CreatedAt = DateTime.Now.AddDays(-2) }
+            new TodoItem { Id = 3, Title = "Do something else", IsDone = true, CreatedAt = DateTime.Now.AddDays(-2) }
         };
         return todos;
     }

@@ -6,7 +6,18 @@
 <CascadingValue Value="_user">
 @foreach(var todo in _todos)
 {
-    <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" />
+    <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
+        <TextContent>
+            @if(todo.IsDone)
+            {
+                <h4><del>@todo.Title</del></h4>
+            }
+            else
+            {
+                <h4>@todo.Title</h4>
+            }
+        </TextContent>    
+    </TodoCard>
 }
 </CascadingValue>
 

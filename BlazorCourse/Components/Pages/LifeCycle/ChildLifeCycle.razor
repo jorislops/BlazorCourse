@@ -1,0 +1,32 @@
+<h3>ChildLifeCycle</h3>
+
+@code {
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        Console.WriteLine($"ChildLifecycle SetParametersAsync {DateTime.Now.ToLongTimeString()}");
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine($"ChildLifecycle OnInitialized {DateTime.Now.ToLongTimeString()}");
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine($"ChildLifecycle OnParameterSet {DateTime.Now.ToLongTimeString()}");
+        base.OnParametersSet();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"ChildLifecycle OnAfterRender(firstRender: {firstRender}) {DateTime.Now.ToLongTimeString()}");
+        base.OnAfterRender(firstRender);
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine($"ChildLifecycle Dispose {DateTime.Now.ToLongTimeString()}");
+    }
+}

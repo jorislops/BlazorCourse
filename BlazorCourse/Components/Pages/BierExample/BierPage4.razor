@@ -1,0 +1,119 @@
+@page "/BierPage4"
+@using BlazorCourse.Components.Pages.BierExample.Repository
+@using BlazorCourse.Components.Pages.BierExample.Model
+
+@* create a beer grid with a filter and a pager *@
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <td>
+            <button @onclick="@(() => SortBy("naam"))">Sort by naam</button>
+        </td>
+        <td>
+            <button @onclick="@(() => SortBy("alcohol"))">Sort by Alcohol</button>
+        </td>
+    </tr>
+
+    </thead>
+    <tbody>
+    @foreach (var bier in _pagedResult.Items)
+    {
+        <tr>
+            <td>@bier.Naam</td>
+            <td>@bier.Alcohol</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @if (_pagedResult.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="Previous">Previous</a>
+                </li>
+            }
+
+            <li class="page-item">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">3</a>
+            </li>
+            @if (_pagedResult.Page < _pagedResult.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="Next">Next</a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+
+
+    Page: @_pagedResult.Page of @_pagedResult.TotalPages
+
+
+</div>
+
+@code {
+    private PagedResult<Bier> _pagedResult;
+
+    private PageFilterSorting _pageFilterSorting = new PageFilterSorting()
+    {
+        CurrentPage = 1,
+        OrderBy = "naam"
+    };
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        _pagedResult = new BierRepository3().Get(_pageFilterSorting);
+    }
+
+    private void Next()
+    {
+        _pageFilterSorting.CurrentPage += 1;
+        LoadData();
+    }
+
+    private void Previous()
+    {
+        _pageFilterSorting.CurrentPage -= 1;
+        LoadData();
+    }
+
+
+    private void SortBy(string columnName)
+    {
+        if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "asc")
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "desc";
+        }
+        else if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "desc")
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "asc";
+        }
+        else
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "asc";
+        }
+
+        _pagedResult.Page = 1;
+        LoadData();
+    }
+
+}

@@ -1,0 +1,73 @@
+@page "/LifeCycle"
+@page "/LifeCycle/{message}"
+@implements IDisposable
+<h3>LifeCycle</h3>
+
+@if (Message != null)
+{
+    <div>
+        @Message
+    </div>    
+}
+
+<div>
+    @DateTime.Now.ToString("HH:mm:ss")
+</div>
+<div>
+    <p>To Force a reload of the page, click the button below</p>
+    
+    <a class="btn btn-primary" href="/lifecycle/hello">Navigate To Same page</a>
+</div>
+<div>
+    <p>The counter is used, otherwise Blazor detects that the component will never changes (has no state) and 
+        calls Dispose(). Instead of reusing the component, when the url changes.
+    </p>
+    @_count
+    <button class="btn btn-primary" @onclick="IncrementCounter">++</button>
+</div>
+
+<div>
+    <ChildLifeCycle />
+</div>
+
+@code {
+    private int _count = 0;
+    
+    [Parameter]
+    public string? Message { get; set; }
+    
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        Console.WriteLine($"Lifecycle SetParametersAsync {DateTime.Now.ToLongTimeString()}");
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine($"Lifecycle OnInitialized {DateTime.Now.ToLongTimeString()}");
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine($"Lifecycle OnParameterSet {DateTime.Now.ToLongTimeString()}");
+        base.OnParametersSet();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"Lifecycle OnAfterRender(firstRender: {firstRender}) {DateTime.Now.ToLongTimeString()}");
+        base.OnAfterRender(firstRender);
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine($"Lifecycle Dispose {DateTime.Now.ToLongTimeString()}");
+    }
+
+    private void IncrementCounter()
+    {
+        _count++;
+    }
+
+}

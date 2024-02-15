@@ -1,0 +1,26 @@
+<div class="form-group">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label>@Label</label>    
+    }
+    
+    @ChildContent
+    
+    @if (!string.IsNullOrWhiteSpace(HelpMessage))
+    {
+        <small class="form-text text-muted">@HelpMessage</small>    
+    }
+    
+</div>
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public string? HelpMessage { get; set; }
+
+}

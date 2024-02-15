@@ -1,0 +1,86 @@
+@page "/bier2"
+@page "/bier2/{Brouwcode:int}"
+@page "/bier2/{Brouwnaam}/{Land}"
+@page "/bier2/{Brouwnaam}"
+@using System.Web
+@using System.Collections.Specialized
+@using BlazorCourse.Components.Pages.BierExample.Model
+@using BlazorCourse.Components.Pages.BierExample.Repository
+<h3>BierPage 2 - Added Repository</h3>
+
+@if (_beers == null)
+{
+    <p>Geen bieren gevonden</p>
+}
+else
+{
+    <h1>Aantal bieren: @(_beers.Count())</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Naam <button @onclick="@(() => SortByNaam("naam"))"></button>
+            </th>
+            <th>Stijl <button @onclick="@(() => SortByNaam("stijl"))"></button></th>
+            <th>Alcohol <button @onclick="@(() => SortByNaam("alcohol"))"></button></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var bier in _beers)
+        {
+            <tr>
+                <td>@bier.Naam</td>
+                <td>@bier.Stijl</td>
+                <td>@bier.Alcohol</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<a class="btn btn-primary" href="/brouwer">Back to Brouwers</a>
+
+@code {
+    private List<Bier> _beers;
+
+    [Parameter] public int? Brouwcode { get; set; }
+
+    [Parameter] public string Brouwnaam { get; set; }
+
+    [Parameter] public string Land { get; set; }
+
+    [Parameter] public string OrderBy { get; set; } = "naam asc";
+
+    [Inject] public NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        string uriAsString = NavigationManager.Uri;
+        Uri url = new Uri(uriAsString);
+        string queryString = url.Query; // returns "?Brouwcode=someInt"
+        NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
+        string brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
+        if (int.TryParse(brouwcodeAsString, out int brouwcode))
+        {
+            Brouwcode = brouwcode;
+        }
+
+        var bierRepository = new BierRepository();
+        _beers = bierRepository.GetBieren(Brouwcode, Brouwnaam, Land, OrderBy, Dir);
+    }
+
+    private void SortByNaam(string orderBy)
+    {
+        Dir = OrderBy == orderBy && Dir == "asc" ? "desc" : "asc";
+
+        var bierRepository = new BierRepository();
+        OrderBy = orderBy;
+
+        _beers = bierRepository.GetBieren(Brouwcode, Brouwnaam, Land, orderBy.ToLower(), Dir);
+    }
+
+    public string Dir { get; set; }
+
+}

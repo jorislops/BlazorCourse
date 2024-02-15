@@ -1,0 +1,33 @@
+@page "/DataTableExample"
+<h3>DataTableExample</h3>
+
+<DataTable Items="_todoItems" ExcludeColumnsCsv=@_excludedColumns>
+    
+</DataTable>
+
+<button class="btn btn-primary" @onclick="ChangeColumnsToExclude">Change Columns</button>
+
+@code {
+    private List<Todo.TodoItem> _todoItems = new List<Todo.TodoItem>();
+
+    private string _excludedColumns = "Id, IsDone";
+    
+    
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _todoItems = new List<Todo.TodoItem>()
+        {
+            new Todo.TodoItem() { Id = 1, Title = "Do this", IsDone = false },
+            new Todo.TodoItem() { Id = 2, Title = "Do that", IsDone = true },
+            new Todo.TodoItem() { Id = 3, Title = "Do something else", IsDone = false },
+        };
+    }
+
+    private void ChangeColumnsToExclude()
+    {
+        _excludedColumns = "Id";
+    }
+
+}

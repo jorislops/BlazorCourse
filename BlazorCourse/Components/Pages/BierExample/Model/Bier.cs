@@ -1,17 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BlazorCourse.Components.Pages.BierExample.Model;
 
 public class Bier
 {
     public int Biercode { get; set; }
+ 
+    [Required, MinLength(2, ErrorMessage = "Naam moet minimaal twee charachters bevatten"), MaxLength(50)]
     public string Naam { get; set; }
     
+    [Required, MinLength(2), MaxLength(30)]
     public string Type { get; set; }
     
+    [Required, MaxLength(20)]
     public string Stijl { get; set; }
     
-    public string Alcohol { get; set; }
+    [Required, Range(0, 16, ErrorMessage = "Alcoholpercentage moet tussen 0 en 16 liggen")]
+    public double? Alcohol { get; set; }
     
-    public string Brouwcode { get; set; }
+    [Required(ErrorMessage = "Je moet een brouwer invullen")]
+    public int? Brouwcode { get; set; }
     
     public Brouwer Brouwer { get; set; }
 }

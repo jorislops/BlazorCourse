@@ -1,20 +1,31 @@
 @page "/BierPage4"
 @using BlazorCourse.Components.Pages.BierExample.Repository
 @using BlazorCourse.Components.Pages.BierExample.Model
+@inject NavigationManager NavigationManager
 
 @* create a beer grid with a filter and a pager *@
+
+<div class="input-group mb-3">
+    <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput=@(args => FilterByNaam(args.Value?.ToString()) )>
+    @* <div class="input-group-append"> *@
+    @*     <button class="btn btn-outline-secondary" type="button">Zoek op naam</button> *@
+    @* </div> *@
+</div>
+
 
 <table class="table table-striped">
     <thead>
     <tr>
         <td>
-            <button @onclick="@(() => SortBy("naam"))">Sort by naam</button>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy("naam"))">Sort by naam</button>
         </td>
         <td>
-            <button @onclick="@(() => SortBy("alcohol"))">Sort by Alcohol</button>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy("alcohol"))">Sort by Alcohol</button>
+        </td>
+        <td>
+            &nbsp;
         </td>
     </tr>
-
     </thead>
     <tbody>
     @foreach (var bier in _pagedResult.Items)
@@ -22,6 +33,9 @@
         <tr>
             <td>@bier.Naam</td>
             <td>@bier.Alcohol</td>
+            <td>
+                <a class="btn btn-danger" href="/BierDelete/@bier.Biercode">Delete</a>
+            </td>
         </tr>
     }
     </tbody>
@@ -52,10 +66,10 @@
         </ul>
     </nav>
 
-
     Page: @_pagedResult.Page of @_pagedResult.TotalPages
-
-
+</div>
+<div>
+    <button class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/Forms/AddBier"))">Add</button>
 </div>
 
 @code {
@@ -109,13 +123,22 @@
             _pageFilterSorting.Dir = "asc";
         }
 
-        _pagedResult.Page = 1;
+        _pageFilterSorting.CurrentPage = 1;
         LoadData();
     }
 
     private void GoToPage(int page)
     {
         _pageFilterSorting.CurrentPage = page;
+        LoadData();
+    }
+
+    private void FilterByNaam(string? bierNaamFilter)
+    {
+        _pageFilterSorting.NaamFilter = bierNaamFilter;
+        _pageFilterSorting.CurrentPage = 1;
+        _pageFilterSorting.OrderBy = "naam";
+        _pageFilterSorting.Dir = "asc";
         LoadData();
     }
 

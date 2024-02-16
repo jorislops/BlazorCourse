@@ -11,14 +11,10 @@ namespace BlazorCourse.Components.Pages.BierExample.Repository;
 
 public class BierRepository4
 {
-    public BierRepository4()
-    {
-    }
-
-    public static int COUNT = 1;
-    
     public PagedResult<Bier> Get(PageFilterSorting pageFilterSorting)
     {
+        pageFilterSorting.NaamFilter = $"%{pageFilterSorting.NaamFilter}%";
+        
         using var connection = new MySqlConnection(GetConnectionString());
         
         var sql = $"""
@@ -31,14 +27,16 @@ public class BierRepository4
                             brouwcode = (SELECT DISTINCT brouwcode FROM brouwer
                                 WHERE naam = @Brouwnaam
                                     AND (@Land IS NULL OR land = @Land)))
+                        AND
+                            (@NaamFilter IS NULL OR naam LIKE @NaamFilter)
                      ORDER BY {pageFilterSorting.OrderBy} {pageFilterSorting.Dir}
                      LIMIT @PageSize OFFSET @Offset
                   """;
 
-        var bieren = connection.Query<Bier>(sql, pageFilterSorting)
-            .ToList();
-        
-
+        var bieren = 
+            connection
+                    .Query<Bier>(sql, pageFilterSorting)
+                    .ToList();
         
         return new PagedResult<Bier>
         {
@@ -60,5 +58,22 @@ public class BierRepository4
         var sql = "INSERT INTO bier (naam, type, stijl, alcohol, brouwcode) " +
                   "VALUES (@Naam, @Type, @Stijl, @Alcohol, @Brouwcode)";
         connection.Execute(sql, bier);
+    }
+
+    public Bier? GetByCode(int biercode)
+    {
+        using var connection = new MySqlConnection(GetConnectionString());
+        var sql = """
+                    SELECT biercode, naam, type, stijl, alcohol, brouwcode
+                    FROM bier WHERE biercode = @Biercode
+                  """;
+        return connection.QueryFirstOrDefault<Bier>(sql, new { Biercode = biercode });
+    }
+
+    public void Delete(int bierCode)
+    {
+        using var connection = new MySqlConnection(GetConnectionString());
+        var sql = "DELETE FROM bier WHERE biercode = @Biercode";
+        connection.Execute(sql, new { Biercode = bierCode });
     }
 }

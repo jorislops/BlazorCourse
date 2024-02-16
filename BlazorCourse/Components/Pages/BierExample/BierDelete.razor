@@ -1,0 +1,46 @@
+@page "/BierDelete/{Biercode:int}"
+@using BlazorCourse.Components.Pages.BierExample.Repository
+@using BlazorCourse.Components.Pages.BierExample.Model
+@inject NavigationManager NavigationManager
+
+@if (_bier == null)
+{
+    <h1>No bier found</h1>
+    <a href="BierPage4">Go back to bieren</a>
+}
+else
+{
+    <div>
+        <h1>Bier: @_bier.Naam</h1>
+        <!-- Not working please fix -->
+        @* <h2>Brouwer: @_bier.Brouwer.Naam</h2> *@
+    </div>
+    <hr/>
+    <h3>Are you sure to delete?</h3> 
+    <div>
+        <button class="btn btn-danger" @onclick="@(() =>Delete(_bier.Biercode))">Delete</button>
+        <a class="btn btn-success" href="/BierPage4">No</a>
+    </div>
+}
+
+@code {
+    private Bier? _bier;
+
+    [Parameter]
+    public int Biercode { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        _bier = new BierRepository4().GetByCode(Biercode);
+    }
+
+
+    private void Delete(int bierCode)
+    {
+        new BierRepository4().Delete(bierCode);
+        NavigationManager.NavigateTo("/BierPage4");
+    }
+
+}

@@ -12,4 +12,6 @@ public class Bier
     public string Alcohol { get; set; }
     
     public string Brouwcode { get; set; }
+    
+    public Brouwer Brouwer { get; set; }
 }

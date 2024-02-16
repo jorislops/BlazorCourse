@@ -26,18 +26,9 @@ public class BierRepository
                                 WHERE naam = @brouwnaam 
                                     AND (@land IS NULL OR land = @land)))
                     ORDER BY 
-                        CASE WHEN @orderBy = 'naam' and @dir = 'desc' THEN naam END DESC,
-                        CASE WHEN @orderBy = 'naam' THEN naam END ASC,
-                        
-                        CASE WHEN @orderBy = 'stijl' and @dir = 'desc' THEN stijl END DESC,
-                        CASE WHEN @orderBy = 'stijl' THEN stijl END ASC,
-                        
-                        CASE WHEN @orderBy = 'alcohol' and @dir = 'desc' THEN alcohol END DESC,
-                        CASE WHEN @orderBy = 'alcohol' THEN alcohol END ASC
-                  
-                  
                   """;
         
+        sql += $"{orderBy} {dir}";
         
         
         using var connection = new MySqlConnection(GetConnectionString());

@@ -36,22 +36,19 @@
                 </li>
             }
 
-            <li class="page-item">
-                <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">3</a>
-            </li>
+            @foreach(var pageNumber in Enumerable.Range(1, Math.Min(10, _pagedResult.TotalPages)))
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="@(()=>GoToPage(pageNumber))">@pageNumber</a>
+                </li>
+            }
+            
             @if (_pagedResult.Page < _pagedResult.TotalPages)
             {
                 <li class="page-item">
                     <a class="page-link" @onclick="Next">Next</a>
                 </li>
             }
-
         </ul>
     </nav>
 
@@ -78,7 +75,7 @@
 
     private void LoadData()
     {
-        _pagedResult = new BierRepository3().Get(_pageFilterSorting);
+        _pagedResult = new BierRepository4().Get(_pageFilterSorting);
     }
 
     private void Next()
@@ -113,6 +110,12 @@
         }
 
         _pagedResult.Page = 1;
+        LoadData();
+    }
+
+    private void GoToPage(int page)
+    {
+        _pageFilterSorting.CurrentPage = page;
         LoadData();
     }
 

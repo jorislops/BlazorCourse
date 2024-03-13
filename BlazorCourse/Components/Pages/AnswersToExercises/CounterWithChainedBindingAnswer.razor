@@ -1,0 +1,17 @@
+@page "/interacting-counters"
+
+<div>
+    <InteractingCounters @bind-Counter="_stepSize"></InteractingCounters>
+    <p>Step size: @_stepSize</p>
+</div>
+
+<div>
+    <InteractingCounters @bind-Counter="_counterValue" StepSize="_stepSize"></InteractingCounters>
+    <p>Counter value: @_counterValue</p>
+</div>
+
+@code {
+
+    private int _stepSize = 1;
+    private int _counterValue;
+}

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@inject IWebHostEnvironment WebHostEnvironment
+
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,11 +13,18 @@
     <link rel="stylesheet" href="BlazorCourse.styles.css"/>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@@fluentui/web-components@@2.5.16/dist/web-components.min.js"></script>
-    <HeadOutlet/>
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
+    <link href="_content/Syncfusion.Blazor.Themes/bootstrap5.css" rel="stylesheet"/>
+    <script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
+    
+    <!-- Monaco Editor -->
+    <script src="_content/BlazorMonaco/jsInterop.js"></script>
+    <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+    <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
 </head>
 
 <body>
-<Routes @rendermode="InteractiveServer"/>
+<Routes @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
 <script src="_framework/blazor.web.js"></script>
 </body>
 

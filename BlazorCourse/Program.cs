@@ -1,5 +1,6 @@
 using BlazorCourse;
 using BlazorCourse.Components;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<CounterService>();
+builder.Services.AddSyncfusionBlazor();
 
 var app = builder.Build();
+
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVWhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjWn9fcXJVRmBVUUFxXw==");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

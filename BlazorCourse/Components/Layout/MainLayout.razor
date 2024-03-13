@@ -1,26 +1,56 @@
-﻿@inherits LayoutComponentBase
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Inputs
+@inherits LayoutComponentBase
+
 
 
 <CascadingValue Value="@AppState">
-    <div class="page">
-        <div class="sidebar">
-            <NavMenu/>
-        </div>
+    <div id="control-section">
+        <div id="sidebar-wrapper">
+            <div>
+                @*Initialize the Sidebar component*@
+                <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle">
+                    <ChildContent>
+                        <div class="main-menu">
+                            <div class="table-content">
+                                <SfTextBox Placeholder="Search..."></SfTextBox>
+                                <p class="main-menu-header">TABLE OF CONTENTS</p>
+                            </div>
+                            <div>
+                                <SiteNavigation></SiteNavigation>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </SfSidebar>
 
-        <main>
-
-            <div class="top-row px-4">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                @*Initialize the Toolbar component*@
+                <SfToolbar>
+                    <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
+                    <ToolbarItems>
+                        <ToolbarItem PrefixIcon="e-tbar-menu-icon tb-icons" TooltipText="Menu"></ToolbarItem>
+                        <ToolbarItem>
+                            <Template>
+                                <div class="e-folder">
+                                    <div class="e-folder-name">Navigation Pane</div>
+                                </div>
+                            </Template>
+                        </ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
             </div>
-
-            <article class="content px-4">
-                @Body
-            </article>
-
-        </main>
+            @*main-content declaration*@
+            <div class="main-content" id="main-text">
+                <div class="sidebar-content">
+                    <div class="row m-4">
+                        <div class="col">
+                            @Body        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </CascadingValue>
-
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
@@ -33,5 +63,201 @@
     //make sure that AppState is initialized
     private AppState AppState { get; set; } = new AppState();
 
+// Specifies the value of TreeView component ExpanOn property.
+
+    // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
+    public bool SidebarToggle = false;
+
+    // Specifies the event handler for Clicked event in Toolbar component.
+    public void Toggle(ClickEventArgs args)
+    {
+        if (args.Item.TooltipText == "Menu")
+        {
+            SidebarToggle = !SidebarToggle;
+        }
+    }
 
 }
+
+<style>
+    div#main-text {
+        height: 2000px;
+    }
+
+    /* Sample specific styles */
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    #sidebar-wrapper .sf-icon-profile:before {
+        float: right;
+        content: '\e717';
+        font-size: 25px;
+    }
+    #sidebar-wrapper.e-sidebar-context {
+        overflow-x: inherit;
+    }
+    #sidebar-wrapper .default-sidebar {
+        z-index: 20 !important;
+    }
+    #sidebar-wrapper .e-content-animation {
+        /*height: 477px;*/
+        width: auto;
+    }
+    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in light themes */
+    .material #sidebar-wrapper .e-listview .e-list-item, .material .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid rgba(0,0,0,0.12);
+    }
+    .fabric #sidebar-wrapper .e-listview .e-list-item, .fabric .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #eaeaea;
+    }
+    .tailwind #sidebar-wrapper .e-listview .e-list-item, .tailwind .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #d7d7d7;
+    }
+    .bootstrap5 .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #dee2e6;
+    }
+    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in dark themes */
+    .bootstrap5-dark .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #444c54;
+    }
+    .material-dark #sidebar-wrapper .e-listview .e-list-item, .material-dark .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #616161;
+    }
+    .fabric-dark #sidebar-wrapper .e-listview .e-list-item, .fabric-dark .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #414040;
+    }
+    .tailwind-dark #sidebar-wrapper .e-listview .e-list-item, .tailwind-dark .defaultToolbar.e-toolbar {
+        border-bottom: 1px solid #4b5563;
+    }
+    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in light themes */
+    .material .default-sidebar .e-treeview .e-ul, .material-dark .default-sidebar .e-treeview .e-ul,
+    .bootstrap .default-sidebar .e-treeview .e-ul, .bootstrap-dark .default-sidebar .e-treeview .e-ul {
+        padding-left: 6px;
+    }
+    .e-bigger.material .default-sidebar .e-treeview .e-ul, .e-bigger.material-dark .default-sidebar .e-treeview .e-ul,
+    .fabric .default-sidebar .e-treeview .e-ul, .fabric-dark .default-sidebar .e-treeview .e-ul,
+    .highcontrast .default-sidebar .e-treeview .e-ul {
+        padding-left: 12px;
+    }
+    .e-bigger.fabric .default-sidebar .e-treeview .e-ul, .e-bigger.fabric-dark .default-sidebar .e-treeview .e-ul,
+    .bootstrap5 .default-sidebar .e-treeview .e-ul, .bootstrap5-dark .default-sidebar .e-treeview .e-ul {
+        padding-left: 14px;
+    }
+    .e-bigger.bootstrap .default-sidebar .e-treeview .e-ul, .e-bigger.bootstrap-dark .default-sidebar .e-treeview .e-ul,
+    .e-bigger.highcontrast .default-sidebar .e-treeview .e-ul {
+        padding-left: 16px;
+    }
+    .tailwind .default-sidebar .e-treeview .e-ul, .tailwind-dark .default-sidebar .e-treeview .e-ul {
+        padding-left: 15px;
+    }
+    .e-bigger.bootstrap5 .default-sidebar .e-treeview .e-ul, .e-bigger.bootstrap5-dark .default-sidebar .e-treeview .e-ul,
+    .e-bigger.tailwind .default-sidebar .e-treeview .e-ul, .e-bigger.tailwind-dark .default-sidebar .e-treeview .e-ul,
+    .bootstrap4 .default-sidebar .e-treeview .e-ul {
+        padding-left: 20px;
+    }
+    .e-bigger.bootstrap4 .default-sidebar .e-treeview .e-ul {
+        padding-left: 24px;
+    }
+    .tailwind .default-sidebar .e-treeview .e-list-item .e-text-content, .tailwind-dark .default-sidebar .e-treeview .e-list-item .e-text-content {
+        padding-left: 22px;
+    }
+    /* Specifies the styles for Sidebar hamburger icon */
+    @@font-face {
+        font-family: 'e-sb-icons';
+        src: url(data:application/x-font-ttf;charset=utf-8;base64,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AAATMzUjBSElByclMzUjNTM1IwUXEQE3JwUBIQLIyAESAs/+/mVm/ezIyMjIAvfx/Sry8gFoAWf9MQGBIXycUVEsIUwhnZMBU/6tk8D3AR8ABAAAAAADzgPqAA8AIAAvADsAACUjJzcjFwcjAwYCFyEuAQcBHgEXPgE3LgEnNDY1JiMOASUzMhYdARQGKwEVLwE3FQceARc+ATcuAScOAQJeJjsvZDI2Lj+tjgMDryP1EP5EA5Rvb5MFY38CAxMTb5QCA3QKDAwKdzs4d5ACWUFDWAECWUFDWCuHV1SKARAm/v4Rv4sEASJxkwICkm8FgmAJEAcDA5OiDAooCgwpLChMIy9DVwICWUFDWAICWAAAAgAAAAAD3QPqAA0AGQAANxUhNS4BJw4BIiYnDgETHgEXPgE3LgEnDgEQA84DknEvc39zL3GS1AOac3SaAwOadHOahIKCdaMRJCgoJBGjAeF0mgMDmnR0mgICmgAAABIA3gABAAAAAAAAAAEAAAABAAAAAAABAAoAAQABAAAAAAACAAcACwABAAAAAAADAAoAEgABAAAAAAAEAAoAHAABAAAAAAAFAAsAJgABAAAAAAAGAAoAMQABAAAAAAAKACwAOwABAAAAAAALABIAZwADAAEECQAAAAIAeQADAAEECQABABQAewADAAEECQACAA4AjwADAAEECQADABQAnQADAAEECQAEABQAsQADAAEECQAFABYAxQADAAEECQAGABQA2wADAAEECQAKAFgA7wADAAEECQALACQBRyBlLXNiLWljb25zUmVndWxhcmUtc2ItaWNvbnNlLXNiLWljb25zVmVyc2lvbiAxLjBlLXNiLWljb25zRm9udCBnZW5lcmF0ZWQgdXNpbmcgU3luY2Z1c2lvbiBNZXRybyBTdHVkaW93d3cuc3luY2Z1c2lvbi5jb20AIABlAC0AcwBiAC0AaQBjAG8AbgBzAFIAZQBnAHUAbABhAHIAZQAtAHMAYgAtAGkAYwBvAG4AcwBlAC0AcwBiAC0AaQBjAG8AbgBzAFYAZQByAHMAaQBvAG4AIAAxAC4AMABlAC0AcwBiAC0AaQBjAG8AbgBzAEYAbwBuAHQAIABnAGUAbgBlAHIAYQB0AGUAZAAgAHUAcwBpAG4AZwAgAFMAeQBuAGMAZgB1AHMAaQBvAG4AIABNAGUAdAByAG8AIABTAHQAdQBkAGkAbwB3AHcAdwAuAHMAeQBuAGMAZgB1AHMAaQBvAG4ALgBjAG8AbQAAAAACAAAAAAAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoBAgEDAQQBBQEGAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYBFwEYARkBGgEbAAltYWlsLXNlbmQLaW5ib3gtMDItd2YLaW5ib3gtMDEtd2YFaW5ib3gPb3Blbi1tZXNzYWdlLXdmDGFycm93aGVhZC0wMRBhcnJvd2hlYWQtdG9wLXdmCXJhdGluZy13ZgtyYXRpbmctLS0wMxFhcnJvd2hlYWQtZG93bi0wMQlmb2xkZXItMDMIdXNlcnMtd2YIY2xvY2stMDIGdXBsb2FkCG9uZWRyaXZlEWNsb3VkLWRvd25sb2FkLXdmD3dvcmstb2ZmbGluZS13ZglzZWFyY2gtd2YPbm90ZS1tZW1vLTAxLXdmDGltcG9ydGFudC13ZglzZW50LW1haWwIaW5ib3gtd2YLbWFpbC0tLXNlbnQJdXNlci1iYWNrDHVzZXItcHJvZmlsZQAAAAA=) format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+    [class^="sf-icon-"],
+    [class*=" sf-icon-"] {
+        font-family: 'e-sb-icons';
+        font-size: 15px;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+   /* Specifies the styles for Toolbar component*/
+    .e-bigger .e-tbar-btn .tb-icons {
+        font-size: 20px;
+    }
+    .e-tbar-btn .tb-icons {
+        font-family: 'Material_toolbar';
+        speak: none;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+    }
+    .e-toolbar .e-icons {
+        font-size: 20px;
+    }
+    .e-tbar-menu-icon:before {
+        content: "\e718";
+    }
+    .e-folder {
+        text-align: center;
+        font-weight: 500;
+        font-size: 16px;
+    }
+    .e-bigger .e-folder {
+        font-size: 18px;
+    }
+    .bootstrap5 .e-folder-name, .bootstrap5-dark .e-folder-name {
+        margin-top: -2px;
+    }
+    .bootstrap4 .e-folder-name,
+    .bootstrap .e-folder-name, .bootstrap-dark .e-folder-name {
+        margin-top: 3px;
+    }
+    .tailwind .defaultToolbar.e-toolbar .e-toolbar-items.e-tbar-pos .e-toolbar-left,
+    .tailwind-dark .defaultToolbar.e-toolbar .e-toolbar-items.e-tbar-pos .e-toolbar-left {
+        line-height: initial;
+    }
+    .material .e-folder-name, .material-dark .e-folder-name {
+        margin-top: 1px;
+    }
+    .e-user-name {
+        text-align: center;
+        font-weight: 500;
+        font-size: 14px
+    }
+    .bootstrap4.e-bigger .e-toolbar .e-toolbar-items .e-custom.e-toolbar-item:not(.e-separator) {
+        padding-left: 12px;
+    }
+    /* Specifies the styles for ListView component*/
+    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-item-header,
+    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-content,
+    .bootstrap-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-content {
+        color: #fff;
+    }
+    .material .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
+    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
+        top: 28px;
+    }
+    .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar{
+        top: 12px;
+    }
+    .bootstrap4 .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
+    .bootstrap .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
+    .bootstrap-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
+        top: 22px;
+    }
+    .fabric .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
+    .fabric-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
+    .highcontrast .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
+        top: 15px;
+    }   
+    .e-listview.e-list-template .e-list-wrapper.e-list-avatar:not(.e-list-badge){
+        padding-left: 75px;
+    }
+    #sidebar-wrapper .defaultToolbar .e-btn.e-icon-btn{
+        border: 0px;
+        background-color: #f3f2f1;
+    }
+ </style>

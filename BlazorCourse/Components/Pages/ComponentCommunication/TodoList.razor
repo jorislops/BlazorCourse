@@ -1,25 +1,29 @@
-@page "/TodoList"
+@page "/todo-list"
 @using BlazorCourse.Models
-@using BlazorCourse.Repositories
 <h3>Todo List</h3>
 
-<CascadingValue Value="_user">
-@foreach(var todo in _todos)
+@if(_todos.Count == 0)
 {
-    <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
-        <TextContent>
-            @if(todo.IsDone)
-            {
-                <h4><del>@todo.Title</del></h4>
-            }
-            else
-            {
-                <h4>@todo.Title</h4>
-            }
-        </TextContent>    
-    </TodoCard>
+    <p>No items found</p>
 }
-</CascadingValue>
+else
+{
+    @foreach(var todo in _todos)
+    {
+        <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
+            <TextContent>
+                @if(todo.IsDone)
+                {
+                    <h4><del>@todo.Title</del></h4>
+                }
+                else
+                {
+                    <h4>@todo.Title</h4>
+                }
+            </TextContent>    
+        </TodoCard>
+    }
+}
 
 <button class="btn btn-primary" 
         @onclick=@(() => _addTodoForm.ToggleVisibility())>Add</button>
@@ -28,16 +32,21 @@
     OnAdd="AddNewTodo"></AddTodoForm>
 
 @code {
-    private List<TodoItem> _todos;
-    private User _user = new User() { Name = "John Doe" };
-    
-    private AddTodoForm _addTodoForm;
+    private List<TodoItem> _todos = new List<TodoItem>();
+    private AddTodoForm _addTodoForm = new AddTodoForm();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _todos = new TodoRepository().Get();
-        
+
+        _todos = new List<TodoItem>()
+        {
+            new TodoItem() { Id = 1, Title = "Buy groceries" },
+            new TodoItem() { Id = 2, Title = "Do laundry" },
+            new TodoItem() { Id = 3, Title = "Clean the house" },
+            new TodoItem() { Id = 4, Title = "Cook dinner" },
+            new TodoItem() { Id = 5, Title = "Wash the car" }
+        };
         Console.WriteLine("OnInitialized() called");
     }
 

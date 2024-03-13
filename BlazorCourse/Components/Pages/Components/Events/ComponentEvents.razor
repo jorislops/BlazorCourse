@@ -1,0 +1,19 @@
+@page "/component-events"
+<h3>The timer component has Event Callbacks</h3>
+<hr>
+<h3>@_message </h3>
+<CountDownCounter
+    Zero="@(message => _message = message)"
+    One=@(message => SetMessage(message))
+    Two="SetMessage"
+    Ten="SetMessage">
+</CountDownCounter>
+
+@code {
+    private string _message = "";
+
+    private void SetMessage(string message)
+    {
+        _message = message;
+    }
+}

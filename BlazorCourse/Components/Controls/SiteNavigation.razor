@@ -1,0 +1,170 @@
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+@inject NavigationManager NavigationManager
+
+@using Syncfusion.Blazor.Navigations
+
+
+@*Initialize the TreeView component*@
+<SfTreeView TValue="TreeItem">
+    <TreeViewFieldsSettings DataSource="@TreeDataSource"
+                            Id="NodeId" Text="NodeText" Expanded="Expanded"
+                            TValue="TreeItem"
+                            NavigateUrl="Url"
+                            Child="@("Child")"  >
+    </TreeViewFieldsSettings>
+</SfTreeView>
+
+@code{
+
+    // Specifies the DataSource value for TreeView component.
+    List<TreeItem> TreeDataSource = new List<TreeItem>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        TreeDataSource.Add(new TreeItem()
+        {
+            NodeId = "1",
+            NodeText = "1 - Introduction",
+            Icon = "folder",
+            Expanded = false,
+            Child = new List<TreeItem>()
+            {
+                new TreeItem { NodeId = "1-00", NodeText = "Counter Example", Url = "/counter", Icon = "html" },
+                new TreeItem { NodeId = "1-01", NodeText = "Razor Syntax", Url = "/razor-syntax",  Icon = "html" },
+                new TreeItem { NodeId = "1-02", NodeText = "Data Binding", Icon = "html", 
+                    Child = new List<TreeItem>()
+                    {
+                        new TreeItem() { NodeId = "1-02-01", NodeText = "One way", Url = "/data-binding/one-way", Icon = "html"},
+                        new TreeItem() { NodeId = "1-02-02", NodeText = "Two way", Url = "/data-binding/two-way", Icon = "html"},
+                        
+                        new () { NodeId = "1-02-03", NodeText = "Object", Url = "/data-binding/object", Icon = "html"},
+                        
+                        new TreeItem() { NodeId = "1-02-04", NodeText = "Get Set", Url = "/data-binding/get-set", Icon = "html"},
+                        new TreeItem() { NodeId = "1-02-05", NodeText = "Get After", Url = "/data-binding/bind-after", Icon = "html"},
+                    }
+                },
+                new TreeItem() { NodeId = "1-03", NodeText = "Events", Url = "/events", Icon = "html" },
+                new TreeItem { NodeId = "1-04", NodeText = "Simple Todo Example", Url = "/todo", Icon = "html" },
+            }
+        });
+        TreeDataSource.Add(new TreeItem()
+        {
+            NodeId = "2",
+            NodeText = "2 - Components Basics",
+            Icon = "folder",
+            Expanded = false,
+            Child = new List<TreeItem>()
+            {
+                new TreeItem()
+                {
+                    NodeId = "2-01", NodeText = "Construction", Icon = "folder",
+                    Child = new List<TreeItem>()
+                    {
+                        new TreeItem() { NodeId = "2-01-01", NodeText = "Simple Component", Url = "/simple-component-example", Icon = "html" },
+                        new TreeItem() { NodeId = "2-01-02", NodeText = "Partial Component", Url = "/simple-component-example-partial", Icon = "html" },
+                        new TreeItem() { NodeId = "2-01-03", NodeText = "Inheritance Component", Url = "/simple-component-example-inheritance", Icon = "html" }
+                    }
+                },
+                new TreeItem()
+                {
+                    NodeId = "2-02", NodeText = "Parameters", Icon = "folder",
+                    Child = new List<TreeItem>()
+                    {
+                        new TreeItem()
+                        {
+                            NodeId = "2-02-01", NodeText = "Component Parameter", Url = "/component-parameter", Icon = "html"
+                        },
+                        new TreeItem()
+                        {
+                            NodeId = "2-02-02", NodeText = "Component Chained Binding", Url = "/component-with-chained-binding", Icon = "html"
+                        }
+                    }
+                },
+                new TreeItem()
+                {
+                    NodeId  = "2-03", NodeText = "Event Callback", Url = "/component-events", Icon = "html",
+                },
+                new TreeItem()
+                {
+                    NodeId = "2-04", NodeText = "State management", Icon = "folder",
+                    Child = new List<TreeItem>()
+                    {
+                        new TreeItem()
+                        {
+                            NodeId = "2-04-1", NodeText = "Component State", Url = "counter-component-state", Icon = "html"
+                        },
+                        new TreeItem()
+                        {
+                            NodeId = "2-04-2", NodeText = "Counter State Static (don't)", Url = "/counter-state-static-variable", Icon = "html"
+                        },
+                        new TreeItem()
+                        {
+                            NodeId = "2-04-3", NodeText = "Cascade Parameters", Url = "/counter-cascade-state", Icon = "html"
+                        }
+                    }
+                },
+                new TreeItem()
+                { NodeId = "2-05", NodeText = "Todo Example", Url = "/todo-list", Icon = "html" },
+                
+                
+            }
+        });
+
+        TreeDataSource.Add(new TreeItem()
+        {
+            NodeId = "3",
+            NodeText = "3 - Databases",
+            Icon = "folder",
+            Expanded = false,
+            Child = [
+                new () { NodeId = "3-01", NodeText = "Todo list db", Url = "/todo-list-db", Icon = "html" },
+                new () { NodeId = "3-02", NodeText = "Bier", Url = "/bier", Icon = "html" },
+                new () { NodeId = "3-03", NodeText = "Brouwer", Url = "/brouwer", Icon = "html" }
+                
+            ]
+        });
+        
+        TreeDataSource.Add(new ()
+        {
+            NodeId = "4",
+            NodeText = "4 - Forms and Validation",
+            Icon = "folder",
+            Expanded = false,
+            Child = [
+                new () { NodeId = "4-01", NodeText = "Form + Validation", Url = "forms/add-bier", Icon = "html" },
+                new () { NodeId = "4-03", NodeText = "Fluent Validation", Url = "forms/add-bier-fluent", Icon = "html" }
+            ]
+        });
+
+    }
+
+    class TreeItem
+    {
+        public string NodeId { get; set; }
+        public string NodeText { get; set; }
+        public string Icon { get; set; } = "folder";
+        public bool Expanded { get; set; }
+        public bool Selected { get; set; }
+        public List<TreeItem> Child { get; set; }
+        public string ImageUrl { get; set; }
+        public string Url { get; set; }
+    }
+    
+    private void NodeClicked(NodeClickEventArgs obj)
+    {
+        if (obj.NodeData != null)
+        {
+            
+            Console.WriteLine(obj.ToString());
+            // NavigationManager.NavigateTo(obj.NodeData.Url);
+        }
+    }
+
+    private void NodeSelected(NodeSelectEventArgs obj)
+    {
+        obj.NodeData.Id = "selected";
+    }
+
+}

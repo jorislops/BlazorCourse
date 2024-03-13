@@ -1,0 +1,50 @@
+@page "/data-binding/two-way"
+<h2>Two way binding</h2>
+<hr>
+
+<input @bind=_name size="100"/> 
+<p>@_name</p>
+@code {
+    string _name = "Change the text and click outside the input field (or press enter) and you see the changes!";
+}
+<hr>
+
+<h2>Two way binding (date)</h2>
+<input type="date" bind="@_dateOfBirth" />
+<p>Date of birth: @_dateOfBirth</p>
+<p>Make sure to set the type to date, otherwise you will get an error.</p>
+@code {
+    DateOnly _dateOfBirth = DateOnly.FromDateTime(DateTime.Now);
+}
+<hr>
+
+<h2>Two way binding, with update (DOM event)</h2>
+@code
+{
+    string _name2 = "Change the text and you see the changes immediately!";
+}
+<input @bind="_name2" @bind:event="oninput"  size="100"/>
+<p>@_name2</p>
+<hr>
+
+<h2>Two way binding, with C# (Blazor) event</h2>
+<input value="@_name3" @oninput=@(e => _name3 = e.Value.ToString()) size="100"/> 
+<p>@_name3</p>
+@code {
+    string _name3 = "Change the text and you see the changes immediately! This time with a C# event.";
+}
+<hr/>
+
+<h2>Binding to an object</h2>
+<input @bind="_person.FirstName" @bind:event="onchange"/>
+<input @bind="_person.LastName" @bind:event="onchange"/>
+<p>@_person.FirstName @_person.LastName</p>
+@code {
+    public class Person
+    {
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+    }
+
+    readonly Person _person = new Person { FirstName = "John", LastName = "Doe" };
+}

@@ -1,0 +1,29 @@
+@page "/simple-component-example-inheritance"
+
+@inherits SimpleComponentExampleBase
+
+<h3>SomePageComponent</h3>
+
+<h4>@Message</h4>
+
+<h4>It's @_currentDay</h4>
+
+<hr>
+
+<DayComponent></DayComponent>
+<hr/>
+
+<h3>Use a page as component</h3>
+<Counter></Counter>
+
+@code {
+    private string _currentDay = "Not set yet.";
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _currentDay = DateTime.Now.DayOfWeek.ToString();
+
+    }
+
+}

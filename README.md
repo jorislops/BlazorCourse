@@ -1,5 +1,7 @@
 # Onderwerpen per week/les
 
+Shop voorbeeld (Angular Course?) Verwijderen?? of laten staan?? en Dan toevoegen aan de navigatie. 
+
 Ik denk dat  het misschien wel te veel is per les.
 Misschien de onderwerpen wat meer verdelen over de lessen.
 Uitwerken per les een voorbeeld/demo en opdracht(en). 
@@ -38,6 +40,11 @@ State-management in components
 - Cascade Parameters
 
 ## Les 3 Verbinden met database 
+- **Nog uitwerken onderstaande 3 items**
+- (Al impliciet gedaan) Routes + Navigation (Chapter 4 - [Query strings](https://chrissainty.com/working-with-query-strings-in-blazor/))
+- Route Parameters
+- Query Strings
+
 - Dapper herhaling
 - Simpele CRUD voorbeeld
 - Navigatie tussen pages, Route Parameters
@@ -49,15 +56,11 @@ State-management in components
   - Fluent Validation
 - Generic Components
 - RenderFragment
-- Gebruiken van bibliotheken
+- Using a component library Blazorise (https://blazorise.com/)  
 
+- Layouts ** #Todo **
 
-- (Al impliciet gedaan) Routes + Navigation (Chapter 4 - [Query strings](https://chrissainty.com/working-with-query-strings-in-blazor/))
-   - Route Parameters
-   - Query Strings
-- Layouts
-
-## Les 5 Advanced Subjects
+## Les 5 Advanced Subjects ** #Todo **
 
 - Dependency Injection
 - State Management (Service)

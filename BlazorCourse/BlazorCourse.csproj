@@ -15,9 +15,10 @@
 
     <ItemGroup>
       <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+      <PackageReference Include="Blazorise.Bootstrap5" Version="1.4.3" />
+      <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.3" />
       <PackageReference Include="BlazorMonaco" Version="3.2.0" />
       <PackageReference Include="Dapper" Version="2.1.35" />
-      <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.3.1" />
       <PackageReference Include="MySqlConnector" Version="2.3.5" />
       <PackageReference Include="SqlKata" Version="2.4.0" />
       <PackageReference Include="SqlKata.Execution" Version="2.4.0" />

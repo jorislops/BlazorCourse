@@ -1,5 +1,8 @@
 using BlazorCourse;
 using BlazorCourse.Components;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,14 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<CounterService>();
 builder.Services.AddSyncfusionBlazor();
+
+builder.Services
+    .AddBlazorise( options =>
+    {
+        options.Immediate = true;
+    } )
+    .AddBootstrap5Providers()
+    .AddFontAwesomeIcons();
 
 var app = builder.Build();
 

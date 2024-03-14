@@ -55,7 +55,7 @@
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
-        var code = GetCode().Result;
+        var code = GetCode();
         
         return new StandaloneEditorConstructionOptions
         {
@@ -65,12 +65,9 @@
         };
     }
     
-    public async Task<string> GetCode()
+    public string GetCode()
     {
-        HttpClient client = new HttpClient();
-        client.DefaultRequestHeaders.Add("User-Agent", "TestApp");
-        var response = await client.GetAsync("https://raw.githubusercontent.com/jorislops/BlazorCourse/main/BlazorCourse/Components/Pages/Databinding/DataBindingObjectExample.razor");
-        return await response.Content.ReadAsStringAsync();
+        return File.ReadAllText("/Users/jorislops/Dev/BlazorCourse2/BlazorCourse/Components/Pages/Counter.razor");
     }
 
 }

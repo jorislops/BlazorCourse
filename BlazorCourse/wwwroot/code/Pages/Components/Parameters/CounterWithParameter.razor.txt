@@ -1,0 +1,25 @@
+<div>
+    <span>Counter with @Counter and Increment: @Step</span>
+    <button @onclick="Decrement" class="btn btn-primary">--</button>
+    <button @onclick="Increment" class="btn btn-primary">++</button>
+</div>
+
+@code {
+    [Parameter, EditorRequired] 
+    public int Counter { get; set; }
+    
+    
+    [Parameter]
+    public int Step { get; set; } = 1;
+
+    private void Increment()
+    {
+        Counter += Step;
+    }
+
+    private void Decrement()
+    {
+        Counter -= Step;
+    }
+
+}

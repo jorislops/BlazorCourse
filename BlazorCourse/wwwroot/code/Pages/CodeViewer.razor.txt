@@ -1,0 +1,125 @@
+@page "/code-viewer"
+@using Syncfusion.Blazor.Layouts
+
+@inject NavigationManager NavigationManager
+
+<h3>CodeViewer</h3>
+
+<div class="col-lg-12 control-section">
+    <SfSplitter Height="385px" Width="100%" SeparatorSize="3">
+        <SplitterPanes>
+            <SplitterPane Size="48%" Collapsible="true">
+                <ContentTemplate>
+                    <div>
+                        <div class="content">
+                            <StandaloneCodeEditor Id="my-editor-instance-id"
+                                                  CssClass="my-editor"
+                                                  ConstructionOptions="EditorConstructionOptions"/>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </SplitterPane>
+            <SplitterPane>
+                <ContentTemplate>
+                    <div>
+                        <div class="content">
+                            <iframe src="@_pageUrl"></iframe>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </SplitterPane>
+        </SplitterPanes>
+    </SfSplitter>
+</div>
+
+@code {
+    private string _code = "Not loaded yet";
+    private string _pageUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        
+        var queryString = new Uri(NavigationManager.Uri).Query;
+        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+        var codeFile = queryDictionary["code-url"];
+        if (!string.IsNullOrEmpty(codeFile))
+        {
+            _code = GetCode(codeFile);
+
+        }
+        
+        var pageUrl = queryDictionary["page-url"];
+        if (!string.IsNullOrEmpty(pageUrl))
+        {
+            _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
+        }
+        
+        
+
+    
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        
+        
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "razor",
+            Value = _code
+        };
+    }
+    
+    public string GetCode(string codeFile)
+    {
+        string codefile = NavigationManager.BaseUri + $"code/Pages/{codeFile}.txt";
+        HttpClient client = new HttpClient();
+        var code = client.GetStringAsync(codefile).Result;
+        return code;
+    }
+
+    
+}
+
+
+<style>
+    .e-splitter .content {
+        padding: 20px;
+    }
+    .e-splitter p {
+        margin-top: 10px;
+    }
+    .expand-pane {
+        margin: 20px auto;
+        max-width: 820px;
+    }
+        /* styles to hide scroll bars */
+        .expand-pane .e-pane.e-pane-horizontal.e-scrollable::-webkit-scrollbar,
+        .expand-pane .e-pane.e-pane-vertical.e-scrollable::-webkit-scrollbar {
+            display: none;
+        }
+        .expand-pane .e-pane.e-pane-horizontal.e-scrollable, .expand-pane .e-pane.e-pane-vertical.e-scrollable {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+    .control-section {
+        min-height: 370px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+    #inner-splitter {
+        border: transparent;
+    }
+</style>
+
+
+
+
+<style>
+    .my-editor {
+        height: 1024px;
+        width: 100%;
+    }
+</style>

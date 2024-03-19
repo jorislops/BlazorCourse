@@ -1,0 +1,64 @@
+@page "/blazorise-datagrid"
+
+@using Blazorise
+@* @using globalBlazorise.DataGrid *@
+@using BlazorCourse.Components.Pages.Databases.BierExample.Model
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+@using global::Blazorise
+@using global::Blazorise.DataGrid
+<h3>blazorise_datagrid</h3>
+
+@* <Badge Color="Color.Primary">Hello</Badge> *@
+
+<DataGrid TItem="Bier"
+          Data="@_bieren"
+          ReadData="args => OnReadData(args)"
+          TotalItems="@_totalItems"
+          PageSize="10"
+          Sortable
+          ShowPager
+          Responsive
+           SortMode="DataGridSortMode.Single">
+    <DataGridCommandColumn />
+    <DataGridColumn Field="@nameof(Bier.Naam)" Caption="Naam" />
+    <DataGridColumn Field="@nameof(Bier.Alcohol)" Caption="Alcohol" />
+    <DataGridColumn Field="@nameof(Bier.Stijl)" Caption="Stijl" />
+</DataGrid>
+@code {
+
+    private List<Bier> _bieren;
+    private int? _totalItems;
+
+    private void OnReadData(DataGridReadDataEventArgs<Bier> e)
+    {
+        var pageFilterSorting = new PageFilterSorting();
+        pageFilterSorting.CurrentPage = e.Page;
+        pageFilterSorting.PageSize = e.PageSize;
+        
+        // Todo: vervangen voor foreach loop ipv linq
+        var orderBy = e.Columns
+            .Where(c => c.SortDirection != SortDirection.Default)
+            .Select(c =>
+            new {
+                Field = c.Field,
+                SortDirection = c.SortDirection == SortDirection.Ascending ? "asc" : "desc"
+            }).FirstOrDefault();
+        
+        if(orderBy == null)
+        {
+            pageFilterSorting.OrderBy = "Naam";
+            pageFilterSorting.Dir = "asc";
+        }
+        else
+        {
+            pageFilterSorting.OrderBy = orderBy.Field;
+            pageFilterSorting.Dir = orderBy.SortDirection;
+        }
+        
+        var pagedResult = new BierRepository().Get(pageFilterSorting);
+        _bieren = pagedResult.Items;
+        _totalItems = pagedResult.TotalItems;
+    }
+
+    
+}

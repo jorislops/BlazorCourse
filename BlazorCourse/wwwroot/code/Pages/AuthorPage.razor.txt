@@ -1,0 +1,48 @@
+@page "/AuthorPage"
+@using MySqlConnector
+@using SqlKata.Compilers
+@using SqlKata.Execution
+@using System.Text.Json
+<h3>AuthorPage</h3>
+
+@code {
+    public class Author
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        
+        
+    }
+    
+    public class Book
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public int AuthorId { get; set; }
+        
+        public Author Author { get; set; }
+    }
+    
+    protected override void OnInitialized()
+    {
+        var connectionString = "Server=localhost;Database=Books;Uid=root;Pwd=Test@1234!;";
+        using var connection = new MySqlConnection(connectionString);
+        var compiler = new MySqlCompiler();
+        var db = new QueryFactory(connection, compiler);
+
+        var authors = db.Query("Authors")
+            .Select("Id", "FirstName", "LastName");
+        
+        var result = db.Query("Books")
+            .Select("Id", "Title", "AuthorId")
+            .Include("Author", authors, "AuthorId", "Id")
+            .Get();
+        
+        var toJson = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+        var booksAsObject = JsonSerializer.Deserialize<List<Book>>(toJson);
+        
+        base.OnInitialized();
+    }
+
+}

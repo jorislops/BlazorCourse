@@ -1,0 +1,65 @@
+@page "/data-binding/bind-after"
+
+@* https://stackoverflow.com/questions/75273153/what-is-the-difference-between-bindafter-and-bindset-in-blazor-7#:~:text=You%20should%20only%20use%20%40bind,%3Aget%3D%22searchText%22%20 *@
+
+<h3>DataBindingBindAfter</h3>
+
+<input @bind="_filter"  @bind:after="Search" @bind:event="oninput"/>
+
+<p>Filter: @_filter</p>
+<p>Search Status: @_searchStatus</p>
+
+<hr>
+
+<h2>Search Results:</h2>
+@if (_filteredNames.Any())
+{
+    <ul>
+        @foreach(var name in _filteredNames)
+        {
+            <li>@name</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Empty Search Result</p>
+}
+
+@code {
+    readonly List<string> _names = new List<string>();
+    
+    List<string> _filteredNames = new List<string>();
+    
+    private string _filter  = String.Empty;
+    private string _searchStatus = string.Empty;
+    
+    protected override void OnInitialized()
+    {
+        _names.Add("John");
+        _names.Add("Paul");
+        _names.Add("George");
+        _names.Add("Ringo");
+        
+        _filteredNames = _names;
+    }
+
+
+    private async Task Search()
+    {
+        _searchStatus = "Searching...";
+        
+        await Task.Delay(3000);
+        
+        if (!string.IsNullOrWhiteSpace(_filter))
+        {
+            _filteredNames = _names.Where(n => n.Contains(_filter, StringComparison.OrdinalIgnoreCase)).ToList();    
+        }
+        else
+        {
+            _filteredNames = _names;
+        }
+        
+        _searchStatus = "Completed.";
+    }
+}

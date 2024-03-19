@@ -1,0 +1,26 @@
+<div style="border: 2px black dashed">
+    <span>Chained Counter with @Counter</span>
+    <button @onclick="Decrement" class="btn btn-primary">--</button>
+    <button @onclick="Increment" class="btn btn-primary">++</button>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int Counter { get; set; }
+    
+    
+    [Parameter]
+    public EventCallback<int> CounterChanged { get; set; }
+
+    private void Decrement()
+    {
+        Counter -= 1;
+        CounterChanged.InvokeAsync(Counter);
+    }
+
+    private void Increment()
+    {
+        Counter += 1;
+        CounterChanged.InvokeAsync(Counter);
+    }
+}

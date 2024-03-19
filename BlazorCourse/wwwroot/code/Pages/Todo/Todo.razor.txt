@@ -1,0 +1,79 @@
+@page "/todo"
+@rendermode InteractiveServer
+
+@* als IsDone == true geef dan de tekst (@todo.Title) weer als verwijderd <del>@todo.Title</del> *@
+
+@* Edit knop toevoegen! Als je op deze knop klikt kan je in het formulier <Editform> het todoitem aanpassen, 
+    tip: met de Id kan je bepalen of het form in edit of add mode staat *@
+
+@* Filteren op done/not done, voeg hier knoppen voor toe om te filteren *@
+
+@* Voeg zoekveld <input ... /> toe en filter de lijst op basis van de titel, als het zoekveld leeg is dan 
+   wordt er niet gefilterd *@
+
+@* Bonus: voeg een knop toe om alle items te verwijderen *@
+
+@* Bonus: voeg een knop toe om alle items te verwijderen die done zijn *@
+
+@* Bonus: voeg datum (DueDate) toe aan TodoItem en sorteer op datum (zowel oplopen als aflopend, door op een knop te klikken) *@
+
+<h3>TodoList</h3>
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li>
+            @if(todo.IsDone)
+            {
+                <del>@todo.Title</del>
+            }
+            else
+            {
+                @todo.Title
+            }
+            &nbsp;
+            <button @onclick="@(() => Delete(todo))" class="btn btn-primary">Delete</button>
+        </li>
+    }
+</ul>
+
+<EditForm Model="newTodoItem">
+    <InputText @bind-Value="newTodoItem.Title"/>
+    <InputCheckbox @bind-Value="newTodoItem.IsDone"/>
+    <button type="button" @onclick="AddTodo" class="btn btn-primary">Add Todo</button>
+</EditForm>
+
+
+@code {
+    public class TodoItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public bool IsDone { get; set; }
+    }
+    
+    private List<TodoItem> todos = new List<TodoItem>();
+
+    private TodoItem newTodoItem = new TodoItem();
+
+    private void AddTodo()
+    {
+        if(string.IsNullOrWhiteSpace(newTodoItem.Title))
+            return;
+        
+        newTodoItem.Id = todos.Count + 1;
+        todos.Add(newTodoItem);
+        newTodoItem = new TodoItem();
+    }
+
+    private void Delete(TodoItem todoItem)
+    {
+        todos.Remove(todoItem);
+    }
+    
+    private void Delete(int id)
+    {
+        todos = todos.Where(x => x.Id != id).ToList();
+    }
+
+}

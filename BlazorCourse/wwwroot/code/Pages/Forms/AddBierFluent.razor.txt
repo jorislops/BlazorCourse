@@ -1,0 +1,76 @@
+@page "/Forms/add-bier-fluent"
+@page "/Forms/AddBierFluent"
+@using BlazorCourse.Components.Pages.Databases.BierExample.Model
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+@using Blazored.FluentValidation
+@inject NavigationManager NavigationManager
+<h3>Bier Toevoegen M.b.v. Fluent Validation</h3>
+<h4>Om fluent Validation in Blazor te gebruiken: <a href="https://github.com/Blazored/FluentValidation">Blazored FluentValidation</a></h4>
+<h4>Documentation van Fluent Validation: <a href="https://docs.fluentvalidation.net/en/latest/">Fluent Validation</a></h4>
+
+<form>
+    <EditForm Model="_bier" OnValidSubmit="AddBierToDb">
+        <FluentValidationValidator/>
+        <ValidationSummary></ValidationSummary>
+        <div class="mb-3">
+            <label for="naam" class="form-label">Naam</label>
+            <InputText class="form-control" id="naam" @bind-Value="_bier.Naam"/>
+            <ValidationMessage For=@(() => _bier.Naam)/>
+        </div>
+
+        <div class="mb-3">
+            <label for="type" class="form-label">Type</label>
+            <InputText class="form-control" id="type" @bind-Value="_bier.Type"/>
+            <ValidationMessage For=@(() => _bier.Type)/>
+        </div>
+
+        <div class="mb-3">
+            <label for="stijl" class="form-label">Stijl</label>
+            <InputText class="form-control" id="stijl" @bind-Value="_bier.Stijl"/>
+            <ValidationMessage For=@(() => _bier.Stijl)/>
+        </div>
+
+        <div class="mb-3">
+            <label for="alcohol" class="form-label">Alcohol</label>
+            <InputNumber class="form-control" id="alcohol" @bind-Value="_bier.Alcohol"/>
+            <ValidationMessage For=@(() => _bier.Alcohol)/>
+        </div>
+
+        <div class="mb-3">
+            <label for="brouwer" class="form-label">Brouwer</label>
+
+            <InputSelect class="form-control" id="brouwer" @bind-Value="_bier.Brouwcode">
+                <option value="">
+                    Selecteer een brouwer
+                </option>
+                @foreach (var brouwer in _brouwers)
+                {
+                    <option value="@brouwer.Brouwcode">@brouwer.Naam</option>
+                }
+            </InputSelect>
+            <ValidationMessage For=@(() => _bier.Brouwcode)/>
+        </div>
+
+        <button class="btn btn-danger" type="reset">Reset</button>
+        <button class="btn btn-primary" type="submit">Add Bier</button>
+    </EditForm>
+</form>
+
+@code {
+    private Bier _bier = new Bier();
+    private List<Brouwer> _brouwers = null!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _brouwers = new BrouwerRepository().Get();
+    }
+
+    private void AddBierToDb()
+    {
+        new BierRepository().Add(_bier);
+        _bier = new Bier();
+        _bier.Brouwcode = -1;
+        NavigationManager.NavigateTo("/BierPage");
+    }
+}

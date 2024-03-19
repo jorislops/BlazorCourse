@@ -1,0 +1,126 @@
+@page "/tictactoe"
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Tic Tac Toe</h1>
+
+<CurrentPlayer Player="@_currentPlayer" />
+
+@if(_winner == Winner.Draw)
+{
+    <p>Draw!</p>
+}
+else if(_winner != Winner.None)
+{
+    <p>Winner: @_winner</p>
+}
+@if(_winner == Winner.Draw || _winner != Winner.None)
+{
+    <button @onclick="@Reset">Reset</button>
+}
+else
+{
+    @foreach(var row in Enumerable.Range(0, 3))
+    {
+        <div class="row border border-dashed">
+            @foreach(var col in Enumerable.Range(0, 3))
+            {
+                <div class="col-1 border border-dashed">
+                    @{
+                        var cell = @_board[row * 3 + col];
+                        var cellContent = cell == CellState.Empty ? "-" : cell.ToString();
+                    }
+
+                    <button class="btn btn-primary w-100" @onclick="@(() => CellClicked(row * 3 + col))">
+                        @cellContent
+                    </button>
+                </div>
+            }
+        </div>          
+    }
+}
+
+
+
+@code {
+
+    
+    private void Reset()
+    {
+        Array.Fill(_board, CellState.Empty);
+        _winner = Winner.None;
+    }
+
+    enum CellState
+    {
+        X,
+        O,
+        Empty
+    }
+
+    enum Winner
+    {
+        X,
+        O,
+        Draw,
+        None
+    }
+
+    private CellState[] _board =
+    [
+        CellState.Empty, CellState.Empty, CellState.Empty,
+        CellState.Empty, CellState.Empty, CellState.Empty,
+        CellState.Empty, CellState.Empty, CellState.Empty
+    ];
+
+    private string _currentPlayer = "X";
+    private Winner _winner = Winner.None;
+
+    private void CellClicked(int cell)
+    {
+        if (_board[cell] == CellState.Empty)
+        {
+            _board[cell] = _currentPlayer == "X" ? CellState.X : CellState.O;
+            _currentPlayer = _currentPlayer == "X" ? "O" : "X";
+
+            CheckForWinner();
+        }
+    }
+
+    private void CheckForWinner()
+    {
+        // Check for a winner
+        var possibleWins = new[]
+        {
+            // Rows
+            new[] { 0, 1, 2 },
+            new[] { 3, 4, 5 },
+            new[] { 6, 7, 8 },
+            // Columns
+            new[] { 0, 3, 6 },
+            new[] { 1, 4, 7 },
+            new[] { 2, 5, 8 },
+            // Diagonals
+            new[] { 0, 4, 8 },
+            new[] { 2, 4, 6 }
+        };
+
+        foreach (var possibleWin in possibleWins)
+        {
+            if (_board[possibleWin[0]] != CellState.Empty &&
+                _board[possibleWin[0]] == _board[possibleWin[1]] &&
+                _board[possibleWin[1]] == _board[possibleWin[2]])
+            {
+                _winner = _board[possibleWin[0]] == CellState.X ? Winner.X : Winner.O;
+            }
+        }
+
+        // Check for a draw
+
+        if (_board.All(cellstate => cellstate != CellState.Empty))
+        {
+            _winner = Winner.Draw;
+        }
+    }
+}

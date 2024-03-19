@@ -1,0 +1,36 @@
+<h3>Count: @_count</h3>
+<button class="btn btn-primary" @onclick=@Decrement>--</button>
+
+@code {
+    private int _count = 12;
+
+    [Parameter]
+    public EventCallback<string> Zero { get; set; }
+    [Parameter]
+    public EventCallback<string> One { get; set; }
+    [Parameter]
+    public EventCallback<string> Two { get; set; }
+    [Parameter]
+    public EventCallback<string> Ten { get; set; }
+    
+    public void Decrement()
+    {
+        _count--;
+
+        switch (_count)
+        {
+            case 0:
+                Zero.InvokeAsync("Lift off!");
+                break;
+            case 1:
+                One.InvokeAsync("One");
+                break;
+            case 2:
+                Two.InvokeAsync("Two");
+                break;
+            case 10:
+                Ten.InvokeAsync("Ten");
+                break;
+        }
+    }
+}

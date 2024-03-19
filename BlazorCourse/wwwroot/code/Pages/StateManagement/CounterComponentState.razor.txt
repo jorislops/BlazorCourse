@@ -1,0 +1,17 @@
+@page "/counter-component-state"
+@rendermode InteractiveServer
+<h3>Counter</h3>
+
+<button class="btn btn-primary" @onclick="() => _count++">++</button>
+<h4>@_count</h4>
+<button class="btn btn-primary" @onclick="() => _count--">--</button>
+
+@code {
+    //state in maintained in the page/component,
+    //by the page/component with the count instance variable
+    //Navigate away from the page and come back (as yoy will see the count is not maintained!)
+    
+    //Remark: A component and page are the same things,
+    //except a page can be called from an url (router)
+    private int _count = 0;
+}

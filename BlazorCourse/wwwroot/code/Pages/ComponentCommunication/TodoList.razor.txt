@@ -1,0 +1,72 @@
+@page "/todo-list"
+@using BlazorCourse.Models
+<h3>Todo List</h3>
+
+@if(_todos.Count == 0)
+{
+    <p>No items found</p>
+}
+else
+{
+    @foreach(var todo in _todos)
+    {
+        <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
+            <TextContent>
+                @if(todo.IsDone)
+                {
+                    <h4><del>@todo.Title</del></h4>
+                }
+                else
+                {
+                    <h4>@todo.Title</h4>
+                }
+            </TextContent>    
+        </TodoCard>
+    }
+}
+
+<button class="btn btn-primary" 
+        @onclick=@(() => _addTodoForm.ToggleVisibility())>Add</button>
+<AddTodoForm 
+    @ref="_addTodoForm"
+    OnAdd="AddNewTodo"></AddTodoForm>
+
+@code {
+    private List<TodoItem> _todos = new List<TodoItem>();
+    private AddTodoForm _addTodoForm = new AddTodoForm();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _todos = new List<TodoItem>()
+        {
+            new TodoItem() { Id = 1, Title = "Buy groceries" },
+            new TodoItem() { Id = 2, Title = "Do laundry" },
+            new TodoItem() { Id = 3, Title = "Clean the house" },
+            new TodoItem() { Id = 4, Title = "Cook dinner" },
+            new TodoItem() { Id = 5, Title = "Wash the car" }
+        };
+        Console.WriteLine("OnInitialized() called");
+    }
+
+    private void AddTodoItem()
+    {
+        _todos.Add(new TodoItem()
+        {
+            Id = _todos.Max(x => x.Id) + 1,
+            Title = "aap"
+        });
+    }
+
+    private void DeleteTodoItem(TodoItem todoItem)
+    {
+        _todos.Remove(todoItem);
+    }
+
+    private void AddNewTodo(TodoItem newTodoItem)
+    {
+        newTodoItem.Id = _todos.Max(x => x.Id) + 1;
+        _todos.Add(newTodoItem);
+    }
+}

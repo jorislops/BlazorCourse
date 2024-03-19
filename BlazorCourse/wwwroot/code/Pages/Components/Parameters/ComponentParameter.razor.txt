@@ -1,0 +1,7 @@
+@page "/component-parameter"
+<h3>Component Parameter</h3>
+
+<CounterWithParameter Counter="10"></CounterWithParameter>
+<hr>
+<CounterWithParameter Counter="5" Step="5"></CounterWithParameter>
+<hr/>

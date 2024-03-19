@@ -1,0 +1,129 @@
+@page "/data-binding/object"
+<h3>Data binding Object Example</h3>
+
+@foreach (var person in _persons)
+{
+    <div>
+        <p>@person.FullName</p>
+        <p>
+            <input type="date" @bind=@person.BirthDate/>
+            @person.BirthDate.ToString("yyyy-MM-dd")
+        </p>
+        <p>
+            @person.Salary
+
+            @* <input type="number" @bind-value=@person.Salary @bind-value:event="oninput"/> *@
+            @* bind and bind-value are the same, https://www.google.com/search?q=blazor+bind+vs+bind-value&oq=blazor+bind+vs+bind-value *@
+
+            <input type="number" @bind=@person.Salary @bind:event="oninput"/>
+        </p>
+        <p>
+            @person.IsMarried
+            <input type="checkbox" @bind=@person.IsMarried/>
+        </p>
+    </div>
+}
+<hr/>
+<p>
+    CityId: @_cityId
+</p>
+<select @bind="_cityId">
+    <option value="0"></option>
+    @foreach (var location in _cities)
+    {
+        <option value="@location.Id">@location.Name</option>
+    }
+</select>
+<hr>
+<p>SelectedGroup: @selectedGroup</p>
+<p>
+    <label>
+        <input type="radio" value="1" name="group1" checked="@(selectedGroup == 1)"
+               @onclick=@(() => selectedGroup = 2)/>1
+        <input type="radio" value="2" name="group1" checked="@(selectedGroup == 2)"
+               @onclick=@(() => selectedGroup = 2)/>2
+    </label>
+</p>
+
+
+    <ul>
+        @foreach (var city in _cities)
+        {
+            <li>@city.Name</li>
+        }
+    </ul>
+
+
+    <table>
+        @foreach (var person in _persons)
+        {
+            <tr>
+                <td>
+                    @person.FirstName
+                </td>
+                <td>
+                    <input @bind=@person.City.Name @bind:event="oninput"/>
+                </td>
+            </tr>    
+        }
+    </table>
+
+
+@code {
+    private List<Person> _persons { get; set; } = null!;
+
+    private List<City> _cities = new List<City>
+    {
+        new City { Id = 1, Name = "New York" },
+        new City { Id = 2, Name = "Los Angeles" },
+        new City { Id = 3, Name = "Chicago" }
+    };
+
+    int selectedGroup = 1;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _persons = new List<Person>
+        {
+            new Person
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                BirthDate = new DateOnly(1980, 1, 1),
+                Salary = 100.99m,
+                IsMarried = true,
+                City = _cities[1]
+            },
+            new Person
+            {
+                FirstName = "Jane",
+                LastName = "Doe",
+                BirthDate = new DateOnly(1985, 1, 1),
+                Salary = 67.99m,
+                IsMarried = true,
+                City = _cities[0]
+            }
+        };
+    }
+
+    public class City
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+
+    public class Person
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
+        public DateOnly BirthDate { get; set; }
+        public decimal Salary { get; set; }
+        public bool IsMarried { get; set; }
+        public City City { get; set; }
+    }
+
+    private int _cityId;
+}

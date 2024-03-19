@@ -1,0 +1,42 @@
+@page "/counter-state-static-variable"
+@rendermode InteractiveServer
+
+<h3>NEVER EVER DO THIS IN REAL LIFE! See code for explanation!</h3>
+<h3>Counter State Static Variable</h3>
+
+
+<button class="btn btn-primary" @onclick="() => _count++">++</button>
+<h4>@_count</h4>
+<button class="btn btn-primary" @onclick="() => _count--">--</button>
+
+
+@code {
+    //NEVER EVER DO THIS IN REAL LIFE!
+    //I am just showing you that you can do this, it's not a good idea.
+    //state in maintained in the page/component,
+    //by the page/component with the count static class variable
+    //Navigate away from the page and come back (as you will see the count is maintained!)
+    //The count is maintained because the static variable is not destroyed when the page is destroyed/recreated
+    //THE BIG PROBLEM IS THAT THE COUNT IS SHARED ACROSS ALL USERS OF THE APPLICATION!!!
+    //So if you have 100 users, they will all share the same count!
+    //This is why you should never use static variables to maintain state in a web application.
+    //Another problem is that the count is not maintained across server restarts.
+    //And the count is not maintained across multiple servers.
+    //So if you have a web farm, the count will be different on each server.
+    //Another problem is that concurrent users try to modify the same static variable at the same time.
+    //This will cause the count to be wrong. You can use locks to prevent this, but it's not a good idea,
+    //this can cause performance problems. 
+    //Of course count a good example of state but idea applies to any state.
+    //SO NEVER EVER USE STATIC VARIABLES TO MAINTAIN STATE IN A WEB APPLICATION!
+    
+
+    //Remark: A component and page are the same things,
+    //except a page can be called from an url (router)
+    private static int _count = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+}

@@ -1,0 +1,64 @@
+@using System.Reflection
+@typeparam TItem
+
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        @foreach (var property in _properties)
+        {
+            <th>@property.Name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+        @if(Items == null || Items.Count == 0)
+        {
+            <tr>
+                <td colspan="@_properties.Length">No data</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Items)
+            {
+                <tr>
+                    @foreach (var property in _properties)
+                    {
+                        <td>@property.GetValue(item)</td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private PropertyInfo[] _properties = null!;
+
+    [Parameter] 
+    public List<TItem>? Items { get; set; }
+    
+    [Parameter]
+    public string? ExcludeColumnsCsv { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _properties = typeof(TItem).GetProperties();
+        if (ExcludeColumnsCsv is not null)
+        {
+            _properties = _properties
+                .Where(p => !ExcludeColumnsCsv
+                    .Split(',')
+                    .Select(s => s.Trim())
+                    .Contains(p.Name))
+                .ToArray();
+        }
+    }
+
+}

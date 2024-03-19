@@ -1,0 +1,40 @@
+@page "/generic-data-table"
+@using BlazorCourse.Models
+<h3>Generic (Type arguments) Data Table</h3>
+
+<DataTable Items="_todoItems" ExcludeColumnsCsv=@_excludedColumns>
+    
+</DataTable>
+
+<button class="btn btn-primary" @onclick="DisplayAllColumns">Display All Columns</button>
+
+@code {
+    private List<TodoItem> _todoItems = new List<TodoItem>();
+
+    
+    
+    
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _todoItems = new List<TodoItem>()
+        {
+            new TodoItem() { Id = 1, Title = "Do this", IsDone = false },
+            new TodoItem() { Id = 2, Title = "Do that", IsDone = true },
+            new TodoItem() { Id = 3, Title = "Do something else", IsDone = false },
+        };
+    }
+
+    private string _excludedColumns = "Id, ParentId, IsDone, Items";
+    private void DisplayAllColumns()
+    {
+        if(_excludedColumns == "")
+        {
+            _excludedColumns = "Id, ParentId, IsDone, Items";
+        }
+        else
+            _excludedColumns = "";
+    }
+
+}

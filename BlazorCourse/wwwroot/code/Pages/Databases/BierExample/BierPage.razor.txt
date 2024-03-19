@@ -1,0 +1,201 @@
+@page "/bier"
+@page "/bier/{Brouwcode:int}"
+@page "/bier/{Brouwnaam}/{Land}"
+@page "/bier/{Brouwnaam}"
+@using BlazorCourse.Components.Pages.Databases.BierExample.Model
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+@using System.Collections.Specialized
+@using System.Web
+@inject NavigationManager NavigationManager
+
+@* create a beer grid with a filter and a pager *@
+
+<div class="input-group mb-3">
+    <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput=@(args => FilterByNaam(args.Value?.ToString()) )>
+    @* <div class="input-group-append"> *@
+    @*     <button class="btn btn-outline-secondary" type="button">Zoek op naam</button> *@
+    @* </div> *@
+</div>
+
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <td>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy("naam"))">Sort by naam</button>
+        </td>
+        <td>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy("alcohol"))">Sort by Alcohol</button>
+        </td>
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var bier in _pagedResult.Items)
+    {
+        <tr>
+            <td>@bier.Naam</td>
+            <td>@bier.Alcohol</td>
+            <td>
+                <a class="btn btn-danger" href="/BierDelete/@bier.Biercode">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @if (_pagedResult.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="Previous">Previous</a>
+                </li>
+            }
+
+            @foreach(var pageNumber in Enumerable.Range(1, Math.Min(10, _pagedResult.TotalPages)))
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="@(()=>GoToPage(pageNumber))">@pageNumber</a>
+                </li>
+            }
+            
+            @if (_pagedResult.Page < _pagedResult.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" @onclick="Next">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+    Page: @_pagedResult.Page of @_pagedResult.TotalPages
+</div>
+<div>
+    <button class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/Forms/AddBier"))">Add</button>
+</div>
+
+@code {
+    private PagedResult<Bier> _pagedResult;
+
+    private PageFilterSorting _pageFilterSorting = new PageFilterSorting()
+    {
+        CurrentPage = 1,
+        OrderBy = "naam"
+    };
+
+    
+    //FromQuery bier?brouwcode=1
+    [Parameter]
+    public int? Brouwcode { get; set; }
+    
+    
+    [Parameter]
+    public string? Brouwnaam { get; set; }
+    
+    [Parameter]
+    public string? Land { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        string uriAsString = NavigationManager.Uri;
+        Uri url = new Uri(uriAsString);
+        string queryString = url.Query; // returns "?Brouwcode=someInt"
+        NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
+        string brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
+        if (int.TryParse(brouwcodeAsString, out int brouwcode))
+        {
+            Brouwcode = brouwcode;
+        }
+        
+        
+        // if (!string.IsNullOrWhiteSpace(Brouwnaam))
+        // {
+        //     if (!string.IsNullOrWhiteSpace(Land))
+        //     {
+        //
+        //     }
+        // }
+    }
+
+    
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        if (Brouwcode is not null)
+        {
+            Brouwcode = Brouwcode;
+        } else if (Brouwnaam is not null)
+        {
+            _pageFilterSorting.Brouwnaam = Brouwnaam;
+            if (Land is not null)
+            {
+                _pageFilterSorting.Land = Land;
+            }
+        }
+
+        _pagedResult = new BierRepository().Get(_pageFilterSorting);
+    }
+
+    private void Next()
+    {
+        _pageFilterSorting.CurrentPage += 1;
+        LoadData();
+    }
+
+    private void Previous()
+    {
+        _pageFilterSorting.CurrentPage -= 1;
+        LoadData();
+    }
+
+
+    private void SortBy(string columnName)
+    {
+        if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "asc")
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "desc";
+        }
+        else if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "desc")
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "asc";
+        }
+        else
+        {
+            _pageFilterSorting.OrderBy = columnName;
+            _pageFilterSorting.Dir = "asc";
+        }
+
+        _pageFilterSorting.CurrentPage = 1;
+        LoadData();
+    }
+
+    private void GoToPage(int page)
+    {
+        _pageFilterSorting.CurrentPage = page;
+        LoadData();
+    }
+
+    private void FilterByNaam(string? bierNaamFilter)
+    {
+        _pageFilterSorting.NaamFilter = bierNaamFilter;
+        _pageFilterSorting.CurrentPage = 1;
+        _pageFilterSorting.OrderBy = "naam";
+        _pageFilterSorting.Dir = "asc";
+        LoadData();
+    }
+
+}

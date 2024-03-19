@@ -53,4 +53,24 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\codefiles\" />
+    </ItemGroup>
+
+    <Target Name="CopyCodeFilesToCodeDirecty" BeforeTargets="Build">
+        <!--    <ItemGroup>-->
+        <!--      <RenameFile Include="Pages\*.*" />-->
+        <!--    </ItemGroup>-->
+        <!--    <Message Text="Move: @(RenameFile) -> @(RenameFile -> Replace('cshtml.cs', 'txt'))" Importance="High" />-->
+        <!--    <Copy SourceFiles="@(RenameFile)" DestinationFiles="$(ProjectDir)\wwwroot\code\@(RenameFile -> Replace('cshtml.cs', 'txt'))" />-->
+
+        <ItemGroup>
+            <PagesForCodeWindow Include="Components\Pages\**\*.razor" />
+        </ItemGroup>
+        <Message Text="Copy $(ProjectDir)\Components\Pages -&gt; $(ProjectDir)/wwwroot/code/" Importance="high" />
+        <!--    @($(ProjectDir)\wwwroot\code\%(RecursiveDir)%(Filename)%(Extension)')-->
+        <Copy SourceFiles="@(PagesForCodeWindow)" DestinationFiles="@(PagesForCodeWindow->'$(ProjectDir)wwwroot/code/Pages/%(RecursiveDir)%(Filename)%(Extension).txt')" />
+    </Target>
+
+
 </Project>

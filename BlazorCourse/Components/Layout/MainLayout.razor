@@ -1,49 +1,54 @@
 ﻿@using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Inputs
 @inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 
 
 <CascadingValue Value="@AppState">
     <div id="control-section">
         <div id="sidebar-wrapper">
-            <div>
-                @*Initialize the Sidebar component*@
-                <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle">
-                    <ChildContent>
-                        <div class="main-menu">
-                            <div class="table-content">
-                                <SfTextBox Placeholder="Search..."></SfTextBox>
-                                <p class="main-menu-header">TABLE OF CONTENTS</p>
-                            </div>
-                            <div>
-                                <SiteNavigation></SiteNavigation>
-                            </div>
-                        </div>
-                    </ChildContent>
-                </SfSidebar>
-
-                @*Initialize the Toolbar component*@
-                <SfToolbar>
-                    <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
-                    <ToolbarItems>
-                        <ToolbarItem PrefixIcon="e-tbar-menu-icon tb-icons" TooltipText="Menu"></ToolbarItem>
-                        <ToolbarItem>
-                            <Template>
-                                <div class="e-folder">
-                                    <div class="e-folder-name">Navigation Pane</div>
+            @if (_showNav)
+            {
+                <div>
+                    @*Initialize the Sidebar component*@
+                    <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle">
+                        <ChildContent>
+                            <div class="main-menu">
+                                <div class="table-content">
+                                    <SfTextBox Placeholder="Search..."></SfTextBox>
+                                    <p class="main-menu-header">TABLE OF CONTENTS</p>
                                 </div>
-                            </Template>
-                        </ToolbarItem>
-                    </ToolbarItems>
-                </SfToolbar>
-            </div>
+                                <div>
+                                    <SiteNavigation></SiteNavigation>
+                                </div>
+                            </div>
+                        </ChildContent>
+                    </SfSidebar>
+
+                    @*Initialize the Toolbar component*@
+                    <SfToolbar>
+                        <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
+                        <ToolbarItems>
+                            <ToolbarItem PrefixIcon="e-tbar-menu-icon tb-icons" TooltipText="Menu"></ToolbarItem>
+                            <ToolbarItem>
+                                <Template>
+                                    <div class="e-folder">
+                                        <div class="e-folder-name">Navigation Pane</div>
+                                    </div>
+                                </Template>
+                            </ToolbarItem>
+                        </ToolbarItems>
+                    </SfToolbar>
+                </div>
+            }
+            
             @*main-content declaration*@
             <div class="main-content" id="main-text">
                 <div class="sidebar-content">
                     <div class="row m-4">
                         <div class="col">
-                            @Body        
+                            @Body
                         </div>
                     </div>
                 </div>
@@ -77,6 +82,23 @@
         }
     }
 
+    private bool _showNav = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        var uri = new Uri(NavigationManager.Uri);
+        var queryString = uri.Query;
+        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+        var showNavQueryValue = queryDictionary["show-nav"];
+        if (showNavQueryValue != null && 
+            (showNavQueryValue.ToLower().Equals("false") || 
+             showNavQueryValue.ToLower().Equals("true")))
+        {
+            _showNav = bool.Parse(showNavQueryValue);
+        }
+    }
 }
 
 <style>

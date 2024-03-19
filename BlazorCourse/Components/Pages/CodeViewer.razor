@@ -23,8 +23,7 @@
                 <ContentTemplate>
                     <div>
                         <div class="content">
-                            <h1>Browser Viewer</h1>
-                            @* <iframe href="data-binding/object"></iframe> *@
+                            <iframe src="@_pageUrl"></iframe>
                         </div>
                     </div>
                 </ContentTemplate>
@@ -34,7 +33,8 @@
 </div>
 
 @code {
-
+    private string _code = "Not loaded yet";
+    private string _pageUrl;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,12 +42,19 @@
         
         var queryString = new Uri(NavigationManager.Uri).Query;
         var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
-        // var codeFile = queryDictionary["code-url"];
-        // if (!string.IsNullOrEmpty(codeFile))
-        // {
-        //     var code = System.IO.File.ReadAllText(codeFile);
-        //     
-        // }
+        var codeFile = queryDictionary["code-url"];
+        if (!string.IsNullOrEmpty(codeFile))
+        {
+            _code = GetCode(codeFile);
+
+        }
+        
+        var pageUrl = queryDictionary["page-url"];
+        if (!string.IsNullOrEmpty(pageUrl))
+        {
+            _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
+        }
+        
         
 
     
@@ -55,21 +62,25 @@
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
-        var code = GetCode();
+        
         
         return new StandaloneEditorConstructionOptions
         {
             AutomaticLayout = true,
             Language = "razor",
-            Value = code
+            Value = _code
         };
     }
     
-    public string GetCode()
+    public string GetCode(string codeFile)
     {
-        return File.ReadAllText("/Users/jorislops/Dev/BlazorCourse2/BlazorCourse/Components/Pages/Counter.razor");
+        string codefile = NavigationManager.BaseUri + $"code/Pages/{codeFile}.txt";
+        HttpClient client = new HttpClient();
+        var code = client.GetStringAsync(codefile).Result;
+        return code;
     }
 
+    
 }
 
 

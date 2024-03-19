@@ -139,7 +139,29 @@
                 new () { NodeId = "4-04", NodeText = "Generic Data table", Url = "/generic-data-table", Icon = "html"}
             ]
         });
-
+        
+        TreeDataSource.Add(new ()
+        {
+            NodeId = "5",
+            NodeText = "5 UI Library - Blazorise",
+            Icon = "folder",
+            Expanded = false,
+            Child = [
+                new TreeItem() { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazorise-datagrid", Icon = "html"}
+            ]
+        });
+        TreeDataSource.Add(new TreeItem()
+        {
+            NodeId = "6",
+            NodeText = "Service for State Management (advanced)",
+            Icon = "folder",
+            Expanded = false,
+            Child = [
+                new TreeItem() { NodeId = "6-01", NodeText = "State Management Service with Notification", Url = "/counter-state-service", Icon = "html"},
+                new TreeItem() { NodeId = "6-02", NodeText = "State Management Service multiple components (Todo)", Url = "/todo-state-service", Icon = "html"},
+                new TreeItem() { NodeId = "6-03", NodeText = "State Management Service with Fluxor (Todo)", Url = "/todo-state-fluxor", Icon = "html"}
+            ]
+        });
     }
 
     class TreeItem

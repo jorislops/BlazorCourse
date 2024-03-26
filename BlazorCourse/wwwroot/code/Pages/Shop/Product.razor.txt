@@ -23,7 +23,7 @@ else
 
 @code {
     private ProductService _productService = new ProductService();
-    private List<ShopProduct> _products = null;
+    private List<ShopProduct> _products = null!;
 
     protected override void OnInitialized()
     {

@@ -6,7 +6,7 @@ public class TodoRepositoryInMemory
 {
     public List<TodoItem> Get()
     {
-        var todos = new List<TodoItem?>
+        var todos = new List<TodoItem>
         {
             new TodoItem { Id = 1, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now, Items = new List<TodoItem>()
             {

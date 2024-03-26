@@ -22,9 +22,10 @@ else
                 }
             </TextContent>    
         </TodoCard>
+        <br/>
     }
 }
-
+<hr/>
 <button class="btn btn-primary" 
         @onclick=@(() => _addTodoForm.ToggleVisibility())>Add</button>
 <AddTodoForm 
@@ -41,13 +42,21 @@ else
 
         _todos = new List<TodoItem>()
         {
-            new TodoItem() { Id = 1, Title = "Buy groceries" },
-            new TodoItem() { Id = 2, Title = "Do laundry" },
+            new TodoItem() { Id = 1, Title = "Buy groceries", Items = new List<TodoItem>()
+            {
+                new TodoItem() { Id = 6, Title = "Milk" },
+                new TodoItem() { Id = 7, Title = "Bread" },
+                new TodoItem() { Id = 8, Title = "Eggs" }   
+            }},
+            new TodoItem() { Id = 2, Title = "Do laundry", Items = new List<TodoItem>()
+            {
+                new TodoItem() { Id = 9, Title = "Whites" },
+                new TodoItem() { Id = 10, Title = "Colors" }
+            }},
             new TodoItem() { Id = 3, Title = "Clean the house" },
             new TodoItem() { Id = 4, Title = "Cook dinner" },
             new TodoItem() { Id = 5, Title = "Wash the car" }
         };
-        Console.WriteLine("OnInitialized() called");
     }
 
     private void AddTodoItem()

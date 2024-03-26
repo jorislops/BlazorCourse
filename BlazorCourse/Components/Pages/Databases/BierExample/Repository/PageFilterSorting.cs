@@ -3,8 +3,8 @@ namespace BlazorCourse.Components.Pages.Databases.BierExample.Repository;
 public class PageFilterSorting
 {
     public int? BrouwCode { get; set; }
-    public string Brouwnaam { get; set; }
-    public string Land { get; set; }
+    public string Brouwnaam { get; set; } = null!;
+    public string Land { get; set; } = null!;
     public string OrderBy { get; set; } = "naam";
     public string Dir { get; set; } = "asc";
     public int CurrentPage { get; set; } = 1;

@@ -2,7 +2,7 @@
 @using BlazorCourse.Models
 @using BlazorCourse.Repositories
 
-@if (_item is null)
+@if (TodoItem is null)
 {
     <p>Todo Item Not Found</p>
 }
@@ -10,12 +10,12 @@ else
 {
     <div class="card" xmlns="http://www.w3.org/1999/html">
         <div class="card-body">
-            <h5 class="card-title">@_item.Title</h5>
-            <p class="card-text">@_item.Description</p>
+            <h5 class="card-title">@TodoItem.Title</h5>
+            <p class="card-text">@TodoItem.Description</p>
             @* <button class="btn btn-danger" @onclick=@(() => DeleteItem(Item))>Delete</button> *@
         </div>
         <div class="card-footer">
-            @foreach (var todo in _item.Items)
+            @foreach (var todo in TodoItem.Items)
             {
                 <div class="card-body">
                     <h5 class="card-title">@todo.Title</h5>
@@ -32,19 +32,9 @@ else
 
 
 @code {
-    [Parameter] //Route Parameter & Component Parameter
-    public int TodoId { get; set; }
-    
-    private TodoItem? _item { get; set; }
+    [Parameter, EditorRequired]
+    public TodoItem? TodoItem { get; set; }
     
     [CascadingParameter]
     public User User { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        _item = new TodoRepository().GetById(TodoId);
-        _item.Items = new TodoRepository().GetByParentId(_item.Id);
-    }
-
 }

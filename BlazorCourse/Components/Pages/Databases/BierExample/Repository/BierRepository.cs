@@ -56,7 +56,10 @@ public class BierRepository
 
     private string GetConnectionString()
     {
-        return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
+        string? bierenConnectionString = ConfigurationHelper.Configuration.GetConnectionString("bieren");
+        Console.WriteLine("ConnectionString bieren: " +bierenConnectionString);
+        return bierenConnectionString!;
+        // return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
     }
 
     public void Add(Bier bier)

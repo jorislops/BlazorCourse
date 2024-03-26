@@ -8,16 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
       <PackageReference Include="Blazorise.Bootstrap5" Version="1.4.3" />
       <PackageReference Include="Blazorise.DataGrid" Version="1.4.3" />
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.3" />
+      <PackageReference Include="Blazorise.TreeView" Version="1.4.3" />
       <PackageReference Include="BlazorMonaco" Version="3.2.0" />
       <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="MySqlConnector" Version="2.3.5" />
@@ -54,7 +49,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="SQL\" />
       <Folder Include="wwwroot\codefiles\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
     <Target Name="CopyCodeFilesToCodeDirecty" BeforeTargets="Build">

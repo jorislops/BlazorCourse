@@ -1,19 +1,31 @@
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Buttons
+@using System.Globalization
+@using System.Text
 @inject NavigationManager NavigationManager
 
-@using Syncfusion.Blazor.Navigations
-
-
 @*Initialize the TreeView component*@
-<SfTreeView TValue="TreeItem">
-    <TreeViewFieldsSettings DataSource="@TreeDataSource"
-                            Id="NodeId" Text="NodeText" Expanded="Expanded"
-                            TValue="TreeItem"
-                            NavigateUrl="Url"
-                            Child="@("Child")"  >
-    </TreeViewFieldsSettings>
-</SfTreeView>
+
+@using global::Blazorise.TreeView
+
+<TreeView Nodes="@TreeDataSource"
+          GetChildNodes="@(item => item.Child)"
+          HasChildNodes="@(item => item.Child?.Any() == true)"
+          SelectedNodeChange="sele">
+    <NodeContent>
+        <Icon Name="IconName.Folder" />
+        @context.NodeText
+    </NodeContent>
+</TreeView>
+
+@* <SfTreeView TValue="TreeItem" SelectedNodesChanged="NodeSelected"> *@
+@*     <TreeViewFieldsSettings DataSource="@TreeDataSource" *@
+@*                             Id="NodeId" Text="NodeText" Expanded="Expanded" *@
+@*                             TValue="TreeItem" *@
+@*                             NavigateUrl="Url" *@
+@*                             Child="@("Child")"  > *@
+@*     </TreeViewFieldsSettings> *@
+@* </SfTreeView> *@
 
 @code{
 
@@ -31,8 +43,8 @@
             Expanded = false,
             Child = new List<TreeItem>()
             {
-                new TreeItem { NodeId = "1-00", NodeText = "Counter Example", Url = "/counter", Icon = "html" },
-                new TreeItem { NodeId = "1-01", NodeText = "Razor Syntax", Url = "/razor-syntax",  Icon = "html" },
+                new TreeItem { NodeId = "1-00", NodeText = "Counter Example", Url = "/counter", Code = "Counter.razor", Icon = "html" },
+                new TreeItem { NodeId = "1-01", NodeText = "Razor Syntax", Url = "/razor-syntax",  Code = "RazorSyntax.razor", Icon = "html" },
                 new TreeItem { NodeId = "1-02", NodeText = "Data Binding", Icon = "html", 
                     Child = new List<TreeItem>()
                     {
@@ -162,33 +174,104 @@
                 new TreeItem() { NodeId = "6-03", NodeText = "State Management Service with Fluxor (Todo)", Url = "/todo-state-fluxor", Icon = "html"}
             ]
         });
+        
+        // TreeDataSource.ForEach(x => x.Url = $"/code-viewer?code-url={x.Code} page-url={x.Url}");
+        TreeDataSource.ForEach(UpdateTreeWidthCode);
+    }
+    
+    public void UpdateTreeWidthCode(TreeItem treeItem)
+    {
+        if (treeItem.Url != null && treeItem.Url.StartsWith("/"))
+        {
+            treeItem.Url = treeItem.Url.Substring(1);
+        }
+        
+        if (treeItem.Code != null)
+        {
+            var treeUrl = treeItem.Url;
+            
+            
+            treeItem.Url = $"/code-viewer?code-url={treeItem.Code}&page-url={treeUrl}";
+        }
+        else if(treeItem.Code == null && treeItem.Url != null)
+        {
+            var treeUrl = treeItem.Url;
+            treeItem.Code = $"{FirstCharToUpper(Capitalise(treeUrl, "-", CultureInfo.InvariantCulture)).Replace("-", "")}.razor";
+            
+            treeItem.Url = $"/code-viewer?code-url={treeItem.Code}&page-url={treeUrl}";
+        }
+        
+        
+
+        
+        
+        foreach (var child in treeItem.Child)
+        {
+            UpdateTreeWidthCode(child);    
+        }
+    }
+    
+    public static string FirstCharToUpper(string input) =>
+        input switch
+        {
+            null => throw new ArgumentNullException(nameof(input)),
+            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+        };
+    
+    public static string Capitalise(string text, string targets, CultureInfo culture)
+    {
+        bool capitalise = true;
+        var result = new StringBuilder(text.Length);
+
+        foreach (char c in text)
+        {
+            if (capitalise)
+            {
+                result.Append(char.ToUpper(c, culture));
+                capitalise = false;
+            }
+            else
+            {
+                if (targets.Contains(c))
+                    capitalise = true;
+
+                result.Append(c);
+            }
+        }
+
+        return result.ToString();
     }
 
-    class TreeItem
+    public class TreeItem
     {
-        public string NodeId { get; set; }
-        public string NodeText { get; set; }
+        public string NodeId { get; set; } = null!;
+        public string NodeText { get; set; } = null!;
         public string Icon { get; set; } = "folder";
         public bool Expanded { get; set; }
         public bool Selected { get; set; }
-        public List<TreeItem> Child { get; set; }
-        public string ImageUrl { get; set; }
-        public string Url { get; set; }
+        public List<TreeItem> Child { get; set; } = new List<TreeItem>();
+        public string? ImageUrl { get; set; }
+        public string? Url { get; set; }
+        public string? Code { get; set; }
     }
     
     private void NodeClicked(NodeClickEventArgs obj)
     {
         if (obj.NodeData != null)
         {
-            
             Console.WriteLine(obj.ToString());
-            // NavigationManager.NavigateTo(obj.NodeData.Url);
         }
     }
 
     private void NodeSelected(NodeSelectEventArgs obj)
     {
         obj.NodeData.Id = "selected";
+    }
+
+    private void NodeSelected(string[] obj)
+    {
+        
     }
 
 }

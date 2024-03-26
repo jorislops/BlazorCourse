@@ -110,19 +110,19 @@
     public class City
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 
 
     public class Person
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
         public string FullName => $"{FirstName} {LastName}";
         public DateOnly BirthDate { get; set; }
         public decimal Salary { get; set; }
         public bool IsMarried { get; set; }
-        public City City { get; set; }
+        public City City { get; set; } = null!;
     }
 
     private int _cityId;

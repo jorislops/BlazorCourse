@@ -15,21 +15,22 @@
             <p class="card-text">@Item.Description</p>
         }
         
-        <a class="btn btn-primary" href="details/@Item.Id">Details</a>
+        <a class="btn btn-primary" href="todo-details-db/@Item.Id">Details</a>
         <button class="btn btn-primary" @onclick="ToggleDetails">ToggleDetails</button>
         <button class="btn btn-danger" @onclick=@(() => DeleteItem(Item))>Delete</button>
     </div>
     <div class="card-footer">
         @if(_showDetails)
         {
-            <TodoDetails TodoItem="Item"></TodoDetails>
+            <p>Test @Item.Title</p>
+            <TodoDetailsDb TodoId="@Item.Id"></TodoDetailsDb>
         }
     </div>
 </div>
 
 @code {
-    [Parameter, EditorRequired]
-    public TodoItem Item { get; set; }
+    [Parameter, EditorRequired] 
+    public TodoItem Item { get; set; } = null!;
 
     [Parameter, EditorRequired]
     public EventCallback<TodoItem> OnDeleteItem { get; set; }

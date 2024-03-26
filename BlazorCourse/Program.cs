@@ -24,6 +24,8 @@ builder.Services
 
 var app = builder.Build();
 
+ConfigurationHelper.Configuration = app.Configuration;
+
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVWhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjWn9fcXJVRmBVUUFxXw==");
 
 // Configure the HTTP request pipeline.
@@ -43,3 +45,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+public class ConfigurationHelper
+{
+    public static IConfiguration Configuration { get; set; } = null!;
+}

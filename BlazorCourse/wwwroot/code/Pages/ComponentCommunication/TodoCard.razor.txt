@@ -15,7 +15,6 @@
             <p class="card-text">@Item.Description</p>
         }
         
-        
         <a class="btn btn-primary" href="details/@Item.Id">Details</a>
         <button class="btn btn-primary" @onclick="ToggleDetails">ToggleDetails</button>
         <button class="btn btn-danger" @onclick=@(() => DeleteItem(Item))>Delete</button>
@@ -23,7 +22,7 @@
     <div class="card-footer">
         @if(_showDetails)
         {
-            <TodoDetails TodoId="@Item.Id"></TodoDetails>
+            <TodoDetails TodoItem="Item"></TodoDetails>
         }
     </div>
 </div>

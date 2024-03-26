@@ -6,7 +6,7 @@
 
 @foreach(var todo in _todos)
 {
-    <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
+    <TodoCardDb Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
         <TextContent>
             @if(todo.IsDone)
             {
@@ -17,27 +17,27 @@
                 <h4>@todo.Title</h4>
             }
         </TextContent>    
-    </TodoCard>
+    </TodoCardDb>
+    <br/>
 }
 
+<hr>
+
 <button class="btn btn-primary" 
-        @onclick=@(() => _addTodoForm.ToggleVisibility())>Add</button>
+        @onclick=@(() => _addTodoForm.ToggleVisibility())>Display/Hide Add Form</button>
 <AddTodoForm 
     @ref="_addTodoForm"
     OnAdd="AddNewTodo"></AddTodoForm>
 
 @code {
-    private List<TodoItem> _todos;
-    private User _user = new User() { Name = "John Doe" };
-    
-    private AddTodoForm _addTodoForm;
+    private List<TodoItem> _todos = null!;
+    private AddTodoForm _addTodoForm = new AddTodoForm();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
         _todos = new TodoRepository().Get();
-        Console.WriteLine("OnInitialized() called");
     }
 
     private void DeleteTodoItem(TodoItem todoItem)

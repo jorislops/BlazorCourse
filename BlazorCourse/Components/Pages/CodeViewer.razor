@@ -5,8 +5,14 @@
 
 <h3>CodeViewer</h3>
 
+<style>
+    .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal  {
+        overflow: hidden;
+    }
+</style>
+
 <div class="col-lg-12 control-section">
-    <SfSplitter Height="385px" Width="100%" SeparatorSize="3">
+    <SfSplitter Height="100%" Width="100%" SeparatorSize="3">
         <SplitterPanes>
             <SplitterPane Size="48%" Collapsible="true">
                 <ContentTemplate>
@@ -19,13 +25,9 @@
                     </div>
                 </ContentTemplate>
             </SplitterPane>
-            <SplitterPane>
+            <SplitterPane CssClass="remove-scroll">
                 <ContentTemplate>
-                    <div>
-                        <div class="content">
-                            <iframe src="@_pageUrl"></iframe>
-                        </div>
-                    </div>
+                    <iframe src="@_pageUrl" style="height: 100%; width: 100%; overflow: hidden;"></iframe>
                 </ContentTemplate>
             </SplitterPane>
         </SplitterPanes>
@@ -46,7 +48,6 @@
         if (!string.IsNullOrEmpty(codeFile))
         {
             _code = GetCode(codeFile);
-
         }
         
         var pageUrl = queryDictionary["page-url"];
@@ -54,10 +55,6 @@
         {
             _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
         }
-        
-        
-
-    
     }
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)

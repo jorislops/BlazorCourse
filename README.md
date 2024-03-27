@@ -73,7 +73,7 @@ State-management in components
 # Les 1 opdrachten
 
 ## Razor Syntax
-- Maam een lijst aan van 10 random gehele getallen, waarbij je de even getallen groen maakt en de oneven getallen rood. Geef dit weer in een lijst (ul li).
+- Maak een lijst aan van 10 random gehele getallen, waarbij je de even getallen groen maakt en de oneven getallen rood. Geef dit weer in een lijst (`<ul> <li>`).
 - Maak een pagina die een sterren pyramide laat zien voor een bepaald getal), je mag 1 maken die jij leuk vindt. Je zou eventueel kunnen opgeven hoe groot de pyramide moet zijn (gebruik hiervoor een <input type="number" .../> .
   ![Pyramide](Images/pyramid.png)
 

@@ -1,0 +1,53 @@
+@page "/todo-details-db/{TodoId:int}"
+@using BlazorCourse.Models
+@using BlazorCourse.Repositories
+
+@if (_item is null)
+{
+    <p>Todo Item Not Found</p>
+}
+else
+{
+    <div class="card" xmlns="http://www.w3.org/1999/html">
+        <div class="card-body">
+            <h5 class="card-title">@_item.Title</h5>
+            <p class="card-text">@_item.Description</p>
+            @* <button class="btn btn-danger" @onclick=@(() => DeleteItem(Item))>Delete</button> *@
+        </div>
+        <div class="card-footer">
+            @foreach (var todo in _item.Items)
+            {
+                <div class="card-body">
+                    <h5 class="card-title">@todo.Title</h5>
+                    @if (User is not null)
+                    {
+                        <h6 class="card-subtitle">@User.Name</h6>    
+                    }
+                    <p class="card-text">@todo.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] //Route Parameter & Component Parameter
+    public int TodoId { get; set; }
+    
+    private TodoItem? _item { get; set; }
+
+    [CascadingParameter] 
+    public User User { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _item = new TodoRepository().GetById(TodoId);
+        if (_item != null)
+        {
+            _item.Items = new TodoRepository().GetByParentId(_item.Id);
+        }
+    }
+
+}

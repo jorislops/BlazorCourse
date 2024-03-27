@@ -1,0 +1,56 @@
+<h3>Counter Example</h3>
+
+<div>
+    @if (CounterText is null)
+    {
+        <p>@_counter</p>    
+    }
+    else
+    {
+        @CounterText(_counter)
+    }
+    
+</div>
+<button @onclick="ChangeCounter">++</button>
+
+@code {
+    [Parameter, EditorRequired] 
+    public int Initial { get; set; }
+
+    [Parameter] 
+    public int Increment { get; set; } = 1;
+    
+    [Parameter]
+    public EventCallback<int> OnCountIncremented { get; set; }
+
+    [Parameter] 
+    public RenderFragment<int>? CounterText { get; set; } = null;
+
+    [Parameter] 
+    public Predicate<int>? ConditionToFireEvent { get; set; } = null;
+    
+    private int _counter = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _counter = Initial;
+    }
+
+    private void ChangeCounter()
+    {
+        _counter += Increment;
+
+        if (ConditionToFireEvent is null)
+        {
+            OnCountIncremented.InvokeAsync(_counter);    
+        }
+        else
+        {
+            if (ConditionToFireEvent(_counter))
+            {
+                OnCountIncremented.InvokeAsync(_counter);
+            }
+        }
+    }
+}

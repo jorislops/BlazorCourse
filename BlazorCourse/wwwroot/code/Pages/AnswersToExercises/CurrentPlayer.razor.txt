@@ -1,0 +1,6 @@
+<h3>It's players @Player turn!</h3>
+
+@code {
+    [Parameter, EditorRequired] 
+    public string Player { get; set; } = null!;
+}

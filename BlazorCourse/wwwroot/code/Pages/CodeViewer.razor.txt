@@ -3,7 +3,7 @@
 
 @inject NavigationManager NavigationManager
 
-<h3>CodeViewer</h3>
+<h3>@_codeFile</h3>
 
 <style>
     .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal  {
@@ -18,7 +18,7 @@
                 <ContentTemplate>
                     <div>
                         <div class="content">
-                            <StandaloneCodeEditor Id="my-editor-instance-id"
+                            <StandaloneCodeEditor @ref="_codeEditor" Id="my-editor-instance-id"
                                                   CssClass="my-editor"
                                                   ConstructionOptions="EditorConstructionOptions"/>
                         </div>
@@ -37,6 +37,34 @@
 @code {
     private string _code = "Not loaded yet";
     private string _pageUrl;
+    private StandaloneCodeEditor _codeEditor;
+    private string? _codeFile;
+    
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += LocationChanged;
+    }
+
+    private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+
+        var queryString = new Uri(NavigationManager.Uri).Query;
+        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+        _codeFile = queryDictionary["code-url"];
+        if (!string.IsNullOrEmpty(_codeFile))
+        {
+            _code = GetCode(_codeFile);
+        }
+        
+        var pageUrl = queryDictionary["page-url"];
+        if (!string.IsNullOrEmpty(pageUrl))
+        {
+            _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
+        }
+
+        _codeEditor.SetValue(_code);
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,8 +87,6 @@
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
-        
-        
         return new StandaloneEditorConstructionOptions
         {
             AutomaticLayout = true,
@@ -76,6 +102,7 @@
         var code = client.GetStringAsync(codefile).Result;
         return code;
     }
+
 
     
 }

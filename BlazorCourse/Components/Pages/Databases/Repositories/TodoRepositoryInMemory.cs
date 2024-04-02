@@ -1,6 +1,6 @@
 using BlazorCourse.Models;
 
-namespace BlazorCourse.Repositories;
+namespace BlazorCourse.Components.Pages.Databases.Repositories;
 
 public class TodoRepositoryInMemory
 {

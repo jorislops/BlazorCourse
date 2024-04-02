@@ -62,7 +62,10 @@ public class NavigationTreeData
                     {
                         new SiteNavigation.TreeItem()
                         {
-                            NodeId = "2-02-01", NodeText = "Component Parameter", Url = "/component-parameter", Icon = "html"
+                            NodeId = "2-02-01", NodeText = "Component Parameter", Url = "/component-parameter", Icon = "html",
+                            RelatedFiles = new List<RelateCodeFile>() { 
+                                new() { Text = "CounterWithParameter.razor", CodeUrl = "/Components/Parameters/ComponentParameter.razor" } 
+                            }
                         },
                         new SiteNavigation.TreeItem()
                         {
@@ -93,6 +96,9 @@ public class NavigationTreeData
                         }
                     }
                 },
+                
+                new SiteNavigation.TreeItem()
+                    { NodeId = "2-06", NodeText = "Counter Les Demo", Url = "/counter-example-les", Icon = "html" },
                 new SiteNavigation.TreeItem()
                     { NodeId = "2-05", NodeText = "Todo Example", Url = "/todo-list", Icon = "html" },
             }
@@ -185,4 +191,10 @@ public class NavigationTreeData
         navigationTree.ForEach(x => SiteNavigationHelper.UpdateTreeWidthCode(x, routings));
     }
     
+}
+
+public class RelateCodeFile
+{
+    public string Text { get; set; } = null!;
+    public string CodeUrl { get; set; } = null!;
 }

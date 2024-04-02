@@ -2,11 +2,12 @@ using BlazorCourse.Models;
 using Dapper;
 using MySqlConnector;
 
-namespace BlazorCourse.Repositories;
+namespace BlazorCourse.Components.Pages.Databases.Repositories;
 
 public class TodoRepository
 {
-    private readonly string _connectionString = "Server=localhost;Database=TodoBlazorCourse;Uid=root;Pwd=Test@1234!;";
+    private readonly string _connectionString = ConfigurationHelper.Configuration.GetConnectionString("todo");
+    
     public List<TodoItem> Get()
     {
         using var connection = new MySqlConnection(_connectionString);

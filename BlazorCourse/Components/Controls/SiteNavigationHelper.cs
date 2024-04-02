@@ -16,8 +16,9 @@ public class SiteNavigationHelper
         if (treeItem.Code != null)
         {
             var treeUrl = treeItem.Url;
-
-
+    
+            treeItem.CodeUrl = treeItem.Code;
+            treeItem.PageUrl = treeUrl;
             treeItem.Url = $"/code-viewer?code-url={treeItem.Code}&page-url={treeUrl}";
         }
         else if (treeItem.Code == null && treeItem.Url != null)
@@ -28,15 +29,11 @@ public class SiteNavigationHelper
                     r.RouteAttribues.Any(w => w.ConstructorArguments.Any(a => a.Value.ToString()
                         .Equals("/" + treeUrl, StringComparison.OrdinalIgnoreCase))))
                 .ToList();
-            // .ForEach(r => treeItem.Code = $"{FirstCharToUpper(Capitalise(r.FullName, "-", CultureInfo.InvariantCulture)).Replace("-", "")}.razor");
-
-            // var r = routings.FirstOrDefault(x => x.FullName.Contains("OneWay"));
-            // var w = "/" + treeUrl;
-            // bool result = r.RouteAttribues.Any(w => w.ConstructorArguments.Any(a =>
-            //     a.Value.ToString().Equals(w, StringComparison.OrdinalIgnoreCase)));
-            //
-            // var ww = r.RouteAttribues.First().ConstructorArguments.First().Value;
             var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
+            
+            
+            treeItem.CodeUrl = codeFile;
+            treeItem.PageUrl = treeUrl;
             treeItem.Url = $"/code-viewer?code-url={codeFile}&page-url={treeUrl}";
         }
 

@@ -3,7 +3,8 @@
 
 @inject NavigationManager NavigationManager
 
-<h3>@_codeFile</h3>
+@using Syncfusion.Blazor.DropDowns
+@using BlazorCourse.Components.Pages.Components.Parameters
 
 <style>
     .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal  {
@@ -12,26 +13,39 @@
 </style>
 
 <div class="col-lg-12 control-section">
-    <SfSplitter Height="100%" Width="100%" SeparatorSize="3">
-        <SplitterPanes>
-            <SplitterPane Size="48%" Collapsible="true">
-                <ContentTemplate>
-                    <div>
-                        <div class="content">
-                            <StandaloneCodeEditor @ref="_codeEditor" Id="my-editor-instance-id"
-                                                  CssClass="my-editor"
-                                                  ConstructionOptions="EditorConstructionOptions"/>
+    <div class="row mb-4">
+        <div class="col">
+            <SfDropDownList TValue="string" TItem="RelatedCode" Placeholder="Select a related code file" DataSource="@LocalData">
+                <DropDownListFieldSettings Value="ID" Text="Text"></DropDownListFieldSettings>
+                <DropDownListEvents TValue="string" TItem="RelatedCode" ValueChange="OnRelatedCodeFileValueChange"></DropDownListEvents>
+            </SfDropDownList>
+        </div>
+        <div class="col">
+            <h3>File: @_codeFile</h3>
+        </div>
+    </div>
+    <div class="row">
+        <SfSplitter Height="100%" Width="100%" SeparatorSize="3">
+            <SplitterPanes>
+                <SplitterPane Size="48%" Collapsible="true">
+                    <ContentTemplate>
+                        <div>
+                            <div class="content">
+                                <StandaloneCodeEditor @ref="_codeEditor" Id="my-editor-instance-id"
+                                                      CssClass="my-editor"
+                                                      ConstructionOptions="EditorConstructionOptions"/>
+                            </div>
                         </div>
-                    </div>
-                </ContentTemplate>
-            </SplitterPane>
-            <SplitterPane CssClass="remove-scroll">
-                <ContentTemplate>
-                    <iframe src="@_pageUrl" style="height: 100%; width: 100%; overflow: hidden;"></iframe>
-                </ContentTemplate>
-            </SplitterPane>
-        </SplitterPanes>
-    </SfSplitter>
+                    </ContentTemplate>
+                </SplitterPane>
+                <SplitterPane CssClass="remove-scroll">
+                    <ContentTemplate>
+                        <iframe src="@_pageUrl" style="height: 100%; width: 100%; overflow: hidden;"></iframe>
+                    </ContentTemplate>
+                </SplitterPane>
+            </SplitterPanes>
+        </SfSplitter>
+    </div>
 </div>
 
 @code {
@@ -39,48 +53,95 @@
     private string _pageUrl;
     private StandaloneCodeEditor _codeEditor;
     private string? _codeFile;
-    
+
+    public class RelatedCode
+    {
+        public string ID { get; set; }
+        public string Text { get; set; }
+        public string CodeFile { get; set; }
+    }
+
+    List<RelatedCode> LocalData = new List<RelatedCode>
+    {
+        new RelatedCode() { ID = "CounterWithParameter", Text = "CounterWithParameter", CodeFile = "Components/Parameters/CounterWithParameter.razor" },
+        new RelatedCode() { ID = "Game2", Text = "Badminton" },
+        new RelatedCode() { ID = "Game3", Text = "Basketball" },
+        new RelatedCode() { ID = "Game4", Text = "Cricket" },
+        new RelatedCode() { ID = "Game5", Text = "Football" },
+        new RelatedCode() { ID = "Game6", Text = "Golf" },
+        new RelatedCode() { ID = "Game7", Text = "Hockey" },
+        new RelatedCode() { ID = "Game8", Text = "Rugby" },
+        new RelatedCode() { ID = "Game9", Text = "Snooker" },
+        new RelatedCode() { ID = "Game10", Text = "Tennis" },
+    };
+
+    private string _pageUrlParam;
+
     protected override void OnInitialized()
     {
         NavigationManager.LocationChanged += LocationChanged;
+
+        ParseQueryStringParams();
+        
+        var navigationTreeData = NavigationTreeData.GetNavigationTree();
+        var relatedFiles = FindNodeWithUrl(navigationTreeData, _pageUrlParam);
+        
+        
+    }
+
+    private List<RelateCodeFile> FindNodeWithUrl(List<SiteNavigation.TreeItem> navigationTreeData, string navigationManagerUri)
+    {
+        foreach (var item in navigationTreeData)
+        {
+            if (item.PageUrl == navigationManagerUri)
+            {
+                return item.RelatedFiles;
+            }
+
+            if (item.Child != null)
+            {
+                var resultFromChild = FindNodeWithUrl(item.Child, navigationManagerUri);
+                if (resultFromChild.Any())
+                {
+                    return resultFromChild;
+                }
+            }
+        }
+
+        return Enumerable.Empty<RelateCodeFile>().ToList();
     }
 
     private void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
-
-        var queryString = new Uri(NavigationManager.Uri).Query;
-        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
-        _codeFile = queryDictionary["code-url"];
-        if (!string.IsNullOrEmpty(_codeFile))
-        {
-            _code = GetCode(_codeFile);
-        }
-        
-        var pageUrl = queryDictionary["page-url"];
-        if (!string.IsNullOrEmpty(pageUrl))
-        {
-            _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
-        }
+        ParseQueryStringParams();
 
         _codeEditor.SetValue(_code);
         StateHasChanged();
     }
 
-    protected override async Task OnInitializedAsync()
+    private void ParseQueryStringParams(string codeFile = null)
     {
-        base.OnInitialized();
-        
         var queryString = new Uri(NavigationManager.Uri).Query;
         var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
-        var codeFile = queryDictionary["code-url"];
-        if (!string.IsNullOrEmpty(codeFile))
+
+        if (codeFile == null)
         {
-            _code = GetCode(codeFile);
+            _codeFile = queryDictionary["code-url"];    
+        }
+        else
+        {
+            _codeFile = codeFile;
         }
         
+        if (!string.IsNullOrEmpty(_codeFile))
+        {
+            _code = GetCode(_codeFile);
+        }
+
         var pageUrl = queryDictionary["page-url"];
         if (!string.IsNullOrEmpty(pageUrl))
         {
+            _pageUrlParam = pageUrl;
             _pageUrl = NavigationManager.BaseUri + pageUrl + "?show-nav=false";
         }
     }
@@ -94,7 +155,7 @@
             Value = _code
         };
     }
-    
+
     public string GetCode(string codeFile)
     {
         string codefile = NavigationManager.BaseUri + $"code/Pages/{codeFile}.txt";
@@ -104,7 +165,12 @@
     }
 
 
-    
+    private void OnRelatedCodeFileValueChange(ChangeEventArgs<string, RelatedCode> obj)
+    { 
+        ParseQueryStringParams(obj.ItemData.CodeFile);
+        _codeEditor.SetValue(_code);
+    }
+
 }
 
 
@@ -137,8 +203,6 @@
         border: transparent;
     }
 </style>
-
-
 
 
 <style>

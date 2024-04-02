@@ -21,6 +21,7 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "BlazorCourse.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+#VOLUME /app
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "BlazorCourse.dll"]

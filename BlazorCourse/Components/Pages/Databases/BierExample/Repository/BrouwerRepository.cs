@@ -9,7 +9,7 @@ public class BrouwerRepository
 {
     private string GetConnectionString()
     {
-        return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
+        return ConfigurationHelper.Configuration.GetConnectionString("Bieren")!;
     }
     
     public List<Brouwer> Get()
@@ -22,7 +22,7 @@ public class BrouwerRepository
 
     public List<BrouwerVm> GetBrouwersVm()
     {
-        using var connection = new MySqlConnection("Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;");
+        using var connection = new MySqlConnection(GetConnectionString());
 
         var sql = 
             """

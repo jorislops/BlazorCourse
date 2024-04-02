@@ -22,11 +22,26 @@ builder.Services
     .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
+
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.SuppressXFrameOptionsHeader = true;
+});
+
 var app = builder.Build();
+
+
 
 ConfigurationHelper.Configuration = app.Configuration;
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVWhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjWn9fcXJVRmBVUUFxXw==");
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-Frame-Options", "ALLOWALL");
+    await next();
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -46,7 +61,10 @@ app.MapRazorComponents<App>()
 
 app.Run();
 
-public class ConfigurationHelper
+namespace BlazorCourse
 {
-    public static IConfiguration Configuration { get; set; } = null!;
+    public class ConfigurationHelper
+    {
+        public static IConfiguration Configuration { get; set; } = null!;
+    }
 }

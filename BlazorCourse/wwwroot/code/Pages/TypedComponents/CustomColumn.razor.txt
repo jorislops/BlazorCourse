@@ -1,0 +1,9 @@
+@typeparam TItem
+
+@code {
+    [Parameter, EditorRequired]
+    public string PropertyName { get; set; }
+    
+    [Parameter, EditorRequired] 
+    public RenderFragment<TItem> ItemTemplate { get; set; } = null!;
+}

@@ -54,10 +54,27 @@ public class BierRepository
         };
     }
 
+    public List<Bier> GetIncludeBrouwer()
+    {
+        string sql = """
+                        SELECT b.biercode, b.naam, b.type, b.stijl, b.alcohol, b.brouwcode, '' as splitcolumn, br.naam, br.land
+                        FROM bier b
+                            JOIN brouwer br ON b.brouwcode = br.brouwcode
+                        ORDER BY br.naam, b.naam
+                     """;
+
+        var connection = new MySqlConnection(GetConnectionString());
+        return connection.Query<Bier, Brouwer, Bier>(sql, (bier, brouwer) =>
+        {
+            bier.Brouwer = brouwer;
+            return bier;
+        }, splitOn: "splitcolumn").ToList();
+    }
+
     private string GetConnectionString()
     {
         string? bierenConnectionString = ConfigurationHelper.Configuration.GetConnectionString("bieren");
-        Console.WriteLine("ConnectionString bieren: " +bierenConnectionString);
+        // Console.WriteLine("ConnectionString bieren: " +bierenConnectionString);
         return bierenConnectionString!;
         // return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
     }

@@ -1,0 +1,25 @@
+@page "/advanced-datatable-example"
+@using BlazorCourse.Components.Pages.Databases.BierExample.Model
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+<h3>Advanced Column Example</h3>
+
+<AdvancedDataTable TItem="Bier" Items="_bieren">
+    <DataTableColumns>
+        <DataTableColumn TItem="Bier" Selector=@(bier => bier.Naam) HeaderText="Naam"/>
+        <DataTableColumn TItem="Bier" Selector=@(bier => bier.Brouwer.Naam) HeaderText="BrouwerNaam"/>
+    </DataTableColumns>
+</AdvancedDataTable>
+
+@code {
+    private List<Bier> _bieren = null!;
+
+    
+    
+    protected override void OnInitialized() 
+    {
+        base.OnInitialized();
+        
+        _bieren = new BierRepository().GetIncludeBrouwer();
+    }
+
+}

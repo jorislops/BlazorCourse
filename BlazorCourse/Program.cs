@@ -22,8 +22,6 @@ builder.Services
     .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
-
-
 builder.Services.AddAntiforgery(options =>
 {
     options.SuppressXFrameOptionsHeader = true;
@@ -31,11 +29,7 @@ builder.Services.AddAntiforgery(options =>
 
 var app = builder.Build();
 
-
-
 ConfigurationHelper.Configuration = app.Configuration;
-
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVWhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjWn9fcXJVRmBVUUFxXw==");
 
 app.Use(async (context, next) =>
 {
@@ -60,11 +54,3 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
-
-namespace BlazorCourse
-{
-    public class ConfigurationHelper
-    {
-        public static IConfiguration Configuration { get; set; } = null!;
-    }
-}

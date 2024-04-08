@@ -40,12 +40,7 @@
     
     [Parameter]
     public string? ExcludeColumnsCsv { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
-
+    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();

@@ -5,53 +5,53 @@
 @inject NavigationManager NavigationManager
 <h3>Bier Toevoegen</h3>
 
-<form>
-    <EditForm Model="_bier" OnValidSubmit="AddBierToDb">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <ValidationSummary></ValidationSummary>
-        <div class="mb-3">
-            <label for="naam" class="form-label">Naam</label>
-            <InputText class="form-control" id="naam" @bind-Value="_bier.Naam"/>
-            <ValidationMessage For=@(() => _bier.Naam)/>
-        </div>
 
-        <div class="mb-3">
-            <label for="type" class="form-label">Type</label>
-            <InputText class="form-control" id="type" @bind-Value="_bier.Type"/>
-            <ValidationMessage For=@(() => _bier.Type)/>
-        </div>
+<EditForm Model="_bier" OnValidSubmit="AddBierToDb">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label for="naam" class="form-label">Naam</label>
+        <InputText class="form-control" id="naam" @bind-Value="_bier.Naam"/>
+        <ValidationMessage For=@(() => _bier.Naam)/>
+    </div>
 
-        <div class="mb-3">
-            <label for="stijl" class="form-label">Stijl</label>
-            <InputText class="form-control" id="stijl" @bind-Value="_bier.Stijl"/>
-            <ValidationMessage For=@(() => _bier.Stijl)/>
-        </div>
+    <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+        <InputText class="form-control" id="type" @bind-Value="_bier.Type"/>
+        <ValidationMessage For=@(() => _bier.Type)/>
+    </div>
 
-        <div class="mb-3">
-            <label for="alcohol" class="form-label">Alcohol</label>
-            <InputNumber class="form-control" id="alcohol" @bind-Value="_bier.Alcohol"/>
-            <ValidationMessage For=@(() => _bier.Alcohol)/>
-        </div>
+    <div class="mb-3">
+        <label for="stijl" class="form-label">Stijl</label>
+        <InputText class="form-control" id="stijl" @bind-Value="_bier.Stijl"/>
+        <ValidationMessage For=@(() => _bier.Stijl)/>
+    </div>
 
-        <div class="mb-3">
-            <label for="brouwer" class="form-label">Brouwer</label>
+    <div class="mb-3">
+        <label for="alcohol" class="form-label">Alcohol</label>
+        <InputNumber class="form-control" id="alcohol" @bind-Value="_bier.Alcohol"/>
+        <ValidationMessage For=@(() => _bier.Alcohol)/>
+    </div>
 
-            <InputSelect class="form-control" id="brouwer" @bind-Value="_bier.Brouwcode">
-                <option value="">
-                    Selecteer een brouwer
-                </option>    
-                @foreach (var brouwer in _brouwers)
-                {
-                    <option value="@brouwer.Brouwcode">@brouwer.Naam</option>
-                }
-            </InputSelect>
-            <ValidationMessage For=@(() => _bier.Brouwcode)/>
-        </div>
+    <div class="mb-3">
+        <label for="brouwer" class="form-label">Brouwer</label>
 
-        <button class="btn btn-danger" type="reset">Reset</button>
-        <button class="btn btn-primary" type="submit">Add Bier</button>
-    </EditForm>
-</form>
+        <InputSelect class="form-control" id="brouwer" @bind-Value="_bier.Brouwcode">
+            <option value="">
+                Selecteer een brouwer
+            </option>
+            @foreach (var brouwer in _brouwers)
+            {
+                <option value="@brouwer.Brouwcode">@brouwer.Naam</option>
+            }
+        </InputSelect>
+        <ValidationMessage For=@(() => _bier.Brouwcode)/>
+    </div>
+
+    <button class="btn btn-danger" type="reset">Reset</button>
+    <button class="btn btn-primary" type="submit">Add Bier</button>
+</EditForm>
+
 
 @code {
     private Bier _bier = new Bier();
@@ -70,4 +70,5 @@
         _bier.Brouwcode = -1;
         NavigationManager.NavigateTo("/BierPage");
     }
+
 }

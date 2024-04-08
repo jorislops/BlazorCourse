@@ -6,7 +6,8 @@ namespace BlazorCourse.Components.Pages.Databases.Repositories;
 
 public class TodoRepository
 {
-    private readonly string _connectionString = ConfigurationHelper.Configuration.GetConnectionString("todo");
+    private readonly string _connectionString = 
+        ConfigurationHelper.Configuration.GetConnectionString("todo")!;
     
     public List<TodoItem> Get()
     {
@@ -23,7 +24,7 @@ public class TodoRepository
         return todos;
     }
     
-    public List<TodoItem> GetByParentId(int itemId)
+    public List<TodoItem> GetByParentId(int parentId)
     {
         string sql =
             """
@@ -33,7 +34,7 @@ public class TodoRepository
                 ORDER BY Id
             """;
         using var connection = new MySqlConnection(_connectionString);
-        var todos = connection.Query<TodoItem>(sql, new {ParentId = itemId}).ToList();
+        var todos = connection.Query<TodoItem>(sql, new {ParentId = parentId}).ToList();
         return todos;
     }
 
@@ -78,5 +79,20 @@ public class TodoRepository
             """;
         using var connection = new MySqlConnection(_connectionString);
         int numEffectedRows = connection.Execute(sql, new {Id = todoItemId});
+    }
+    
+    public void Update(TodoItem todoItem)
+    {
+        string sql =
+            """
+                UPDATE TodoItem
+                SET Title = @Title, 
+                    Description = @Description, 
+                    IsDone = @IsDone, 
+                    CompletedAt = @CompletedAt
+                WHERE Id = @Id
+            """;
+        using var connection = new MySqlConnection(_connectionString);
+        int numEffectedRows = connection.Execute(sql, todoItem);
     }
 }

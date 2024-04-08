@@ -3,13 +3,10 @@
 <h5>Chained binding:</h5>
 @* https://learn.microsoft.com/en-us/aspnet/core/blazor/components/data-binding?view=aspnetcore-8.0#binding-with-component-parameters *@
 <CounterWithChainedBinding @bind-Counter="_couter"></CounterWithChainedBinding>
-
 <div>
     Value of Counter: @_couter
     <button @onclick="Reset" class="btn btn-primary">Reset</button>    
 </div>
-
-
 @code {
     private int _couter;
 
@@ -17,5 +14,4 @@
     {
         _couter = 0;
     }
-
 }

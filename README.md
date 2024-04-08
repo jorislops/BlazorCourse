@@ -55,7 +55,7 @@ State-management in components
   - Validatie
   - Fluent Validation
 - Generic Components
-- RenderFragment
+- RenderFragment **herhaling**
 - Using a component library Blazorise (https://blazorise.com/)  
 
 - Layouts ** #Todo **

@@ -1,0 +1,27 @@
+@typeparam TItem
+
+@code {
+
+    [CascadingParameter]
+    public AdvancedDataTable<TItem> DataTable { get; set; } = null;
+
+    [Parameter, EditorRequired] 
+    public Func<TItem, object> Selector { get; set; } = null;
+    
+    [Parameter, EditorRequired]
+    public string HeaderText { get; set; } = null;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+
+    protected override Task OnInitializedAsync()
+    {
+        DataTable.AddColumn(this);
+        
+        return base.OnInitializedAsync();
+    }
+
+}

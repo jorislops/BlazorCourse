@@ -17,6 +17,17 @@ public class BierRepository
             pageFilterSorting.NaamFilter = null;
         }
         
+        //To prevent SQL Injection, we only allow certain columns to be sorted on
+        var allowedColumns = new string[] {"biercode", "naam", "type", "stijl", "alcohol", "brouwcode"};
+        if (!allowedColumns.Contains(pageFilterSorting.OrderBy))
+        {
+            pageFilterSorting.OrderBy = "naam";
+        }
+        if (pageFilterSorting.Dir != "ASC" && pageFilterSorting.Dir != "DESC")
+        {
+            pageFilterSorting.Dir = "ASC";
+        }
+        
         var sql = $"""
                     SELECT biercode, naam, type, stijl, alcohol, brouwcode
                     FROM bier
@@ -29,13 +40,15 @@ public class BierRepository
                                     AND (@Land IS NULL OR land = @Land)))
                         AND
                             (@NaamFilter IS NULL OR naam LIKE @NaamFilter)
+                    -- Be aware of SQL Injection, but this is a simple example!!!! 
+                    -- To solve this problem, check the valid values for the parameters
+                    
                      ORDER BY {pageFilterSorting.OrderBy} {pageFilterSorting.Dir}
                      LIMIT @PageSize OFFSET @Offset
                   """;
         
         using var connection = new MySqlConnection(GetConnectionString());
-        var bieren = 
-            connection
+        var bieren = connection
                     .Query<Bier>(sql, pageFilterSorting)
                     .ToList();
 

@@ -25,16 +25,17 @@
     <DataGridColumn Field="@nameof(Bier.Stijl)" Caption="Stijl" />
 </DataGrid>
 @code {
-
     private List<Bier> _bieren;
     private int? _totalItems;
 
     private void OnReadData(DataGridReadDataEventArgs<Bier> e)
     {
-        var pageFilterSorting = new PageFilterSorting();
-        pageFilterSorting.CurrentPage = e.Page;
-        pageFilterSorting.PageSize = e.PageSize;
-        
+        var pageFilterSorting = new PageFilterSorting()
+        {
+            CurrentPage = e.Page,
+            PageSize = e.PageSize
+        };
+
         // Todo: vervangen voor foreach loop ipv linq
         var orderBy = e.Columns
             .Where(c => c.SortDirection != SortDirection.Default)

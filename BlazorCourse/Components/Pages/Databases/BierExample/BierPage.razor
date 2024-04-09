@@ -10,11 +10,19 @@
 
 @* create a beer grid with a filter and a pager *@
 
-<div class="input-group mb-3">
-    <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput=@(args => FilterByNaam(args.Value?.ToString()) )>
+<div class="row">
+    <div class="col mb-3">
+        <button class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/AddBier"))">Add Beer</button>
+    </div>
+</div>
+
+<div class="row input-group">
+    <div class="col">
+        <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput=@(args => FilterByNaam(args.Value?.ToString()))>
     @* <div class="input-group-append"> *@
     @*     <button class="btn btn-outline-secondary" type="button">Zoek op naam</button> *@
     @* </div> *@
+    </div>
 </div>
 
 
@@ -73,9 +81,7 @@
 
     Page: @_pagedResult.Page of @_pagedResult.TotalPages
 </div>
-<div>
-    <button class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/Forms/AddBier"))">Add</button>
-</div>
+
 
 @code {
     private PagedResult<Bier> _pagedResult;
@@ -111,19 +117,7 @@
         {
             Brouwcode = brouwcode;
         }
-        
-        
-        // if (!string.IsNullOrWhiteSpace(Brouwnaam))
-        // {
-        //     if (!string.IsNullOrWhiteSpace(Land))
-        //     {
-        //
-        //     }
-        // }
     }
-
-    
-
 
     protected override void OnParametersSet()
     {

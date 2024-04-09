@@ -1,10 +1,9 @@
 @page "/code-viewer"
+@using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Layouts
+@using System.Web
 
 @inject NavigationManager NavigationManager
-
-@using Syncfusion.Blazor.DropDowns
-@using BlazorCourse.Components.Pages.Components.Parameters
 
 <style>
     .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal  {
@@ -14,16 +13,18 @@
 
 <div class="col-lg-12 control-section">
     <div class="row mb-4">
-        <div class="col">
-            <SfDropDownList TValue="string" TItem="RelatedCode" Placeholder="Select a related code file" DataSource="@LocalData">
-                <DropDownListFieldSettings Value="ID" Text="Text"></DropDownListFieldSettings>
-                <DropDownListEvents TValue="string" TItem="RelatedCode" ValueChange="OnRelatedCodeFileValueChange"></DropDownListEvents>
-            </SfDropDownList>
+            <div class="col">
+                <h3>File: @_codeFile</h3>
+            </div>
         </div>
-        <div class="col">
-            <h3>File: @_codeFile</h3>
-        </div>
-    </div>
+    @* <div class="row mb-4"> *@
+    @*     <div class="col"> *@
+    @*         <SfDropDownList TValue="string" TItem="RelatedCode" Placeholder="Select a related code file" DataSource="@LocalData"> *@
+    @*             <DropDownListFieldSettings Value="ID" Text="Text"></DropDownListFieldSettings> *@
+    @*             <DropDownListEvents TValue="string" TItem="RelatedCode" ValueChange="OnRelatedCodeFileValueChange"></DropDownListEvents> *@
+    @*         </SfDropDownList> *@
+    @*     </div> *@
+    @* </div> *@
     <div class="row">
         <SfSplitter Height="100%" Width="100%" SeparatorSize="3">
             <SplitterPanes>
@@ -61,18 +62,18 @@
         public string CodeFile { get; set; }
     }
 
-    List<RelatedCode> LocalData = new List<RelatedCode>
+    readonly List<RelatedCode> LocalData = new()
     {
-        new RelatedCode() { ID = "CounterWithParameter", Text = "CounterWithParameter", CodeFile = "Components/Parameters/CounterWithParameter.razor" },
-        new RelatedCode() { ID = "Game2", Text = "Badminton" },
-        new RelatedCode() { ID = "Game3", Text = "Basketball" },
-        new RelatedCode() { ID = "Game4", Text = "Cricket" },
-        new RelatedCode() { ID = "Game5", Text = "Football" },
-        new RelatedCode() { ID = "Game6", Text = "Golf" },
-        new RelatedCode() { ID = "Game7", Text = "Hockey" },
-        new RelatedCode() { ID = "Game8", Text = "Rugby" },
-        new RelatedCode() { ID = "Game9", Text = "Snooker" },
-        new RelatedCode() { ID = "Game10", Text = "Tennis" },
+        new RelatedCode { ID = "CounterWithParameter", Text = "CounterWithParameter", CodeFile = "Components/Parameters/CounterWithParameter.razor" },
+        new RelatedCode { ID = "Game2", Text = "Badminton" },
+        new RelatedCode { ID = "Game3", Text = "Basketball" },
+        new RelatedCode { ID = "Game4", Text = "Cricket" },
+        new RelatedCode { ID = "Game5", Text = "Football" },
+        new RelatedCode { ID = "Game6", Text = "Golf" },
+        new RelatedCode { ID = "Game7", Text = "Hockey" },
+        new RelatedCode { ID = "Game8", Text = "Rugby" },
+        new RelatedCode { ID = "Game9", Text = "Snooker" },
+        new RelatedCode { ID = "Game10", Text = "Tennis" }
     };
 
     private string _pageUrlParam;
@@ -82,11 +83,9 @@
         NavigationManager.LocationChanged += LocationChanged;
 
         ParseQueryStringParams();
-        
+
         var navigationTreeData = NavigationTreeData.GetNavigationTree();
         var relatedFiles = FindNodeWithUrl(navigationTreeData, _pageUrlParam);
-        
-        
     }
 
     private List<RelateCodeFile> FindNodeWithUrl(List<SiteNavigation.TreeItem> navigationTreeData, string navigationManagerUri)
@@ -122,17 +121,17 @@
     private void ParseQueryStringParams(string codeFile = null)
     {
         var queryString = new Uri(NavigationManager.Uri).Query;
-        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+        var queryDictionary = HttpUtility.ParseQueryString(queryString);
 
         if (codeFile == null)
         {
-            _codeFile = queryDictionary["code-url"];    
+            _codeFile = queryDictionary["code-url"];
         }
         else
         {
             _codeFile = codeFile;
         }
-        
+
         if (!string.IsNullOrEmpty(_codeFile))
         {
             _code = GetCode(_codeFile);
@@ -158,15 +157,15 @@
 
     public string GetCode(string codeFile)
     {
-        string codefile = NavigationManager.BaseUri + $"code/Pages/{codeFile}.txt";
-        HttpClient client = new HttpClient();
+        var codefile = NavigationManager.BaseUri + $"code/Pages/{codeFile}.txt";
+        var client = new HttpClient();
         var code = client.GetStringAsync(codefile).Result;
         return code;
     }
 
 
     private void OnRelatedCodeFileValueChange(ChangeEventArgs<string, RelatedCode> obj)
-    { 
+    {
         ParseQueryStringParams(obj.ItemData.CodeFile);
         _codeEditor.SetValue(_code);
     }

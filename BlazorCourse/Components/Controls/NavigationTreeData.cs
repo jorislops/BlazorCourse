@@ -142,7 +142,8 @@ public class NavigationTreeData
             Expanded = false,
             Child =
             [
-                new SiteNavigation.TreeItem() { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazorise-datagrid", Icon = "html" }
+                new SiteNavigation.TreeItem() { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazorise-datagrid", Icon = "html" },
+                new SiteNavigation.TreeItem() { NodeId = "5-02", NodeText = "Advanced Datagrid", Url = "/advanced-datatable-example", Icon = "html" }
             ]
         });
 

@@ -1,0 +1,18 @@
+@inject MessageService MessageService
+
+<div>
+    <h3>Child</h3>
+    <span>Hey there, I'm @Name.</span>
+    <p/>
+    <button @onclick=@(() => SayHi.InvokeAsync("Hi!") )>Say "Hi"</button>
+    <p/>
+    <button @onclick=@(() => MessageService.SaySomething($"Anybody here? I'm {Name}."))>Say something</button>
+</div>
+
+@code {
+    [Parameter]
+    public string? Name { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> SayHi { get; set; }
+}

@@ -1,5 +1,6 @@
 using BlazorCourse;
 using BlazorCourse.Components;
+using BlazorCourse.Components.Pages.Components.ParentChildServiceExample;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
@@ -12,7 +13,16 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<CounterService>();
-builder.Services.AddSyncfusionBlazor();
+    
+    builder.Services.AddSyncfusionBlazor();
+
+    string? syncfusionLicenseKey = Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
+    if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
+    {
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);    
+    }
+
+builder.Services.AddScoped<MessageService>();
 
 builder.Services
     .AddBlazorise( options =>

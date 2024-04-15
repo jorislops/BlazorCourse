@@ -98,6 +98,9 @@ public class NavigationTreeData
                 },
                 
                 new SiteNavigation.TreeItem()
+                { NodeId = "2-07", NodeText = "Parent Child And Service Example", Url = "/parent-child-and-service-example", Icon = "html" },
+                
+                new SiteNavigation.TreeItem()
                     { NodeId = "2-06", NodeText = "Counter Les Demo", Url = "/counter-example-les", Icon = "html" },
                 new SiteNavigation.TreeItem()
                     { NodeId = "2-05", NodeText = "Todo Example", Url = "/todo-list", Icon = "html" },

@@ -1,0 +1,14 @@
+@page "/Parent-child-service-example"
+
+@* .NET 7 Blazor 🔥 Component Communication (Parameters, EventCallbacks & States/Services) *@
+@* https://www.youtube.com/watch?v=QSM1Vhu1Nsc *@
+
+<h1>ParentChildServiceExample</h1>
+<h3>Index.razor</h3>
+
+<Parent Name="Joel" ChildName="Sarah"/>
+<Parent Name="Anna" ChildName="Ellie"/>
+
+@code {
+    
+}

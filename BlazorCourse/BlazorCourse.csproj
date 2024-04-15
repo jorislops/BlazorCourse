@@ -37,6 +37,8 @@
       <_ContentIncludedByDefault Remove="Components\Pages\BierExample\BierDelete.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\BierExample\BierPage.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\BierExample\BrouwerPage.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Shop\Product.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Shop\ProductCard.razor" />
     </ItemGroup>
 
     <ItemGroup>

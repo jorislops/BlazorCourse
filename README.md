@@ -1,3 +1,22 @@
+# Welkom
+
+In dit project (BlazorCourse) vind je de opdrachten en voorbeelden met Blazor.
+TOC:
+- installatie
+- onderwerpen per week/les
+- opdrachten per week
+- bronnen
+
+# Instalatie 
+
+Met `git clone` kan je het project clonen.
+Je zult dan wel de databases moeten aanmaken in MySQL of MariaDb. 
+De SQL code staat in `/SQL`. Voer deze code uit. 
+De connection strings staan in `appsettings.json`.
+
+Voer af en toe een git pull uit om de laatste versie te krijgen, mocht je dingen tegenkomen die niet kloppen 
+of onduidelijk zijn schroom om te vragen zodat wij het kunnen verbeteren. Alvast bedankt.
+
 # Onderwerpen per week/les
 
 ## Les 1 Razor Syntax & Voorbeeld & Structuur van Project
@@ -58,25 +77,31 @@ State-management in components
 ## Les 6 Uitloop
 
 
-# Les 1 opdrachten
+# 1. Opdrachten les 1
 
-Maak zelf een Blazor project aan. 
-Stel de RenderMode in voor het gehele project.
+Maak zelf een Blazor project aan.
+Vergeet niet de RenderMode in te stellen voor het gehele project en Pre Rendering uit te zetten voor development.
+Zet boven aan in 'App.razor' de volgende code:
+``` @inject IWebHostEnvironment WebHostEnvironment```
+
 In `App.razor` maak de volgende aanpassingen:
-```razor
+```html
   <Routes @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
 ```
-```
+```html
   <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
 ```
+In Program.cs voeg het volgende: .AddInteractiveServerComponents() toe aan de services.
+`builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();`
 
-## Razor Syntax
+## 1.1 Razor Syntax
 1. Maak een lijst aan van 10 random gehele getallen, waarbij je de even getallen groen maakt en de oneven getallen rood. De kleur kan je veranderen met `style` of een `css-class`. 
  Geef dit weer in een lijst (`<ul> <li>`).
 1. Maak een pagina die een sterren piramide laat zien. Je mag 1 maken die jij leuk vindt. Je zou eventueel kunnen opgeven hoeveel lagen de pyramide moet hebben (gebruik hiervoor een <input type="number" .../> .
   ![Pyramide](Images/pyramid.png)
 
-## Binding van data
+## 1.2 Binding van data
 1. Maak een pagina aan die gegeven een getal (`<input type="number">`) de tafel van dat getal laat zien.
 1. Een getal raden spelletje, waarbij je een getal moet raden tussen 1 en 100. Je geeft aan of het opgegeven getal te groot of 
    te klein is dan het te raden getal. Als de gebruiker het getal heeft geraden, dan wordt het aantal pogingen getoond en maak de pagina (of een div of iets dergelijks) groen.
@@ -88,8 +113,9 @@ In `App.razor` maak de volgende aanpassingen:
    Je zou dit project kunnen gebruiken om de opdrachten te maken. Het makkelijkste is dan om een `git clone` te doen.
  
 
-# Les 2 opdrachten
+# 2. Opdrachten les 2
 
+## 2.1 Components
 1. Maak een eigen counter component aan. Deze is verantwoordelijk voor het bijhouden van een getal. 
   Deze kan je verlagen met 1 of verhogen met 1. Test dit component op een page.
 1. Maak nu een score bord pagina aan, deze bestaat uit twee counters (thuis team en uit team). 
@@ -110,7 +136,9 @@ In `App.razor` maak de volgende aanpassingen:
   Maak ook een component die de kaarten laat zien en waarbij je een nieuw spel kan starten.
   Maak ook een component aan die bijhoudt per speler hoeveel punten deze heeft (misschien hergebruik van eerder gemaakt component).
 
-# Les 3 opdrachten - Producten CRUD Pagina's
+# 3 opdrachten - Les 3
+
+## 3.1 Producten CRUD Pagina's
 
 1. Maak een product tabel aan in de database, waarbij je de volgende kolommen hebt:
   - Id
@@ -129,8 +157,7 @@ In `App.razor` maak de volgende aanpassingen:
 7. Maak een pagina of component aan waarbij je een product kan toevoegen.
 8. Maak een pagina of component aan die de details van een product laat zien, waarbij je ook het product kan verwijderen.
 
-
-##  Todo aanpassen
+## 3.2 Todo aanpassen
 1. In het BlazorCourse project `/Components/Pages/Databases/TodoExample/` staan `TodoListDb.razor` en gerelateerde componenten/pagina's en de repository.
 1. De `TodoItem.cs` kan je vinden in 'Models/TodoItem.cs'. Deze wordt gebruikt door meeredere pagina's/componenten buiten de TodoExample directory. 
 1. Kijk hoe de delete werkt in de repository (`TodoRepository.cs`), echter willen we ook de kinderen verwijderen, dit gebeurt nu met twee DELETE queries.
@@ -139,7 +166,7 @@ Pas dit aan zodat het met 1 DELETE query kan. Hiervoor moet je de foreign key co
 1. Een TodoItem kan kinderen hebben, deze kinderen kunnen ook weer kinderen hebben. Kan jij `<TodoDetails>` en 
 gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op ieder niveau kinderen kunt toevoegen/verwijderen.
 
-## Bier CRUD aanpassen
+## 3.3 Bier CRUD aanpassen
 1. In het BlazorCourse project `/Components/Pages/Databases/BierExamle` staat de code van de bieren pagina's/componenten.
 1. Om bieren toe te voegen, worden stijl en type niet in een aparte tabel opgeslagen, verander dit in de database. 
 1. Maak dus twee nieuwe repositories aan voor stijl en type.
@@ -156,7 +183,9 @@ gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op iede
 1. Maak een pagina aan die een bier kan wijzigen (edit). Haal je inspiratie uit de AddBier.razor. Als je echt je best doet kan dit in 1 pagina. 
   Echter misschien is het makkelijker om eerst een aparte pagina te maken te maken voor het wijzigen.
 
-# Les 4 opdrachten - Forms & Validatie & Routes & Layout
+# 4 Opdrachten Les 4 
+
+## 4.1 Forms & Validatie & Routes & Layout
 
 1. Zorg ervoor dat er input validatie is op de producten pagina van Les 3 opdrachten. 
   Dit betekent dat een product niet toegevoegd kan worden als de naam leeg is of de prijs niet een getal is groter dan 1 euro.
@@ -164,35 +193,43 @@ gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op iede
 1. Maak een pagina aan waarbij je een category kan selecteren en dat je daarna de producten van die category ziet.
 1. Maak een pagina aan waarbij je de category kan toevoegen/verwijderen. Een category kan niet verwijderd worden als er 
   nog producten zijn die deze category hebben, je moet dan eerst de producten verwijderen.  Vraag aan de gebruiker of hij dit wil doen of niet.
+
+## 4.2 Layout 
+
 1. Maak een Layout aan voor je producten pagina, waarbij je een header en footer hebt. 
   - De header bevat een navigatie menu, waarbij je kan navigeren naar de producten pagina en de category pagina.
   - In de footer staat het aantal producten en categorieën die er zijn. 
 
+## 4.3 Component Library (Blazorise)
+
 1. In de echte wereld gebruiken we niet zelf ontwikkelde componenten maar die door andere zijn ontwikkeld. 
   Het handigste is om een nieuw project te beginnen. Vergeet
-  niet de RenderMode in te stellen voor het gehele project.
-  In `App.razor` maak de volgende aanpassingen:
+  niet de RenderMode in te stellen voor het gehele project en Pre Rendering uit te zetten voor development.
+  Zet boven aan in 'App.razor' de volgende code:
+  ```@inject IWebHostEnvironment WebHostEnvironment```
+   In `App.razor` maak de volgende aanpassingen:
 ```razor
   <Routes @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
 ```
 ```
   <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: !WebHostEnvironment.IsDevelopment())"/>
 ```
-  Op https://blazorise.com/ staat een knop getting started. 
-  Kijk eerst of je Blazorise aan de praat krijgt. 
-  In het BlazorCourse project staat `Components\BlazoriseDataGrid.razor`. Bekijk maar eens hoe dit werkt.
-  Op https://bootstrapdemo.blazorise.com/ staan demo's van de verschillende UI componenten.
-  
-  *Nu de opdracht:* 
-  Maak zelf een pagina met Blazorize componenten die product weergeeft in een tabel (m.b.v. DataGrid component).
-  Eventueel kan je ook een filter toevoegen, zodat je kan filteren op categorie (dropdown). 
+  In Program.cs voeg het volgende: .AddInteractiveServerComponents() toe aan de services.
+  `builder.Services.AddRazorComponents()
+  .AddInteractiveServerComponents();`
+
+1. Op https://blazorise.com/ staat een knop getting started. Kijk eerst of je Blazorise aan de praat krijgt. 
+1. In het BlazorCourse project staat `Components\BlazoriseDataGrid.razor`. Bekijk maar eens hoe dit werkt.
+1. Op https://bootstrapdemo.blazorise.com/ staan demo's van de verschillende UI componenten bekijk deze maar eens.
+1. Maak zelf een pagina met Blazorize componenten die product weergeeft in een tabel (m.b.v. DataGrid component).
+1. Eventueel kan je ook een filter toevoegen, zodat je kan filteren op categorie (m.b.v. een dropdown).
   M.b.v. een componenten bibliotheek kan je meer focussen op de functionaliteit van je applicatie en minder 
   op de layout/ui-componenten. 
   
 
 # Les 5 opdrachten - Advanced Subjects
 
-- Maak een service aan die verantwoordelijk is het manager van de state van het memory spel (les 2 laatste opdracht).  
+1. Maak een service aan die verantwoordelijk is het manager van de state van het memory spel (les 2 laatste opdracht).  
   Register Callbacks in deze services zodat componenten weten dat ze moeten updaten.
 
 # Bronnen

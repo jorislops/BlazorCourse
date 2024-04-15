@@ -27,8 +27,8 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired]
-    public TodoItem Item { get; set; }
+    [Parameter, EditorRequired] 
+    public TodoItem Item { get; set; } = null!;
 
     [Parameter, EditorRequired]
     public EventCallback<TodoItem> OnDeleteItem { get; set; }

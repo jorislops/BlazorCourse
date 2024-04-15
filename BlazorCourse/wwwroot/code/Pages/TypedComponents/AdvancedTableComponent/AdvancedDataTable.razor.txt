@@ -47,17 +47,4 @@ else
         Columns.Add(tableColumn);
         StateHasChanged(); //trick to force rendering when columns are added
     }
-    
-    
-    public class TableColumn
-    {
-        public string HeaderText { get; set; }
-        // public Func<TItem, object> Value { get; set; }
-        //
-        // public RenderFragment RenderFragment { get; set; }
-    }
-
-
-    
-
 }

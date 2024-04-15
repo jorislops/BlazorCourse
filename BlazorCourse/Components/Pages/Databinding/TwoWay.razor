@@ -28,7 +28,7 @@
 <hr>
 
 <h2>Two way binding, with C# (Blazor) event</h2>
-<input value="@_name3" @oninput=@(e => _name3 = e.Value.ToString()) size="100"/> 
+<input value="@_name3" @oninput=@(e => _name3 = e.Value?.ToString() ?? string.Empty) size="100"/> 
 <p>@_name3</p>
 @code {
     string _name3 = "Change the text and you see the changes immediately! This time with a C# event.";

@@ -187,7 +187,7 @@ public class NavigationTreeData
             .Select(x => new SiteNavigationHelper.RouteAttributeResult()
                 {
                     Type = x,
-                    FullName = x.FullName,
+                    FullName = x.FullName!,
                     RouteAttribues = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(Microsoft.AspNetCore.Components.RouteAttribute))
                 }
             );

@@ -25,7 +25,7 @@
     <DataGridColumn Field="@nameof(Bier.Stijl)" Caption="Stijl" />
 </DataGrid>
 @code {
-    private List<Bier> _bieren;
+    private List<Bier>? _bieren;
     private int? _totalItems;
 
     private void OnReadData(DataGridReadDataEventArgs<Bier> e)

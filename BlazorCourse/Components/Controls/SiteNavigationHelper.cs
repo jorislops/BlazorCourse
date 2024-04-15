@@ -13,6 +13,7 @@ public class SiteNavigationHelper
             treeItem.Url = treeItem.Url.Substring(1);
         }
 
+        var routeAttributeResults = routings.ToList();
         if (treeItem.Code != null)
         {
             var treeUrl = treeItem.Url;
@@ -25,8 +26,8 @@ public class SiteNavigationHelper
         {
             var treeUrl = treeItem.Url;
             // treeItem.Code = $"{FirstCharToUpper(Capitalise(treeUrl, "-", CultureInfo.InvariantCulture)).Replace("-", "")}.razor";
-            var route = routings.Where(r =>
-                    r.RouteAttribues.Any(w => w.ConstructorArguments.Any(a => a.Value.ToString()
+            var route = routeAttributeResults.Where(r =>
+                    r.RouteAttribues.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
                         .Equals("/" + treeUrl, StringComparison.OrdinalIgnoreCase))))
                 .ToList();
             var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
@@ -40,15 +41,15 @@ public class SiteNavigationHelper
 
         foreach (var child in treeItem.Child)
         {
-            UpdateTreeWidthCode(child, routings);
+            UpdateTreeWidthCode(child, routeAttributeResults);
         }
     }
 
-    public class RouteAttributeResult
+    public record RouteAttributeResult
     {
-        public string FullName { get; set; }
-        public IEnumerable<CustomAttributeData> RouteAttribues { get; set; }
-        public Type Type { get; set; }
+        public required string FullName { get; set; }
+        public required IEnumerable<CustomAttributeData> RouteAttribues { get; set; }
+        public required Type Type { get; set; }
     }
 
     public static string FirstCharToUpper(string input) =>

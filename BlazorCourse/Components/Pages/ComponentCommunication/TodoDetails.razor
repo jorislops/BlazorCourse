@@ -33,7 +33,7 @@ else
 @code {
     [Parameter, EditorRequired]
     public TodoItem? TodoItem { get; set; }
-    
-    [CascadingParameter]
-    public User User { get; set; }
+
+    [CascadingParameter] 
+    public User? User { get; set; }
 }

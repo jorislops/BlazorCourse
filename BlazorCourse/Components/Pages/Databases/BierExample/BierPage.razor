@@ -84,7 +84,7 @@
 
 
 @code {
-    private PagedResult<Bier> _pagedResult;
+    private PagedResult<Bier> _pagedResult = null!;
 
     private PageFilterSorting _pageFilterSorting = new PageFilterSorting()
     {
@@ -112,7 +112,7 @@
         Uri url = new Uri(uriAsString);
         string queryString = url.Query; // returns "?Brouwcode=someInt"
         NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
-        string brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
+        string? brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
         if (int.TryParse(brouwcodeAsString, out int brouwcode))
         {
             Brouwcode = brouwcode;

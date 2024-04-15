@@ -23,7 +23,6 @@
     {
         base.OnInitialized();
         _currentDay = DateTime.Now.DayOfWeek.ToString();
-
     }
 
 }

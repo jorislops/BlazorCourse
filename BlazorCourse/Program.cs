@@ -43,7 +43,7 @@ ConfigurationHelper.Configuration = app.Configuration;
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("X-Frame-Options", "ALLOWALL");
+    context.Response.Headers.Append("X-Frame-Options", "ALLOWALL");
     await next();
 });
 

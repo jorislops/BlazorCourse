@@ -27,7 +27,7 @@ public class SiteNavigationHelper
             var treeUrl = treeItem.Url;
             // treeItem.Code = $"{FirstCharToUpper(Capitalise(treeUrl, "-", CultureInfo.InvariantCulture)).Replace("-", "")}.razor";
             var route = routeAttributeResults.Where(r =>
-                    r.RouteAttribues.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
+                    r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
                         .Equals("/" + treeUrl, StringComparison.OrdinalIgnoreCase))))
                 .ToList();
             var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
@@ -48,7 +48,7 @@ public class SiteNavigationHelper
     public record RouteAttributeResult
     {
         public required string FullName { get; set; }
-        public required IEnumerable<CustomAttributeData> RouteAttribues { get; set; }
+        public required IEnumerable<CustomAttributeData> RouteAttributes { get; set; }
         public required Type Type { get; set; }
     }
 

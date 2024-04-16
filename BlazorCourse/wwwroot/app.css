@@ -1,3 +1,17 @@
+.e-splitter.e-splitter-horizontal .e-pane {
+    padding:  5px;
+    font-size: 16px;
+}
+.e-splitter .e-split-bar.e-split-bar-horizontal{
+    background: #90b5d9;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.e-treeview .e-list-text {
+    font-size: 16px;
+}
+
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -48,4 +62,31 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+.sidebar-treeview .main-treeview .icon-microchip::before {
+    content: '\e77c';
+}
+
+.sidebar-treeview .main-treeview .icon-ident::before {
+    content: '\e810';
+}
+
+
+.folder::before {
+    font-family: 'e-icons';
+    content: '\e83c';
+}
+
+.html::before {
+    font-family: 'e-icons';
+    content: '\e7d3';
+}
+
+.sidebar-treeview .main-treeview .icon-docs::before {
+    content: '\e83c';
+}
+#wrapper .e-tbar-menu-icon::before {
+    content: '\e799';
+    font-family: 'e-icons';
 }

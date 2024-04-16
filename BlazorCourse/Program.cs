@@ -10,17 +10,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(options =>
+    {
+        options.MaximumReceiveMessageSize = 1024*1024;
+    });
 
 builder.Services.AddScoped<CounterService>();
     
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVGhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjXX5YcHNWQWJfV0ZxWA==");
     builder.Services.AddSyncfusionBlazor();
 
-    string? syncfusionLicenseKey = Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
-    if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
-    {
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);    
-    }
+    // string? syncfusionLicenseKey =
+    //     ;
+    //     // Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
+    // if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
+    // {
+    //         
+    // }
 
 builder.Services.AddScoped<MessageService>();
 

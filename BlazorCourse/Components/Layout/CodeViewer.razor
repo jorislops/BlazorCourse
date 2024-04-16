@@ -1,0 +1,207 @@
+@using System.Web
+@using System.Runtime.Intrinsics.X86
+@using Microsoft.AspNetCore.Mvc.Razor
+@using Orientation = Syncfusion.Blazor.Layouts.Orientation
+@using System.Runtime.CompilerServices
+@using System.Text
+@using Microsoft.AspNetCore.Identity
+@using Syncfusion.Blazor.Data
+@inject IJSRuntime JS
+
+@if (_extraCode)
+{
+    if (_filename != null)
+    {
+        <h5>@(ParseFilename(_filename) + ".razor")</h5>
+        <br/>
+    }
+    <div style="overflow: auto">
+        <pre style="margin-bottom: 0; padding-bottom: 0; overflow: hidden; display: inline-block;">
+            <code class="language-razor">@_codeRazor</code>
+        </pre>
+        @if (_codeCsharp != null)
+        {
+            <pre style="margin-top: 0; padding-top: 0; overflow: hidden; display: inline-block;">
+                <code class="language-csharp">@_codeCsharp</code>
+            </pre>
+        }
+    </div>
+    <hr/>
+    if(_filenameExtra != null)
+    {
+        <h5>@ParseFilename(_filenameExtra + ".cs") </h5>
+        <br/>
+    }
+    <pre>
+        <code class="language-csharp">@_codeExtra</code>
+    </pre>
+    if (_codeCss != null)
+    {
+        <hr/>
+        if (_filename != null)
+        {
+            <h5>@(ParseFilename(_filename) + ".razor.css")</h5>
+            <br/>
+        }
+        <pre>
+            <code class="language-csharp">@_codeCss</code>
+        </pre>
+    }
+}
+else
+{ 
+    if(_filename != null)
+    {
+        <h5>@(ParseFilename(_filename) +".razor")</h5>
+        <br/>
+    }
+    <div style="overflow: auto">
+        <pre style="margin-bottom: 0; padding-bottom: 0; overflow: hidden; display: inline-block;">
+            <code class="language-razor">@_codeRazor</code>
+        </pre>
+        @if (_codeCsharp != null)
+        {
+            <pre style="margin-top: 0; padding-top: 0; overflow: hidden; display: inline-block;">
+                <code class="language-csharp">@_codeCsharp</code>
+            </pre>
+        }
+    </div>
+    if (_codeCss != null)
+    {
+        <hr/>
+        if (_filename != null)
+        {
+            <h5>@(ParseFilename(_filename) + ".razor.css")</h5>
+            <br/>
+        }
+        <pre>
+            <code class="language-csharp">@_codeCss</code>
+        </pre>
+    }
+}
+
+@code {
+    [Parameter] public string? Uri { get; set; }
+
+    [Parameter] public string? BaseUri { get; set; }
+
+    string? _filename;
+    string? _filenameExtra;
+    bool _extraCode = false;
+    private string? _currentUri = "";
+    MarkupString? _codeRazor;
+    MarkupString? _codeCsharp;
+    MarkupString? _codeExtra;
+    MarkupString? _codeCss;
+    
+    async Task ParseCode()
+    {
+        if (Uri != null && BaseUri != null)
+        {
+            // _filename = Uri.Replace(BaseUri, "");
+            _filename = Uri;
+            // add extra code files here. The name will be {filename of the extra code}.cs.txt
+            switch (_filename)
+            {
+                case "dimensions":
+                    _extraCode = true;
+                    _filenameExtra = "dimensionService";
+                    break;
+                // special case for the home page    
+                case "":
+                    _filename = BaseUri + "Code/pages/Home";
+                    break;
+            }
+        }
+        /*
+        If the @code part of the page doesn't highlight correctly, split the Razor part and the Csharp part into two separate files
+        Name them {file}.razor.txt and {file}.cs.txt
+        */
+        
+        if (_filename != null)
+        {
+            _codeRazor = await FetchCode(_filename + ".razor", "razor");
+            _codeCsharp = await FetchCode(_filename + ".cs", "csharp");
+            _codeCss = await FetchCode(_filename + ".razor.css", "css");
+        }
+        if (_filenameExtra != null)
+        {
+            _codeExtra = await FetchCode(_filenameExtra+".cs", "csharp");
+        }
+    }
+    
+    async Task<MarkupString?> FetchCode(string filename, string language)
+    {
+        string codeUri = $"{filename}.txt";
+        HttpClient client = new HttpClient();
+        //try if the code file exists
+        try {
+            string plainCode = client.GetStringAsync(codeUri).Result;
+            // client.Dispose();
+            if (language == "razor")
+            {
+                //invoke the highlightRazor function in the highlight.js file
+                string x = await JS.InvokeAsync<string>("highlightRazor", plainCode);
+                
+                var result = new  MarkupString(x);
+                return result;
+            }
+            if (language == "css")
+            {
+                //invoke the highlightCss function in the highlight.js file
+                return new  MarkupString(await JS.InvokeAsync<string>("highlightCss", plainCode));
+            }
+            //invoke the highlightCsharp function in the highlight.js file
+            return new  MarkupString(await JS.InvokeAsync<string>("highlightCsharp", plainCode));
+        }
+        catch (Exception e)
+        {
+            // @Code part not found so just hightlight the Razor part
+            return null;
+        }
+    }
+    
+    // Call highlighting when the parameters are set so the code is highlighted when NavigationManager.LocationChanged is called
+    // Because oninitialization is not called when the page is navigated to from another page
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        _extraCode = false;
+        await ParseCode();
+        await base.OnParametersSetAsync();
+    }
+    
+    string? ParseFilename(string filename)
+    {
+            StringBuilder parsedFilename = new StringBuilder(filename);
+            //Capitalize the first letter of the filename
+            parsedFilename[0] = filename.ToUpper()[0];
+            //check if the filename contains a "-"
+            if (filename.Contains("-"))
+            {
+                //find the index of the "-"
+                int indexOfMinus = filename.IndexOf("-");
+                //remove the "-"
+                parsedFilename.Remove(indexOfMinus, 1);
+                //capitalize the letter after the "-"
+                parsedFilename[indexOfMinus] = char.ToUpper(parsedFilename[indexOfMinus]);
+                //parsedFilename.Replace(filename.Substring(indexOfMinus, 2), filename[indexOfMinus + 1].ToString().ToUpper());
+                return parsedFilename.ToString();
+            }
+            else
+            {
+                return parsedFilename.ToString();
+            }
+    }
+}
+
+<style>
+    h5 {
+        display: inline-block;
+        color: #5d5c5c;
+        width: auto;
+        border: 2px solid lightgrey;
+        padding: 5px;
+    }
+</style>
+

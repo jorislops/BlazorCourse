@@ -152,7 +152,8 @@
         {
             AutomaticLayout = true,
             Language = "razor",
-            Value = _code
+            Value = _code,
+            
         };
     }
 

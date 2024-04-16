@@ -13,12 +13,14 @@
     <TreeViewFieldsSettings DataSource="@TreeDataSource"
                             Id="NodeId" Text="NodeText" Expanded="Expanded"
                             TValue="TreeItem"
-
+                            IconCss="Icon"
+                            NavigateUrl="Url"
+                            
                             Child="@("Child")">
     </TreeViewFieldsSettings>
-    <TreeViewEvents TValue="TreeItem" NodeSelected="NodeSelected">
-
-    </TreeViewEvents>
+    @* <TreeViewEvents TValue="TreeItem" NodeSelected="NodeSelected"> *@
+    @* *@
+    @* </TreeViewEvents> *@
 </SfTreeView>
 
 @* <TreeView Nodes="@TreeDataSource" *@

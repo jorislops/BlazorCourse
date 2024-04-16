@@ -1,18 +1,35 @@
-﻿@using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor.Inputs
+﻿@using System.Reflection
+@using System.Web
+@using Syncfusion.Blazor.Navigations
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 
+@using Syncfusion.Blazor.Layouts
 
 
 <CascadingValue Value="@AppState">
     <div id="control-section">
         <div id="sidebar-wrapper">
-            @if (_showNav)
-            {
+            @*Initialize the Toolbar component*@
+            <SfToolbar>
+                <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
+                <ToolbarItems>
+                    <ToolbarItem PrefixIcon="e-icons e-menu" TooltipText="Menu"></ToolbarItem>
+                    <ToolbarItem>
+                        <Template>
+                            <div class="e-folder">
+                                <div class="e-folder-name">Navigation Pane</div>
+                                <button @onclick="ToggleCode"></button>
+                            </div>
+                        </Template>
+                    </ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+            
                 <div>
                     @*Initialize the Sidebar component*@
-                    <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle">
+                    <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle"
+                               @attributes="@_htmlAttribute">
                         <ChildContent>
                             <div class="main-menu">
                                 @* <div class="table-content"> *@
@@ -26,31 +43,45 @@
                         </ChildContent>
                     </SfSidebar>
 
-                    @*Initialize the Toolbar component*@
-                    <SfToolbar>
-                        <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
-                        <ToolbarItems>
-                            <ToolbarItem PrefixIcon="e-tbar-menu-icon tb-icons" TooltipText="Menu"></ToolbarItem>
-                            <ToolbarItem>
-                                <Template>
-                                    <div class="e-folder">
-                                        <div class="e-folder-name">Navigation Pane</div>
-                                    </div>
-                                </Template>
-                            </ToolbarItem>
-                        </ToolbarItems>
-                    </SfToolbar>
+
                 </div>
-            }
             
+
             @*main-content declaration*@
             <div class="main-content" id="main-text">
                 <div class="sidebar-content">
-                    <div class="row m-4">
-                        <div class="col">
+                    <div class="content px-4">
+                        @* <h4 style="color: lightseagreen">@MessageService.SelectedMenu</h4> *@
+                        @* <hr/> *@
+                        @if (_showCode)
+                        {
+                            <SfSplitter Width="100%" SeparatorSize="3">
+                                <SplitterPanes >
+                                    <SplitterPane >
+                                        <ContentTemplate>
+                                            <CodeViewer Uri="@_codeFileUri" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
+                                        </ContentTemplate>
+                                    </SplitterPane>
+                                    <SplitterPane>
+                                        <ContentTemplate>
+                                            @Body
+                                        </ContentTemplate>
+                                    </SplitterPane>
+                                </SplitterPanes>
+                            </SfSplitter>
+                        }
+                        else
+                        {
                             @Body
-                        </div>
+                        }
                     </div>
+
+
+                    @* <div class="row m-4"> *@
+                    @*     <div class="col"> *@
+                    @*         @Body *@
+                    @*     </div> *@
+                    @* </div> *@
                 </div>
             </div>
         </div>
@@ -65,13 +96,19 @@
 
 @code
 {
+    readonly Dictionary<string, object> _htmlAttribute = new()
+    {
+        { "class", "sidebar-treeview" }
+    };
+    
+    
     //make sure that AppState is initialized
-    private AppState AppState { get; set; } = new AppState();
+    private AppState AppState { get; } = new();
 
 // Specifies the value of TreeView component ExpanOn property.
 
     // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
-    public bool SidebarToggle = false;
+    public bool SidebarToggle;
 
     // Specifies the event handler for Clicked event in Toolbar component.
     public void Toggle(ClickEventArgs args)
@@ -87,20 +124,70 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
+
+        NavigationManager.LocationChanged += (sender, args) =>
+        {
+            GetFileUrl();
+            StateHasChanged();
+        };
+
         var uri = new Uri(NavigationManager.Uri);
         var queryString = uri.Query;
-        var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+        var queryDictionary = HttpUtility.ParseQueryString(queryString);
         var showNavQueryValue = queryDictionary["show-nav"];
-        if (showNavQueryValue != null && 
-            (showNavQueryValue.ToLower().Equals("false") || 
+        if (showNavQueryValue != null &&
+            (showNavQueryValue.ToLower().Equals("false") ||
              showNavQueryValue.ToLower().Equals("true")))
         {
             _showNav = bool.Parse(showNavQueryValue);
         }
+        
+        // _showCode = !_showNav;
+    }
+    
+    private bool _showCode = true;
+    private string _codeFileUri = "";
+    
+    private void ToggleCode()
+    {
+        _showCode = !_showCode;
+
+        GetFileUrl();
+    }
+
+    private void GetFileUrl()
+    {
+        var allComponents = Assembly
+            .GetExecutingAssembly()
+            .ExportedTypes
+            .Where(t => t.IsSubclassOf(typeof(ComponentBase)));
+
+        var routableComponents = allComponents
+            .Where(c => c
+                .GetCustomAttributes(true)
+                .OfType<RouteAttribute>()
+                .Count() > 0);
+        var routings = routableComponents
+            .Select(x => new SiteNavigationHelper.RouteAttributeResult
+                {
+                    Type = x,
+                    FullName = x.FullName!,
+                    RouteAttributes = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(RouteAttribute))
+                }
+            );
+
+        var currentUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
+        var route = routings.Where(r =>
+                r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
+                    .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
+            .ToList();
+        var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
+        _codeFileUri = NavigationManager.BaseUri + "code/pages" +codeFile;
+        _codeFileUri = _codeFileUri.Replace(".razor", "");
     }
 }
 
+]
 <style>
     div#main-text {
         height: 2000px;

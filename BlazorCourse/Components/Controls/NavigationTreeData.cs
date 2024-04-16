@@ -165,7 +165,7 @@ public class NavigationTreeData
         });
 
         
-        UpdateCode(navigationTree);
+        //UpdateCode(navigationTree);
 
         
         return navigationTree;
@@ -188,7 +188,7 @@ public class NavigationTreeData
                 {
                     Type = x,
                     FullName = x.FullName!,
-                    RouteAttribues = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(Microsoft.AspNetCore.Components.RouteAttribute))
+                    RouteAttributes = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(Microsoft.AspNetCore.Components.RouteAttribute))
                 }
             );
 

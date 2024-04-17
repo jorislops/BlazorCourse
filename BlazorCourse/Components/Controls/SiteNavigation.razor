@@ -1,62 +1,99 @@
 @using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor.Buttons
-@using System.Globalization
-@using System.Reflection
-@using System.Text
 @inject NavigationManager NavigationManager
+@inject CodeViewerService CodeViewerService
 
-@*Initialize the TreeView component*@
+<h1>
+    @String.Join(',',_selectedNodes)
+</h1>
+<h1>
+    @String.Join(',',_expandedNodes)
+</h1>
 
-@using global::Blazorise.TreeView
-
-<SfTreeView TValue="TreeItem" @ref="_tree">
-    <TreeViewFieldsSettings DataSource="@TreeDataSource"
-                            Id="NodeId" Text="NodeText" Expanded="Expanded"
+<SfTreeView TValue="TreeItem" @ref="_tree"
+            ExpandOn="ExpandAction.Click"
+            SelectedNodes="_selectedNodes"
+            @bind-ExpandedNodes="_expandedNodes">
+    <TreeViewFieldsSettings DataSource="@_treeDataSource"
+                            Id="NodeId" 
+                            Text="NodeText" 
                             TValue="TreeItem"
                             IconCss="Icon"
                             NavigateUrl="Url"
-                            
+                            Selected="Selected"
                             Child="@("Child")">
     </TreeViewFieldsSettings>
-    @* <TreeViewEvents TValue="TreeItem" NodeSelected="NodeSelected"> *@
-    @* *@
-    @* </TreeViewEvents> *@
+    <TreeViewEvents TValue="TreeItem"
+                    NodeExpanding="OnNodeExpanding"
+                    NodeCollapsing="OnNodeCollapsing"
+                    NodeSelecting="OnNodeSelecting"/>
 </SfTreeView>
 
-@* <TreeView Nodes="@TreeDataSource" *@
-@*           GetChildNodes="@(item => item.Child)" *@
-@*           HasChildNodes="@(item => item.Child?.Any() == true)" *@
-@*           SelectedNodeChange="sele"> *@
-@*     <NodeContent> *@
-@*         <Icon Name="IconName.Folder" /> *@
-@*         @context.NodeText *@
-@*     </NodeContent> *@
-@* </TreeView> *@
-
-@* <SfTreeView TValue="TreeItem" SelectedNodesChanged="NodeSelected"> *@
-@*     <TreeViewFieldsSettings DataSource="@TreeDataSource" *@
-@*                             Id="NodeId" Text="NodeText" Expanded="Expanded" *@
-@*                             TValue="TreeItem" *@
-@*                             NavigateUrl="Url" *@
-@*                             Child="@("Child")"  > *@
-@*     </TreeViewFieldsSettings> *@
-@* </SfTreeView> *@
-
 @code{
-
+    string[] _selectedNodes = new string[] { "" };
+    List<string> _expandedNodesList = new List<string>();
+    string[] _expandedNodes = new string[] { "" };
+    string _previousSelectedNodeId = "";
+    
+    
     // Specifies the DataSource value for TreeView component.
-    List<TreeItem> TreeDataSource = new List<TreeItem>();
+    List<TreeItem> _treeDataSource = new List<TreeItem>();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        TreeDataSource = NavigationTreeData.GetNavigationTree();
+        _treeDataSource = NavigationTreeData.GetNavigationTree();
 
+        UpdateParentIds(_treeDataSource);
+        
+        NavigationManager.LocationChanged += LocationChanged;
+        LocationChanged(new object(), new LocationChangedEventArgs(NavigationManager.Uri, true));
+
+        Console.WriteLine("test");
+        void UpdateParentIds(List<TreeItem> treeDataSource)
+        {
+            foreach (var treeItem in treeDataSource)
+            {
+                if (treeItem.Child.Count > 0)
+                {
+                    foreach (var child in treeItem.Child)
+                    {
+                        child.ParentId = treeItem.NodeId;
+                        child.Parent = treeItem;
+                    }
+                    UpdateParentIds(treeItem.Child);
+                }
+            }
+        }
     }
 
 
- 
+    private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        string url = e.Location;
+        url = url.Replace(NavigationManager.BaseUri, "");
+        if (url == "")
+        {
+            CodeViewerService.SelectedMenuMessage(url);
+            _selectedNodes[0]= "";
+            InvokeAsync(StateHasChanged);
+        }
+        else
+        {
+            if(_treeDataSource != null)
+            {
+                TreeItem? navigatedNode = TreeItem.FindNodeByUrl(_treeDataSource, url);
+                if (navigatedNode != null)
+                {
+                    CodeViewerService.SelectedMenuMessage(navigatedNode.NodeText);
+                    _selectedNodes[0] = navigatedNode.NodeId;
+                    ExpandSelectedNode(navigatedNode);
+                    _expandedNodes = _expandedNodesList.ToArray();
+                    InvokeAsync(StateHasChanged);
+                }
+            }
+        }
+    }
 
     public class TreeItem
     {
@@ -64,6 +101,8 @@
         public string NodeText { get; set; } = null!;
         public string Icon { get; set; } = "folder";
         public bool Expanded { get; set; }
+        public string? ParentId = null;
+        
         public bool Selected { get; set; }
         public List<TreeItem> Child { get; set; } = new List<TreeItem>();
         public string? ImageUrl { get; set; }
@@ -72,6 +111,8 @@
         public List<RelateCodeFile> RelatedFiles { get; set; } = new List<RelateCodeFile>();
         public string? CodeUrl { get; set; }
         public string? PageUrl { get; set; }
+        public TreeItem? Parent { get; set; }
+
 
         public static TreeItem? FindNode(List<TreeItem> nodes, string id)
         {
@@ -91,6 +132,30 @@
 
             return null;
         }
+
+        public static TreeItem? FindNodeByUrl(List<TreeItem> nodes, string url)
+        {
+            foreach (TreeItem node in nodes)
+            {
+                if (node.Url != null)
+                {
+                    if (node.Url.Contains(url))
+                    {
+                        return node;
+                    }
+                }
+            
+                if(node.Child != null)
+                {
+                    TreeItem? found = FindNodeByUrl(node.Child, url);
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+            }
+            return null;
+        }
     }
 
 
@@ -99,7 +164,7 @@
     private void NodeSelected(NodeSelectEventArgs obj)
     {
         string id = obj.NodeData.Id;
-        var clickedNode = TreeItem.FindNode(TreeDataSource, id);
+        var clickedNode = TreeItem.FindNode(_treeDataSource, id);
         if (clickedNode != null)
         {
             if (clickedNode.Url != null)
@@ -113,5 +178,81 @@
         }
     }
 
+
+    void OnNodeExpanding(NodeExpandEventArgs args)
+    {
+        if(args.NodeData.Id != null)
+        {
+            TreeItem? node = TreeItem.FindNode(_treeDataSource!, args.NodeData.Id);
+            if(node != null) {ExpandSelectedNode(node);}
+        }
+    }
+    
+    List<string> ExpandSelectedNode(TreeItem node)
+    {
+        var result = new List<string>();
+        var currentNode = node;
+        while (currentNode.ParentId != null)
+        {
+            result.Add(currentNode.ParentId);
+            currentNode = currentNode.Parent;
+        }
+
+        return result;
+
+        // if (node.Expanded != null)
+        // {
+        //     if(_expandedNodesList.Contains(node.NodeId) == false) _expandedNodesList.Add(node.NodeId);
+        //     node.Expanded = true;
+        // }
+        // if (node.ParentId != null)
+        // {
+        //     TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
+        //     if(parentNode is not null)
+        //     {
+        //         ExpandSelectedNode(parentNode);
+        //     }
+        // }
+    }
+    
+    void OnNodeCollapsing(NodeExpandEventArgs args)
+    {
+        
+        TreeItem? node = TreeItem.FindNode(_treeDataSource!, args.NodeData.Id);
+        if (node != null)
+        {
+            if (_expandedNodesList.Contains(node.NodeId))
+            {
+                _expandedNodesList.Remove(node.NodeId);
+                if (node.Expanded != null)
+                {
+                    node.Expanded = false;
+                }
+            }
+
+            if (args.NodeData.ParentID != null)
+            {
+                if(node.ParentId != null)
+                {
+                    TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
+                    if (parentNode is not null)
+                    {
+                        if (parentNode.Expanded != null)
+                        {
+                            parentNode.Expanded = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void OnNodeSelecting(NodeSelectEventArgs args)
+    {
+        if (args.NodeData.HasChildren)
+        {
+            args.Cancel = true;
+        }
+    }
 
 }

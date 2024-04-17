@@ -1,8 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@using Syncfusion.Blazor.Navigations
-@using System.Reflection
 
 <PageTitle>Home</PageTitle>
 

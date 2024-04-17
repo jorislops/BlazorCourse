@@ -1,10 +1,13 @@
 ﻿@using System.Reflection
 @using System.Web
+@using BlazorCourse.Components.Pages.Components.ParentChildServiceExample
 @using Syncfusion.Blazor.Navigations
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject CodeViewerService CodeViewerService
 
 @using Syncfusion.Blazor.Layouts
+@implements IDisposable
 
 
 <CascadingValue Value="@AppState">
@@ -122,12 +125,19 @@
     private bool _showNav = true;
 
     protected override void OnInitialized()
-    {
+    { 
         base.OnInitialized();
 
         NavigationManager.LocationChanged += (sender, args) =>
         {
-            GetFileUrl();
+            GetFileUrl("No Location");
+            StateHasChanged();
+
+        };
+        
+        CodeViewerService.OnMenuChange += () =>
+        {
+            GetFileUrl("No Location");
             StateHasChanged();
         };
 
@@ -152,10 +162,10 @@
     {
         _showCode = !_showCode;
 
-        GetFileUrl();
+        GetFileUrl(NavigationManager.Uri);
     }
 
-    private void GetFileUrl()
+    private void GetFileUrl(string location)
     {
         var allComponents = Assembly
             .GetExecutingAssembly()
@@ -184,6 +194,17 @@
         var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
         _codeFileUri = NavigationManager.BaseUri + "code/pages" +codeFile;
         _codeFileUri = _codeFileUri.Replace(".razor", "");
+    }
+
+    public void Dispose()
+    {
+        // NavigationManager.LocationChanged -= (sender, args) =>
+        // {
+        //     GetFileUrl(args.);
+        //     StateHasChanged();
+        // };
+        
+        CodeViewerService.OnMenuChange -= StateHasChanged;
     }
 }
 

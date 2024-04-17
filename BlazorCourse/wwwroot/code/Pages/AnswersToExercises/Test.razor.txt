@@ -1,0 +1,31 @@
+@page "/Test"
+<h3>Test</h3>
+
+
+    @for (int j = 0; j < 10; j++)
+    {
+        <p>
+            @for (int s = 0; s < (10 - j); s++)
+            {
+                <text>&nbsp;&nbsp;</text>
+            }
+            
+            @for (int i = 0; i < j; i++)
+            {
+                <span>
+                    *
+                </span>
+            }
+        </p>        
+    }
+    
+    <pre>
+          ****
+****
+    </pre>
+
+
+
+    @code {
+    
+}

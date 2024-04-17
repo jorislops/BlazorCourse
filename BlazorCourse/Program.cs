@@ -17,6 +17,7 @@ builder.Services.AddRazorComponents()
     });
 
 builder.Services.AddScoped<CounterService>();
+builder.Services.AddScoped<CodeViewerService>();
     
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVGhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjXX5YcHNWQWJfV0ZxWA==");
     builder.Services.AddSyncfusionBlazor();

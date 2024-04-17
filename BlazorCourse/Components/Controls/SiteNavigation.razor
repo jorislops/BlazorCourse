@@ -2,17 +2,8 @@
 @inject NavigationManager NavigationManager
 @inject CodeViewerService CodeViewerService
 
-<h1>
-    @String.Join(',',_selectedNodes)
-</h1>
-<h1>
-    @String.Join(',',_expandedNodes)
-</h1>
-
 <SfTreeView TValue="TreeItem" @ref="_tree"
-            ExpandOn="ExpandAction.Click"
-            SelectedNodes="_selectedNodes"
-            @bind-ExpandedNodes="_expandedNodes">
+            ExpandOn="ExpandAction.Click">
     <TreeViewFieldsSettings DataSource="@_treeDataSource"
                             Id="NodeId" 
                             Text="NodeText" 
@@ -20,22 +11,13 @@
                             IconCss="Icon"
                             NavigateUrl="Url"
                             Selected="Selected"
+                            Expanded="Expanded"
                             Child="@("Child")">
     </TreeViewFieldsSettings>
-    <TreeViewEvents TValue="TreeItem"
-                    NodeExpanding="OnNodeExpanding"
-                    NodeCollapsing="OnNodeCollapsing"
-                    NodeSelecting="OnNodeSelecting"/>
+    
 </SfTreeView>
 
 @code{
-    string[] _selectedNodes = new string[] { "" };
-    List<string> _expandedNodesList = new List<string>();
-    string[] _expandedNodes = new string[] { "" };
-    string _previousSelectedNodeId = "";
-    
-    
-    // Specifies the DataSource value for TreeView component.
     List<TreeItem> _treeDataSource = new List<TreeItem>();
 
     protected override void OnInitialized()
@@ -43,30 +25,27 @@
         base.OnInitialized();
 
         _treeDataSource = NavigationTreeData.GetNavigationTree();
-
         UpdateParentIds(_treeDataSource);
         
         NavigationManager.LocationChanged += LocationChanged;
         LocationChanged(new object(), new LocationChangedEventArgs(NavigationManager.Uri, true));
+    }
 
-        Console.WriteLine("test");
-        void UpdateParentIds(List<TreeItem> treeDataSource)
+    void UpdateParentIds(List<TreeItem> treeDataSource)
+    {
+        foreach (var treeItem in treeDataSource)
         {
-            foreach (var treeItem in treeDataSource)
+            if (treeItem.Child.Count > 0)
             {
-                if (treeItem.Child.Count > 0)
+                foreach (var child in treeItem.Child)
                 {
-                    foreach (var child in treeItem.Child)
-                    {
-                        child.ParentId = treeItem.NodeId;
-                        child.Parent = treeItem;
-                    }
-                    UpdateParentIds(treeItem.Child);
+                    child.ParentId = treeItem.NodeId;
+                    child.Parent = treeItem;
                 }
+                UpdateParentIds(treeItem.Child);
             }
         }
     }
-
 
     private void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
@@ -75,7 +54,6 @@
         if (url == "")
         {
             CodeViewerService.SelectedMenuMessage(url);
-            _selectedNodes[0]= "";
             InvokeAsync(StateHasChanged);
         }
         else
@@ -85,10 +63,12 @@
                 TreeItem? navigatedNode = TreeItem.FindNodeByUrl(_treeDataSource, url);
                 if (navigatedNode != null)
                 {
+                    navigatedNode.Selected = true;
+                    DeselectAll(_treeDataSource);
+                    navigatedNode.Selected = true;
+                    ExpandParents(navigatedNode);
+                    
                     CodeViewerService.SelectedMenuMessage(navigatedNode.NodeText);
-                    _selectedNodes[0] = navigatedNode.NodeId;
-                    ExpandSelectedNode(navigatedNode);
-                    _expandedNodes = _expandedNodesList.ToArray();
                     InvokeAsync(StateHasChanged);
                 }
             }
@@ -215,35 +195,52 @@
         // }
     }
     
-    void OnNodeCollapsing(NodeExpandEventArgs args)
-    {
-        
-        TreeItem? node = TreeItem.FindNode(_treeDataSource!, args.NodeData.Id);
-        if (node != null)
-        {
-            if (_expandedNodesList.Contains(node.NodeId))
-            {
-                _expandedNodesList.Remove(node.NodeId);
-                if (node.Expanded != null)
-                {
-                    node.Expanded = false;
-                }
-            }
+    // void OnNodeCollapsing(NodeExpandEventArgs args)
+    // {
+    //     
+    //     TreeItem? node = TreeItem.FindNode(_treeDataSource!, args.NodeData.Id);
+    //     if (node != null)
+    //     {
+    //         if (_expandedNodesList.Contains(node.NodeId))
+    //         {
+    //             _expandedNodesList.Remove(node.NodeId);
+    //             if (node.Expanded != null)
+    //             {
+    //                 node.Expanded = false;
+    //             }
+    //         }
+    //
+    //         if (args.NodeData.ParentID != null)
+    //         {
+    //             if(node.ParentId != null)
+    //             {
+    //                 TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
+    //                 if (parentNode is not null)
+    //                 {
+    //                     DeselectAll(_treeDataSource);
+    //                     parentNode.Selected = true;
+    //                     ExpandParents(parentNode);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-            if (args.NodeData.ParentID != null)
-            {
-                if(node.ParentId != null)
-                {
-                    TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
-                    if (parentNode is not null)
-                    {
-                        if (parentNode.Expanded != null)
-                        {
-                            parentNode.Expanded = false;
-                        }
-                    }
-                }
-            }
+    private void ExpandParents(TreeItem node)
+    {
+        if (node.Parent != null)
+        {
+            node.Parent.Expanded = true;
+            ExpandParents(node.Parent);
+        }
+    }
+
+    private void DeselectAll(List<TreeItem> nodes)
+    {
+        foreach (var node in nodes)
+        {
+            node.Selected = false;
+            DeselectAll(node.Child);
         }
     }
     

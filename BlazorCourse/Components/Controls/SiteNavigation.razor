@@ -2,8 +2,10 @@
 @inject NavigationManager NavigationManager
 @inject CodeViewerService CodeViewerService
 
-<SfTreeView TValue="TreeItem" @ref="_tree"
-            ExpandOn="ExpandAction.Click">
+<SfTreeView TValue="TreeItem"
+            ExpandOn="ExpandAction.Click"
+            AllowMultiSelection="false"
+            >
     <TreeViewFieldsSettings DataSource="@_treeDataSource"
                             Id="NodeId" 
                             Text="NodeText" 
@@ -12,8 +14,15 @@
                             NavigateUrl="Url"
                             Selected="Selected"
                             Expanded="Expanded"
-                            Child="@("Child")">
+                            Child="Child"
+                            HasChildren="HasChildren"
+                            >
     </TreeViewFieldsSettings>
+    <TreeViewEvents TValue="TreeItem"
+                    NodeSelected="OnSelected"
+                    NodeSelecting="OnSelecting">
+        
+    </TreeViewEvents>
     
 </SfTreeView>
 
@@ -65,7 +74,6 @@
                 {
                     navigatedNode.Selected = true;
                     DeselectAll(_treeDataSource);
-                    navigatedNode.Selected = true;
                     ExpandParents(navigatedNode);
                     
                     CodeViewerService.SelectedMenuMessage(navigatedNode.NodeText);
@@ -92,6 +100,8 @@
         public string? CodeUrl { get; set; }
         public string? PageUrl { get; set; }
         public TreeItem? Parent { get; set; }
+
+        public bool HasChildren => Child.Any();
 
 
         public static TreeItem? FindNode(List<TreeItem> nodes, string id)
@@ -137,28 +147,7 @@
             return null;
         }
     }
-
-
-    private SfTreeView<TreeItem> _tree = null!;
-
-    private void NodeSelected(NodeSelectEventArgs obj)
-    {
-        string id = obj.NodeData.Id;
-        var clickedNode = TreeItem.FindNode(_treeDataSource, id);
-        if (clickedNode != null)
-        {
-            if (clickedNode.Url != null)
-            {
-                NavigationManager.NavigateTo(clickedNode.Url);
-            }
-        }
-        else
-        {
-            Console.WriteLine("Node not found");
-        }
-    }
-
-
+    
     void OnNodeExpanding(NodeExpandEventArgs args)
     {
         if(args.NodeData.Id != null)
@@ -179,53 +168,8 @@
         }
 
         return result;
-
-        // if (node.Expanded != null)
-        // {
-        //     if(_expandedNodesList.Contains(node.NodeId) == false) _expandedNodesList.Add(node.NodeId);
-        //     node.Expanded = true;
-        // }
-        // if (node.ParentId != null)
-        // {
-        //     TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
-        //     if(parentNode is not null)
-        //     {
-        //         ExpandSelectedNode(parentNode);
-        //     }
-        // }
     }
     
-    // void OnNodeCollapsing(NodeExpandEventArgs args)
-    // {
-    //     
-    //     TreeItem? node = TreeItem.FindNode(_treeDataSource!, args.NodeData.Id);
-    //     if (node != null)
-    //     {
-    //         if (_expandedNodesList.Contains(node.NodeId))
-    //         {
-    //             _expandedNodesList.Remove(node.NodeId);
-    //             if (node.Expanded != null)
-    //             {
-    //                 node.Expanded = false;
-    //             }
-    //         }
-    //
-    //         if (args.NodeData.ParentID != null)
-    //         {
-    //             if(node.ParentId != null)
-    //             {
-    //                 TreeItem? parentNode = TreeItem.FindNode(_treeDataSource!, node.ParentId);
-    //                 if (parentNode is not null)
-    //                 {
-    //                     DeselectAll(_treeDataSource);
-    //                     parentNode.Selected = true;
-    //                     ExpandParents(parentNode);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
     private void ExpandParents(TreeItem node)
     {
         if (node.Parent != null)
@@ -243,13 +187,27 @@
             DeselectAll(node.Child);
         }
     }
-    
-    void OnNodeSelecting(NodeSelectEventArgs args)
+
+    private void OnSelecting(NodeSelectEventArgs args)
     {
+        var treeNode = TreeItem.FindNode(_treeDataSource, args.NodeData.Id);
+        
         if (args.NodeData.HasChildren)
         {
             args.Cancel = true;
         }
+    }
+
+    private string[] _selectedNodes = new string[] {};
+
+    private void OnSelected(NodeSelectEventArgs args)
+    {
+        var treeNode = TreeItem.FindNode(_treeDataSource, args.NodeData.Id);
+        
+        // if (args.NodeData.HasChildren)
+        // {
+        //     args.Cancel = true;
+        // }
     }
 
 }

@@ -29,8 +29,7 @@
                     <ToolbarItem Align="ItemAlign.Right">
                         <Template>
                 
-                            <SfButton @onclick="ToggleCode" IconCss="e-btn-sb-icons e-show-code" IconPosition=@IconPosition.Right>
-                                <span class="e-icons e-code-view"></span>
+                            <SfButton @onclick="ToggleCode" IconCss="@(_showCode ? "e-icons e-insert-code" : "e-icons e-code-view")" IconPosition=@IconPosition.Right>
                                 @(_showCode ? "Hide Code" : "Show Code")
                             </SfButton>
 
@@ -131,19 +130,16 @@
         content: '\e705';
     }
     .e-open-icon::before {
-        content: '\e70d';
+        content: '\e80e';
     }
     .e-add-icon::before {
         content: '\e70a';
     }
     
     .e-hide-code::before {
-        content: '\e831';
+        content: '\e70b';
     }
     
-    .e-show-code::before {
-        content: '\e831';
-    }
     
 </style>
 
@@ -242,7 +238,7 @@
                     .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
             .ToList();
         var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
-        _codeFileUri = NavigationManager.BaseUri + "code/pages" +codeFile;
+        _codeFileUri = NavigationManager.BaseUri + "code/Pages" +codeFile;
         _codeFileUri = _codeFileUri.Replace(".razor", "");
     }
 

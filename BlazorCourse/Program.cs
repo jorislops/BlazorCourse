@@ -19,18 +19,20 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<CounterService>();
 builder.Services.AddScoped<CodeViewerService>();
     
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF1cVGhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjXX5YcHNWQWJfV0ZxWA==");
+
+    
     builder.Services.AddSyncfusionBlazor();
 
-    // string? syncfusionLicenseKey =
-    //     ;
-    //     // Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
-    // if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
-    // {
-    //         
-    // }
+    string? syncfusionLicenseKey =  Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
+    Console.WriteLine("syncfusionLicenseKey: " + syncfusionLicenseKey);
+    if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
+    {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
+    }
 
-builder.Services.AddScoped<MessageService>();
+        
+            ;
+        builder.Services.AddScoped<MessageService>();
 
 builder.Services
     .AddBlazorise( options =>

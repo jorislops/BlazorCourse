@@ -1,5 +1,5 @@
 @using System.Text
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 
 @if (_extraCode)
 {
@@ -92,7 +92,7 @@ else
         if (Uri != null && BaseUri != null)
         {
             // _filename = Uri.Replace(BaseUri, "");
-            _filename = Uri;
+            _filename = SiteNavigationHelper.GetFileUrl(Uri, BaseUri);
             // add extra code files here. The name will be {filename of the extra code}.cs.txt
             switch (_filename)
             {
@@ -134,7 +134,7 @@ else
             if (language == "razor")
             {
                 //invoke the highlightRazor function in the highlight.js file
-                string x = await JS.InvokeAsync<string>("highlightRazor", plainCode);
+                string x = await Js.InvokeAsync<string>("highlightRazor", plainCode);
                 
                 var result = new  MarkupString(x);
                 return result;
@@ -142,10 +142,10 @@ else
             if (language == "css")
             {
                 //invoke the highlightCss function in the highlight.js file
-                return new  MarkupString(await JS.InvokeAsync<string>("highlightCss", plainCode));
+                return new  MarkupString(await Js.InvokeAsync<string>("highlightCss", plainCode));
             }
             //invoke the highlightCsharp function in the highlight.js file
-            return new  MarkupString(await JS.InvokeAsync<string>("highlightCsharp", plainCode));
+            return new  MarkupString(await Js.InvokeAsync<string>("highlightCsharp", plainCode));
         }
         catch (Exception e)
         {
@@ -163,28 +163,12 @@ else
         await ParseCode();
         await base.OnParametersSetAsync();
     }
-    
+
     string? ParseFilename(string filename)
     {
             StringBuilder parsedFilename = new StringBuilder(filename);
-            //Capitalize the first letter of the filename
-            parsedFilename[0] = filename.ToUpper()[0];
-            //check if the filename contains a "-"
-            if (filename.Contains("-"))
-            {
-                //find the index of the "-"
-                int indexOfMinus = filename.IndexOf("-");
-                //remove the "-"
-                parsedFilename.Remove(indexOfMinus, 1);
-                //capitalize the letter after the "-"
-                parsedFilename[indexOfMinus] = char.ToUpper(parsedFilename[indexOfMinus]);
-                //parsedFilename.Replace(filename.Substring(indexOfMinus, 2), filename[indexOfMinus + 1].ToString().ToUpper());
-                return parsedFilename.ToString();
-            }
-            else
-            {
-                return parsedFilename.ToString();
-            }
+            string[] filenameSplits = filename.Split("/");
+            return filenameSplits.Last();
     }
 }
 

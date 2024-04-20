@@ -1,5 +1,4 @@
 @page "/todo-list"
-@using BlazorCourse.Models
 <h3>Todo List</h3>
 
 @if(_todos.Count == 0)

@@ -1,5 +1,4 @@
 @page "/generic-data-table"
-@using BlazorCourse.Models
 <h3>Generic (Type arguments) Data Table</h3>
 
 <DataTable TItem="TodoItem" Items="_todoItems" ExcludeColumnsCsv=@_excludedColumns>

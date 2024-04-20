@@ -25,7 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Components\Controls\DayComponent.razor" />
       <AdditionalFiles Include="Components\Pages\AnswersToExercises\TicTacToe.razor" />
       <AdditionalFiles Include="Components\Pages\Databases\BierExample\BierDelete.razor" />
       <AdditionalFiles Include="Components\Pages\Databases\BierExample\BierPage.razor" />
@@ -48,10 +47,6 @@
       <Compile Update="Components\Pages\ComponentsBasics\SimpleComponentExampleWithInheritance.cs">
         <DependentUpon>SimpleComponentExampleWithInheritance.razor</DependentUpon>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\codefiles\" />
     </ItemGroup>
 
     <ItemGroup>

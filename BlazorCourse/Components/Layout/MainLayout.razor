@@ -1,21 +1,16 @@
-﻿@using System.Reflection
-@using System.Web
-@using BlazorCourse.Components.Pages.Components.ParentChildServiceExample
+﻿@using System.Web
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Navigations
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
-@inject CodeViewerService CodeViewerService
 
 @using Syncfusion.Blazor.Layouts
-@implements IDisposable
-
+@using System.Runtime.InteropServices.JavaScript
 
 <CascadingValue Value="@AppState">
-    <div id="control-section">
-        <div id="sidebar-wrapper">
-            @*Initialize the Toolbar component*@
-            <SfToolbar>
+    <div class="page">
+        <div>
+            <SfToolbar CssClass="defaultToolbar" Height="50px" >
                 <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
                 <ToolbarItems>
                     <ToolbarItem PrefixIcon="e-icons e-menu" TooltipText="Menu"></ToolbarItem>
@@ -28,74 +23,61 @@
                     </ToolbarItem>
                     <ToolbarItem Align="ItemAlign.Right">
                         <Template>
-                
                             <SfButton @onclick="ToggleCode" IconCss="@(_showCode ? "e-icons e-insert-code" : "e-icons e-code-view")" IconPosition=@IconPosition.Right>
                                 @(_showCode ? "Hide Code" : "Show Code")
                             </SfButton>
-
                         </Template>
                     </ToolbarItem>
                 </ToolbarItems>
             </SfToolbar>
-            
-                <div>
-                    @*Initialize the Sidebar component*@
-                    <SfSidebar Width="290px" Target=".main-content" MediaQuery="(min-width:600px)" @bind-IsOpen="SidebarToggle"
-                               @attributes="@_htmlAttribute">
-                        <ChildContent>
-                            <div class="main-menu">
-                                @* <div class="table-content"> *@
-                                @*     <SfTextBox Placeholder="Search..."></SfTextBox> *@
-                                @*     <p class="main-menu-header">TABLE OF CONTENTS</p> *@
-                                @* </div> *@
-                                <div>
-                                    <SiteNavigation></SiteNavigation>
-                                </div>
-                            </div>
-                        </ChildContent>
-                    </SfSidebar>
-
-
-                </div>
-            
-
-            @*main-content declaration*@
-            <div class="main-content" id="main-text">
-                <div class="sidebar-content">
-                    <div class="content px-4">
-                        @* <h4 style="color: lightseagreen">@MessageService.SelectedMenu</h4> *@
-                        @* <hr/> *@
-                        @if (_showCode)
-                        {
-                            <SfSplitter Width="100%" SeparatorSize="3">
-                                <SplitterPanes >
-                                    <SplitterPane >
-                                        <ContentTemplate>
-                                            <CodeViewer Uri="@_codeFileUri" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
-                                        </ContentTemplate>
-                                    </SplitterPane>
-                                    <SplitterPane>
-                                        <ContentTemplate>
-                                            @Body
-                                        </ContentTemplate>
-                                    </SplitterPane>
-                                </SplitterPanes>
-                            </SfSplitter>
-                        }
-                        else
-                        {
-                            @Body
-                        }
+        </div>
+        <div id="wrapper">
+            @*Initialize the Sidebar component*@
+            @*querymedia isnt't possible when you want to force the sidebar closed in presenting mode*@
+            <SfSidebar Width="386px"
+                       Target=".main-content"
+                       Type="SidebarType.Push"
+                       @bind-IsOpen="_sidebarToggle"
+                       @attributes=_htmlAttribute
+                       OnOpen="OnOpen">
+                <ChildContent>
+                    <div class="main-menu">
+                        <div>
+                            <SiteNavigation></SiteNavigation>
+                        </div>
                     </div>
-
-
-                    @* <div class="row m-4"> *@
-                    @*     <div class="col"> *@
-                    @*         @Body *@
-                    @*     </div> *@
-                    @* </div> *@
+                </ChildContent>
+            </SfSidebar>
+        </div>
+        @*main-content declaration*@
+        <div class="main-content" id="main-text">
+            <div class="sidebar-content">
+                <div class="content px-4">
+                    @if (_showCode)
+                    {
+                        <SfSplitter Width="100%" SeparatorSize="3">
+                            <SplitterPanes >
+                                <SplitterPane size="50%">
+                                    <ContentTemplate>
+                                        <CodeViewer Uri="@NavigationManager.GetUriWithQueryParameter("presenting", (bool?)null)" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
+                                    </ContentTemplate>
+                                </SplitterPane>
+                                <SplitterPane>
+                                    <ContentTemplate >
+                                        @Body
+                                    </ContentTemplate>
+                                </SplitterPane>
+                            </SplitterPanes>
+                        </SfSplitter>
+                    }
+                    else
+                    {
+                        @Body
+                    }
                 </div>
+
             </div>
+
         </div>
     </div>
 </CascadingValue>
@@ -106,334 +88,78 @@
     <a class="dismiss">🗙</a>
 </div>
 
-<style>
-    @@font-face {
-        font-family: 'button-icons';
-        src: url(data:application/x-font-ttf;charset=utf-8;base64,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) format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-    .e-btn-sb-icons {
-        font-family: 'button-icons';
-        line-height: 1;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    .e-play-icon::before {
-        content: '\e701';
-    }
-    .e-pause-icon::before {
-        content: '\e705';
-    }
-    .e-open-icon::before {
-        content: '\e80e';
-    }
-    .e-add-icon::before {
-        content: '\e70a';
-    }
-    
-    .e-hide-code::before {
-        content: '\e70b';
-    }
-    
-    
-</style>
-
 @code
 {
+    [SupplyParameterFromQuery]
+    public bool presenting { get; set; }
+    
+    bool _showCode = true;
+    string _codeFileUri = "";
+    // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
+    bool _sidebarToggle = true;
     readonly Dictionary<string, object> _htmlAttribute = new()
     {
         { "class", "sidebar-treeview" }
     };
     
+    //possible bool for presentation mode
+    //private bool _showNav = true;
     
     //make sure that AppState is initialized
     private AppState AppState { get; } = new();
-
-// Specifies the value of TreeView component ExpanOn property.
-
-    // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
-    public bool SidebarToggle;
-
-    // Specifies the event handler for Clicked event in Toolbar component.
-    public void Toggle(ClickEventArgs args)
+    
+    
+    protected override void OnInitialized()
+    {
+        if (presenting) _sidebarToggle = false;
+        /*NavigationManager.LocationChanged += LocationChanged;*/
+        // _codeFileUri = SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
+    }
+    void OnOpen()
+    {
+        if (presenting) _sidebarToggle = false;
+    }
+    /*private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _codeFileUri = SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
+    }*/
+    
+    // Specifies the event handler for Clicked event in the menu button component.
+    void Toggle(ClickEventArgs args)
     {
         if (args.Item.TooltipText == "Menu")
         {
-            SidebarToggle = !SidebarToggle;
+            _sidebarToggle = !_sidebarToggle;
+            
         }
     }
-
-    private bool _showNav = true;
-
-    protected override void OnInitialized()
-    { 
-        base.OnInitialized();
-
-        NavigationManager.LocationChanged += (sender, args) =>
-        {
-            GetFileUrl("No Location");
-            StateHasChanged();
-
-        };
-        
-        CodeViewerService.OnMenuChange += () =>
-        {
-            GetFileUrl("No Location");
-            StateHasChanged();
-        };
-
-        var uri = new Uri(NavigationManager.Uri);
-        var queryString = uri.Query;
-        var queryDictionary = HttpUtility.ParseQueryString(queryString);
-        var showNavQueryValue = queryDictionary["show-nav"];
-        if (showNavQueryValue != null &&
-            (showNavQueryValue.ToLower().Equals("false") ||
-             showNavQueryValue.ToLower().Equals("true")))
-        {
-            _showNav = bool.Parse(showNavQueryValue);
-        }
-        
-        // _showCode = !_showNav;
-    }
     
-    private bool _showCode = true;
-    private string _codeFileUri = "";
-    
-    private void ToggleCode()
+    //specifies the event handler for the click event in the Code button component
+    void ToggleCode()
     {
         _showCode = !_showCode;
-
-        GetFileUrl(NavigationManager.Uri);
-    }
-
-    private void GetFileUrl(string location)
-    {
-        var allComponents = Assembly
-            .GetExecutingAssembly()
-            .ExportedTypes
-            .Where(t => t.IsSubclassOf(typeof(ComponentBase)));
-
-        var routableComponents = allComponents
-            .Where(c => c
-                .GetCustomAttributes(true)
-                .OfType<RouteAttribute>()
-                .Count() > 0);
-        var routings = routableComponents
-            .Select(x => new SiteNavigationHelper.RouteAttributeResult
-                {
-                    Type = x,
-                    FullName = x.FullName!,
-                    RouteAttributes = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(RouteAttribute))
-                }
-            );
-
-        var currentUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
-        var route = routings.Where(r =>
-                r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
-                    .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
-            .ToList();
-        var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
-        _codeFileUri = NavigationManager.BaseUri + "code/Pages" +codeFile;
-        _codeFileUri = _codeFileUri.Replace(".razor", "");
-    }
-
-    public void Dispose()
-    {
-        // NavigationManager.LocationChanged -= (sender, args) =>
-        // {
-        //     GetFileUrl(args.);
-        //     StateHasChanged();
-        // };
-        
-        CodeViewerService.OnMenuChange -= StateHasChanged;
+        //_codeFileUri= SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
     }
 }
 
-]
-<style>
-    div#main-text {
-        height: 2000px;
-    }
+@*Some silly css styling to override button focus and still keep original styling*@
+@*And then we need to override hover since focus takes precedence SIGH!!! :P *@
+@*TODO: fix with javascript. remove focus on click*@
 
-    /* Sample specific styles */
-    .container-fluid {
-        padding-left: 0;
-        padding-right: 0;
+<style>
+    .e-toolbar .e-toolbar-item .e-tbar-btn:focus {
+        background: #f8f9fa;
+        box-shadow: none;
+        border: none;
+        }
+    .e-toolbar .e-toolbar-item .e-tbar-btn:hover{  
+             background: #5c636a !important;
+             border-color: #6c757d !important;
+             border-style: solid !important;
+             border-width: 0 !important;
+             border-radius: 4px !important;
+             color: #6c757d;
     }
-    #sidebar-wrapper .sf-icon-profile:before {
-        float: right;
-        content: '\e717';
-        font-size: 25px;
-    }
-    #sidebar-wrapper.e-sidebar-context {
-        overflow-x: inherit;
-    }
-    #sidebar-wrapper .default-sidebar {
-        z-index: 20 !important;
-    }
-    #sidebar-wrapper .e-content-animation {
-        /*height: 477px;*/
-        width: auto;
-    }
-    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in light themes */
-    .material #sidebar-wrapper .e-listview .e-list-item, .material .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid rgba(0,0,0,0.12);
-    }
-    .fabric #sidebar-wrapper .e-listview .e-list-item, .fabric .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #eaeaea;
-    }
-    .tailwind #sidebar-wrapper .e-listview .e-list-item, .tailwind .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #d7d7d7;
-    }
-    .bootstrap5 .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #dee2e6;
-    }
-    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in dark themes */
-    .bootstrap5-dark .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #444c54;
-    }
-    .material-dark #sidebar-wrapper .e-listview .e-list-item, .material-dark .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #616161;
-    }
-    .fabric-dark #sidebar-wrapper .e-listview .e-list-item, .fabric-dark .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #414040;
-    }
-    .tailwind-dark #sidebar-wrapper .e-listview .e-list-item, .tailwind-dark .defaultToolbar.e-toolbar {
-        border-bottom: 1px solid #4b5563;
-    }
-    /* Specifies the styles for Sidebar, ListView, and Toolbar component related styles in light themes */
-    .material .default-sidebar .e-treeview .e-ul, .material-dark .default-sidebar .e-treeview .e-ul,
-    .bootstrap .default-sidebar .e-treeview .e-ul, .bootstrap-dark .default-sidebar .e-treeview .e-ul {
-        padding-left: 6px;
-    }
-    .e-bigger.material .default-sidebar .e-treeview .e-ul, .e-bigger.material-dark .default-sidebar .e-treeview .e-ul,
-    .fabric .default-sidebar .e-treeview .e-ul, .fabric-dark .default-sidebar .e-treeview .e-ul,
-    .highcontrast .default-sidebar .e-treeview .e-ul {
-        padding-left: 12px;
-    }
-    .e-bigger.fabric .default-sidebar .e-treeview .e-ul, .e-bigger.fabric-dark .default-sidebar .e-treeview .e-ul,
-    .bootstrap5 .default-sidebar .e-treeview .e-ul, .bootstrap5-dark .default-sidebar .e-treeview .e-ul {
-        padding-left: 14px;
-    }
-    .e-bigger.bootstrap .default-sidebar .e-treeview .e-ul, .e-bigger.bootstrap-dark .default-sidebar .e-treeview .e-ul,
-    .e-bigger.highcontrast .default-sidebar .e-treeview .e-ul {
-        padding-left: 16px;
-    }
-    .tailwind .default-sidebar .e-treeview .e-ul, .tailwind-dark .default-sidebar .e-treeview .e-ul {
-        padding-left: 15px;
-    }
-    .e-bigger.bootstrap5 .default-sidebar .e-treeview .e-ul, .e-bigger.bootstrap5-dark .default-sidebar .e-treeview .e-ul,
-    .e-bigger.tailwind .default-sidebar .e-treeview .e-ul, .e-bigger.tailwind-dark .default-sidebar .e-treeview .e-ul,
-    .bootstrap4 .default-sidebar .e-treeview .e-ul {
-        padding-left: 20px;
-    }
-    .e-bigger.bootstrap4 .default-sidebar .e-treeview .e-ul {
-        padding-left: 24px;
-    }
-    .tailwind .default-sidebar .e-treeview .e-list-item .e-text-content, .tailwind-dark .default-sidebar .e-treeview .e-list-item .e-text-content {
-        padding-left: 22px;
-    }
-    /* Specifies the styles for Sidebar hamburger icon */
-    @@font-face {
-        font-family: 'e-sb-icons';
-        src: url(data:application/x-font-ttf;charset=utf-8;base64,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AAATMzUjBSElByclMzUjNTM1IwUXEQE3JwUBIQLIyAESAs/+/mVm/ezIyMjIAvfx/Sry8gFoAWf9MQGBIXycUVEsIUwhnZMBU/6tk8D3AR8ABAAAAAADzgPqAA8AIAAvADsAACUjJzcjFwcjAwYCFyEuAQcBHgEXPgE3LgEnNDY1JiMOASUzMhYdARQGKwEVLwE3FQceARc+ATcuAScOAQJeJjsvZDI2Lj+tjgMDryP1EP5EA5Rvb5MFY38CAxMTb5QCA3QKDAwKdzs4d5ACWUFDWAECWUFDWCuHV1SKARAm/v4Rv4sEASJxkwICkm8FgmAJEAcDA5OiDAooCgwpLChMIy9DVwICWUFDWAICWAAAAgAAAAAD3QPqAA0AGQAANxUhNS4BJw4BIiYnDgETHgEXPgE3LgEnDgEQA84DknEvc39zL3GS1AOac3SaAwOadHOahIKCdaMRJCgoJBGjAeF0mgMDmnR0mgICmgAAABIA3gABAAAAAAAAAAEAAAABAAAAAAABAAoAAQABAAAAAAACAAcACwABAAAAAAADAAoAEgABAAAAAAAEAAoAHAABAAAAAAAFAAsAJgABAAAAAAAGAAoAMQABAAAAAAAKACwAOwABAAAAAAALABIAZwADAAEECQAAAAIAeQADAAEECQABABQAewADAAEECQACAA4AjwADAAEECQADABQAnQADAAEECQAEABQAsQADAAEECQAFABYAxQADAAEECQAGABQA2wADAAEECQAKAFgA7wADAAEECQALACQBRyBlLXNiLWljb25zUmVndWxhcmUtc2ItaWNvbnNlLXNiLWljb25zVmVyc2lvbiAxLjBlLXNiLWljb25zRm9udCBnZW5lcmF0ZWQgdXNpbmcgU3luY2Z1c2lvbiBNZXRybyBTdHVkaW93d3cuc3luY2Z1c2lvbi5jb20AIABlAC0AcwBiAC0AaQBjAG8AbgBzAFIAZQBnAHUAbABhAHIAZQAtAHMAYgAtAGkAYwBvAG4AcwBlAC0AcwBiAC0AaQBjAG8AbgBzAFYAZQByAHMAaQBvAG4AIAAxAC4AMABlAC0AcwBiAC0AaQBjAG8AbgBzAEYAbwBuAHQAIABnAGUAbgBlAHIAYQB0AGUAZAAgAHUAcwBpAG4AZwAgAFMAeQBuAGMAZgB1AHMAaQBvAG4AIABNAGUAdAByAG8AIABTAHQAdQBkAGkAbwB3AHcAdwAuAHMAeQBuAGMAZgB1AHMAaQBvAG4ALgBjAG8AbQAAAAACAAAAAAAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoBAgEDAQQBBQEGAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYBFwEYARkBGgEbAAltYWlsLXNlbmQLaW5ib3gtMDItd2YLaW5ib3gtMDEtd2YFaW5ib3gPb3Blbi1tZXNzYWdlLXdmDGFycm93aGVhZC0wMRBhcnJvd2hlYWQtdG9wLXdmCXJhdGluZy13ZgtyYXRpbmctLS0wMxFhcnJvd2hlYWQtZG93bi0wMQlmb2xkZXItMDMIdXNlcnMtd2YIY2xvY2stMDIGdXBsb2FkCG9uZWRyaXZlEWNsb3VkLWRvd25sb2FkLXdmD3dvcmstb2ZmbGluZS13ZglzZWFyY2gtd2YPbm90ZS1tZW1vLTAxLXdmDGltcG9ydGFudC13ZglzZW50LW1haWwIaW5ib3gtd2YLbWFpbC0tLXNlbnQJdXNlci1iYWNrDHVzZXItcHJvZmlsZQAAAAA=) format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-    [class^="sf-icon-"],
-    [class*=" sf-icon-"] {
-        font-family: 'e-sb-icons';
-        font-size: 15px;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-   /* Specifies the styles for Toolbar component*/
-    .e-bigger .e-tbar-btn .tb-icons {
-        font-size: 20px;
-    }
-    .e-tbar-btn .tb-icons {
-        font-family: 'Material_toolbar';
-        speak: none;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-    }
-    .e-toolbar .e-icons {
-        font-size: 20px;
-    }
-    .e-tbar-menu-icon:before {
-        content: "\e718";
-    }
-    .e-folder {
-        text-align: center;
-        font-weight: 500;
-        font-size: 16px;
-    }
-    .e-bigger .e-folder {
-        font-size: 18px;
-    }
-    .bootstrap5 .e-folder-name, .bootstrap5-dark .e-folder-name {
-        margin-top: -2px;
-    }
-    .bootstrap4 .e-folder-name,
-    .bootstrap .e-folder-name, .bootstrap-dark .e-folder-name {
-        margin-top: 3px;
-    }
-    .tailwind .defaultToolbar.e-toolbar .e-toolbar-items.e-tbar-pos .e-toolbar-left,
-    .tailwind-dark .defaultToolbar.e-toolbar .e-toolbar-items.e-tbar-pos .e-toolbar-left {
-        line-height: initial;
-    }
-    .material .e-folder-name, .material-dark .e-folder-name {
-        margin-top: 1px;
-    }
-    .e-user-name {
-        text-align: center;
-        font-weight: 500;
-        font-size: 14px
-    }
-    .bootstrap4.e-bigger .e-toolbar .e-toolbar-items .e-custom.e-toolbar-item:not(.e-separator) {
-        padding-left: 12px;
-    }
-    /* Specifies the styles for ListView component*/
-    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-item-header,
-    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-content,
-    .bootstrap-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-content {
-        color: #fff;
-    }
-    .material .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
-    .material-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
-        top: 28px;
-    }
-    .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar{
-        top: 12px;
-    }
-    .bootstrap4 .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
-    .bootstrap .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
-    .bootstrap-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
-        top: 22px;
-    }
-    .fabric .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
-    .fabric-dark .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar,
-    .highcontrast .e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
-        top: 15px;
-    }   
-    .e-listview.e-list-template .e-list-wrapper.e-list-avatar:not(.e-list-badge){
-        padding-left: 75px;
-    }
-    #sidebar-wrapper .defaultToolbar .e-btn.e-icon-btn{
-        border: 0px;
-        background-color: #f3f2f1;
-    }
- </style>
+</style>
+       
+ 

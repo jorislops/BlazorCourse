@@ -18,21 +18,14 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<CounterService>();
 builder.Services.AddScoped<CodeViewerService>();
-    
-
-    
-    builder.Services.AddSyncfusionBlazor();
-
-    string? syncfusionLicenseKey =  Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
+builder.Services.AddSyncfusionBlazor();
+string? syncfusionLicenseKey =  Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE", EnvironmentVariableTarget.User);
     Console.WriteLine("syncfusionLicenseKey: " + syncfusionLicenseKey);
     if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
     {
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
     }
-
-        
-            ;
-        builder.Services.AddScoped<MessageService>();
+builder.Services.AddScoped<MessageService>();
 
 builder.Services
     .AddBlazorise( options =>

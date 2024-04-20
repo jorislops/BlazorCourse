@@ -89,7 +89,7 @@
         var relatedFiles = FindNodeWithUrl(navigationTreeData, _pageUrlParam);
     }
 
-    private List<RelateCodeFile> FindNodeWithUrl(List<SiteNavigation.TreeItem> navigationTreeData, string? navigationManagerUri)
+    private List<RelatedCodeFile> FindNodeWithUrl(List<TreeItem> navigationTreeData, string? navigationManagerUri)
     {
         foreach (var item in navigationTreeData)
         {
@@ -108,7 +108,7 @@
             // }
         }
 
-        return Enumerable.Empty<RelateCodeFile>().ToList();
+        return Enumerable.Empty<RelatedCodeFile>().ToList();
     }
 
     private void LocationChanged(object? sender, LocationChangedEventArgs e)

@@ -1,86 +1,44 @@
-using System.Globalization;
 using System.Reflection;
-using System.Text;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorCourse.Components.Controls;
 
-public class SiteNavigationHelper
+public static class SiteNavigationHelper
 {
-    public static void UpdateTreeWidthCode(SiteNavigation.TreeItem treeItem, IEnumerable<RouteAttributeResult> routings)
+    public static string GetFileUrl(string uri, string baseUri)
     {
-        if (treeItem.Url != null && treeItem.Url.StartsWith("/"))
-        {
-            treeItem.Url = treeItem.Url.Substring(1);
-        }
+        var allComponents = Assembly
+            .GetExecutingAssembly()
+            .ExportedTypes
+            .Where(t => t.IsSubclassOf(typeof(ComponentBase)));
 
-        var routeAttributeResults = routings.ToList();
-        if (treeItem.Code != null)
-        {
-            var treeUrl = treeItem.Url;
-    
-            treeItem.CodeUrl = treeItem.Code;
-            treeItem.PageUrl = treeUrl;
-            treeItem.Url = $"/code-viewer?code-url={treeItem.Code}&page-url={treeUrl}";
-        }
-        else if (treeItem.Code == null && treeItem.Url != null)
-        {
-            var treeUrl = treeItem.Url;
-            // treeItem.Code = $"{FirstCharToUpper(Capitalise(treeUrl, "-", CultureInfo.InvariantCulture)).Replace("-", "")}.razor";
-            var route = routeAttributeResults.Where(r =>
-                    r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
-                        .Equals("/" + treeUrl, StringComparison.OrdinalIgnoreCase))))
-                .ToList();
-            var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
-            
-            
-            treeItem.CodeUrl = codeFile;
-            treeItem.PageUrl = treeUrl;
-            treeItem.Url = $"/code-viewer?code-url={codeFile}&page-url={treeUrl}";
-        }
+        var routableComponents = allComponents
+            .Where(c => c
+                .GetCustomAttributes(true)
+                .OfType<RouteAttribute>()
+                .Any());
+        var routings = routableComponents
+            .Select(x => new RouteAttributeResult
+                {
+                    Type = x,
+                    FullName = x.FullName!,
+                    RouteAttributes = x.CustomAttributes.Where(ca => ca.AttributeType == typeof(RouteAttribute))
+                }
+            );
 
-
-        foreach (var child in treeItem.Child)
-        {
-            UpdateTreeWidthCode(child, routeAttributeResults);
-        }
+        var currentUrl = uri.Replace(baseUri, "");
+        var route = routings.Where(r =>
+                r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
+                    .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
+            .ToList();
+        var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
+        var codeFileUri = baseUri + "code/Pages" +codeFile;
+        return codeFileUri.Replace(".razor", "");
     }
-
     public record RouteAttributeResult
     {
         public required string FullName { get; set; }
         public required IEnumerable<CustomAttributeData> RouteAttributes { get; set; }
         public required Type Type { get; set; }
-    }
-
-    public static string FirstCharToUpper(string input) =>
-        input switch
-        {
-            null => throw new ArgumentNullException(nameof(input)),
-            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
-            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
-        };
-
-    public static string Capitalise(string text, string targets, CultureInfo culture)
-    {
-        bool capitalise = true;
-        var result = new StringBuilder(text.Length);
-
-        foreach (char c in text)
-        {
-            if (capitalise)
-            {
-                result.Append(char.ToUpper(c, culture));
-                capitalise = false;
-            }
-            else
-            {
-                if (targets.Contains(c))
-                    capitalise = true;
-
-                result.Append(c);
-            }
-        }
-
-        return result.ToString();
     }
 }

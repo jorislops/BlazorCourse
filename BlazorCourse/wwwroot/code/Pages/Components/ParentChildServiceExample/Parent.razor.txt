@@ -6,15 +6,14 @@
     <span>Hi, I'm @Name.</span>
     <span>My child says: "@_childText".</span><br/>
     <span>Someone said: "@MessageService.Message".</span><br/>
-    
+
     <Child Name="@ChildName" SayHi="ChildSaidHi"></Child>
 </div>
+
 @code {
-    [Parameter]
-    public string? Name { get; set; }
-    
-    [Parameter]
-    public string? ChildName { get; set; }
+    [Parameter] public string? Name { get; set; }
+
+    [Parameter] public string? ChildName { get; set; }
 
     private string _childText = "Nothing";
 

@@ -7,7 +7,7 @@
 {
     <div>
         @Message
-    </div>    
+    </div>
 }
 
 <div>
@@ -15,11 +15,12 @@
 </div>
 <div>
     <p>To Force a reload of the page, click the button below</p>
-    
+
     <a class="btn btn-primary" href="/lifecycle/hello">Navigate To Same page</a>
 </div>
 <div>
-    <p>The counter is used, otherwise Blazor detects that the component will never changes (has no state) and 
+    <p>
+        The counter is used, otherwise Blazor detects that the component will never changes (has no state) and
         calls Dispose(). Instead of reusing the component, when the url changes.
     </p>
     @_count
@@ -27,15 +28,14 @@
 </div>
 
 <div>
-    <ChildLifeCycle />
+    <ChildLifeCycle/>
 </div>
 
 @code {
-    private int _count = 0;
-    
-    [Parameter]
-    public string? Message { get; set; }
-    
+    private int _count;
+
+    [Parameter] public string? Message { get; set; }
+
     public override Task SetParametersAsync(ParameterView parameters)
     {
         Console.WriteLine($"Lifecycle SetParametersAsync {DateTime.Now.ToLongTimeString()}");

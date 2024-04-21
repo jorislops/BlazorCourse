@@ -4,7 +4,6 @@
 @page "/bier/{Brouwnaam}"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
-@using System.Collections.Specialized
 @using System.Web
 @inject NavigationManager NavigationManager
 
@@ -18,10 +17,10 @@
 
 <div class="row input-group">
     <div class="col">
-        <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput=@(args => FilterByNaam(args.Value?.ToString()))>
-    @* <div class="input-group-append"> *@
-    @*     <button class="btn btn-outline-secondary" type="button">Zoek op naam</button> *@
-    @* </div> *@
+        <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput="@(args => FilterByNaam(args.Value?.ToString()))">
+        @* <div class="input-group-append"> *@
+        @*     <button class="btn btn-outline-secondary" type="button">Zoek op naam</button> *@
+        @* </div> *@
     </div>
 </div>
 
@@ -63,13 +62,13 @@
                 </li>
             }
 
-            @foreach(var pageNumber in Enumerable.Range(1, Math.Min(10, _pagedResult.TotalPages)))
+            @foreach (var pageNumber in Enumerable.Range(1, Math.Min(10, _pagedResult.TotalPages)))
             {
                 <li class="page-item">
-                    <a class="page-link" @onclick="@(()=>GoToPage(pageNumber))">@pageNumber</a>
+                    <a class="page-link" @onclick="@(() => GoToPage(pageNumber))">@pageNumber</a>
                 </li>
             }
-            
+
             @if (_pagedResult.Page < _pagedResult.TotalPages)
             {
                 <li class="page-item">
@@ -86,34 +85,31 @@
 @code {
     private PagedResult<Bier> _pagedResult = null!;
 
-    private PageFilterSorting _pageFilterSorting = new PageFilterSorting()
+    private readonly PageFilterSorting _pageFilterSorting = new()
     {
         CurrentPage = 1,
         OrderBy = "naam"
     };
 
-    
+
     //FromQuery bier?brouwcode=1
-    [Parameter]
-    public int? Brouwcode { get; set; }
-    
-    
-    [Parameter]
-    public string? Brouwnaam { get; set; }
-    
-    [Parameter]
-    public string? Land { get; set; }
-    
+    [Parameter] public int? Brouwcode { get; set; }
+
+
+    [Parameter] public string? Brouwnaam { get; set; }
+
+    [Parameter] public string? Land { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
-        string uriAsString = NavigationManager.Uri;
-        Uri url = new Uri(uriAsString);
-        string queryString = url.Query; // returns "?Brouwcode=someInt"
-        NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
-        string? brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
-        if (int.TryParse(brouwcodeAsString, out int brouwcode))
+
+        var uriAsString = NavigationManager.Uri;
+        var url = new Uri(uriAsString);
+        var queryString = url.Query; // returns "?Brouwcode=someInt"
+        var queryParameters = HttpUtility.ParseQueryString(queryString);
+        var brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
+        if (int.TryParse(brouwcodeAsString, out var brouwcode))
         {
             Brouwcode = brouwcode;
         }
@@ -130,7 +126,8 @@
         if (Brouwcode is not null)
         {
             Brouwcode = Brouwcode;
-        } else if (Brouwnaam is not null)
+        }
+        else if (Brouwnaam is not null)
         {
             _pageFilterSorting.Brouwnaam = Brouwnaam;
             if (Land is not null)

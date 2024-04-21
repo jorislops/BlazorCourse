@@ -1,7 +1,7 @@
 @page "/counter-example-les"
 <h3>Counter Example Les</h3>
 
-<CounterExample Initial="10" Increment="5" 
+<CounterExample Initial="10" Increment="5"
                 OnCountIncremented="CountIncrement"
                 ConditionToFireEvent="@(count => count % 10 == 0)">
     <CounterText>
@@ -14,6 +14,7 @@
 
 @code {
     private int _countFromEvent = -1;
+
     private void CountIncrement(int value)
     {
         _countFromEvent = value;

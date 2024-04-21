@@ -5,12 +5,10 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired] 
-    public int Counter { get; set; }
-    
-    
-    [Parameter]
-    public int Step { get; set; } = 1;
+    [Parameter] [EditorRequired] public int Counter { get; set; }
+
+
+    [Parameter] public int Step { get; set; } = 1;
 
     private void Increment()
     {

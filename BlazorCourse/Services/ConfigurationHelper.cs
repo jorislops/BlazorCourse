@@ -1,4 +1,4 @@
-namespace BlazorCourse;
+namespace BlazorCourse.Services;
 
 public class ConfigurationHelper
 {

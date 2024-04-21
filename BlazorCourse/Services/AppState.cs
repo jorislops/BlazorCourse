@@ -1,10 +1,11 @@
-namespace BlazorCourse;
+namespace BlazorCourse.Services;
 
-public class CounterService
+public class AppState
 {
-    public int Counter { get; set; } = 0;
-    
+    public int Counter { get; set; }
+
     public event Action? CountHasChanged;
+
     public void IncrementCounter()
     {
         Counter++;

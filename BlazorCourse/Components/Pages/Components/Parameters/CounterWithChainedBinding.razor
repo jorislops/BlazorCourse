@@ -5,12 +5,10 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired]
-    public int Counter { get; set; }
-    
-    
-    [Parameter]
-    public EventCallback<int> CounterChanged { get; set; }
+    [Parameter] [EditorRequired] public int Counter { get; set; }
+
+
+    [Parameter] public EventCallback<int> CounterChanged { get; set; }
 
     private void Decrement()
     {
@@ -23,4 +21,5 @@
         Counter += 1;
         CounterChanged.InvokeAsync(Counter);
     }
+
 }

@@ -8,16 +8,16 @@
 <a class="btn btn-success" @onclick="HyperlinkDisguisedAsButtonClicked">Click me</a>
 
 <h5>Event Parameters</h5>
-@foreach(var btnNumber in Enumerable.Range(1, 5))
+@foreach (var btnNumber in Enumerable.Range(1, 5))
 {
     <button class="btn btn-primary" @onclick="() => ButtonClickedWithParameter(btnNumber)">@btnNumber</button>
 }
 
 <h5>Event Arguments</h5>
 
-<div @onmousemove="@((mouseEvent) => MouseMove(mouseEvent))" style="border: 2px dashed red">
-@* Below is the same as the above line, but with a different syntax *@
-@* <div @onmousemove="@OnMouseMove" style="border: 2px dashed red"> *@
+<div @onmousemove="@(mouseEvent => MouseMove(mouseEvent))" style="border: 2px dashed red">
+    @* Below is the same as the above line, but with a different syntax *@
+    @* <div @onmousemove="@OnMouseMove" style="border: 2px dashed red"> *@
     <p>Move your mouse over me</p>
 
     <p>Mouse X: @_mouseX Mouse Y: @_mouseY</p>
@@ -25,7 +25,7 @@
 </div>
 
 @code {
-    private string _message = String.Empty;
+    private string _message = string.Empty;
     private double _mouseX;
     private double _mouseY;
     private double _mouseYRelative;
@@ -35,12 +35,12 @@
     {
         _message = "Button Clicked";
     }
-    
+
     private void HyperlinkDisguisedAsButtonClicked()
     {
         _message = "Hyperlink Clicked";
     }
-    
+
     private void ButtonClickedWithParameter(int btnNumber)
     {
         _message = $"Button Clicked with parameter {btnNumber}";

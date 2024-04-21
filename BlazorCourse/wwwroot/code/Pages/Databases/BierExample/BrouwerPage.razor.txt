@@ -1,6 +1,6 @@
 @page "/brouwer"
-@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
@@ -11,7 +11,7 @@
     {
         <li>
             <span @onclick="@(() => GoToBeerPage(brouwer.Brouwcode))">@brouwer.Naam (@brouwer.AantalBieren) (@brouwer.AantalBrouwersZelfdeNaam)</span>
-            
+
             @{
                 var link = brouwer.Naam;
                 if (brouwer.AantalBrouwersZelfdeNaam > 1)
@@ -19,17 +19,17 @@
                     link += $"/{brouwer.Land}";
                 }
             }
-            
+
             <a href="/Bier/@link">Show Beers</a>
         </li>
     }
 </ul>
 
 @code {
-    
-    
+
+
     private List<BrouwerVm> _brouwers = null!;
-    
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -40,4 +40,5 @@
     {
         NavigationManager.NavigateTo($"/Bier/{brouwcode}");
     }
+
 }

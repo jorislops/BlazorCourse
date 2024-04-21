@@ -16,12 +16,11 @@
 
 @code {
     private string _currentDay = "Not set yet.";
-    
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         _currentDay = DateTime.Now.DayOfWeek.ToString();
-
     }
 
 }

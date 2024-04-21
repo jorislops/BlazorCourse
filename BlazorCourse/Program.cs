@@ -1,44 +1,32 @@
 using BlazorCourse;
 using BlazorCourse.Components;
-using BlazorCourse.Components.Pages.Components.ParentChildServiceExample;
+using BlazorCourse.Services;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
-    .AddHubOptions(options =>
-    {
-        options.MaximumReceiveMessageSize = 1024*1024;
-    });
+    .AddHubOptions(options => { options.MaximumReceiveMessageSize = 1024 * 1024; });
 
 builder.Services.AddScoped<CounterService>();
-builder.Services.AddScoped<CodeViewerService>();
+
 builder.Services.AddSyncfusionBlazor();
-string? syncfusionLicenseKey =  Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE", EnvironmentVariableTarget.User);
-    Console.WriteLine("syncfusionLicenseKey: " + syncfusionLicenseKey);
-    if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey))
-    {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
-    }
-builder.Services.AddScoped<MessageService>();
+var syncfusionLicenseKey = Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
+Console.WriteLine("syncfusionLicenseKey: " + syncfusionLicenseKey);
+if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey)) SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
 
 builder.Services
-    .AddBlazorise( options =>
-    {
-        options.Immediate = true;
-    } )
+    .AddBlazorise(options => { options.Immediate = true; })
     .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
-builder.Services.AddAntiforgery(options =>
-{
-    options.SuppressXFrameOptionsHeader = true;
-});
+builder.Services.AddAntiforgery(options => { options.SuppressXFrameOptionsHeader = true; });
 
 var app = builder.Build();
 
@@ -53,7 +41,7 @@ app.Use(async (context, next) =>
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseExceptionHandler("/Error", true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

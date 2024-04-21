@@ -8,7 +8,8 @@
         <h5>@(ParseFilename(_filename) + ".razor")</h5>
         <br/>
     }
-    <div style="overflow: auto">
+
+    <div>
         <pre style="margin-bottom: 0; padding-bottom: 0; overflow: hidden; display: inline-block;">
             <code class="language-razor">@_codeRazor</code>
         </pre>
@@ -20,11 +21,12 @@
         }
     </div>
     <hr/>
-    if(_filenameExtra != null)
+    if (_filenameExtra != null)
     {
         <h5>@ParseFilename(_filenameExtra + ".cs") </h5>
         <br/>
     }
+
     <pre>
         <code class="language-csharp">@_codeExtra</code>
     </pre>
@@ -36,19 +38,21 @@
             <h5>@(ParseFilename(_filename) + ".razor.css")</h5>
             <br/>
         }
+
         <pre>
             <code class="language-csharp">@_codeCss</code>
         </pre>
     }
 }
 else
-{ 
-    if(_filename != null)
+{
+    if (_filename != null)
     {
-        <h5>@(ParseFilename(_filename) +".razor")</h5>
+        <h5>@(ParseFilename(_filename) + ".razor")</h5>
         <br/>
     }
-    <div style="overflow: auto">
+
+    <div>
         <pre style="margin-bottom: 0; padding-bottom: 0; overflow: hidden; display: inline-block;">
             <code class="language-razor">@_codeRazor</code>
         </pre>
@@ -67,6 +71,7 @@ else
             <h5>@(ParseFilename(_filename) + ".razor.css")</h5>
             <br/>
         }
+
         <pre>
             <code class="language-csharp">@_codeCss</code>
         </pre>
@@ -86,7 +91,7 @@ else
     MarkupString? _codeCsharp;
     MarkupString? _codeExtra;
     MarkupString? _codeCss;
-    
+
     async Task ParseCode()
     {
         if (Uri != null && BaseUri != null)
@@ -110,42 +115,46 @@ else
         If the @code part of the page doesn't highlight correctly, split the Razor part and the Csharp part into two separate files
         Name them {file}.razor.txt and {file}.cs.txt
         */
-        
+
         if (_filename != null)
         {
             _codeRazor = await FetchCode(_filename + ".razor", "razor");
             _codeCsharp = await FetchCode(_filename + ".cs", "csharp");
             _codeCss = await FetchCode(_filename + ".razor.css", "css");
         }
+
         if (_filenameExtra != null)
         {
-            _codeExtra = await FetchCode(_filenameExtra+".cs", "csharp");
+            _codeExtra = await FetchCode(_filenameExtra + ".cs", "csharp");
         }
     }
-    
+
     async Task<MarkupString?> FetchCode(string filename, string language)
     {
-        string codeUri = $"{filename}.txt";
-        HttpClient client = new HttpClient();
+        var codeUri = $"{filename}.txt";
+        var client = new HttpClient();
         //try if the code file exists
-        try {
-            string plainCode = client.GetStringAsync(codeUri).Result;
+        try
+        {
+            var plainCode = client.GetStringAsync(codeUri).Result;
             // client.Dispose();
             if (language == "razor")
             {
                 //invoke the highlightRazor function in the highlight.js file
-                string x = await Js.InvokeAsync<string>("highlightRazor", plainCode);
-                
-                var result = new  MarkupString(x);
+                var x = await Js.InvokeAsync<string>("highlightRazor", plainCode);
+
+                var result = new MarkupString(x);
                 return result;
             }
+
             if (language == "css")
             {
                 //invoke the highlightCss function in the highlight.js file
-                return new  MarkupString(await Js.InvokeAsync<string>("highlightCss", plainCode));
+                return new MarkupString(await Js.InvokeAsync<string>("highlightCss", plainCode));
             }
+
             //invoke the highlightCsharp function in the highlight.js file
-            return new  MarkupString(await Js.InvokeAsync<string>("highlightCsharp", plainCode));
+            return new MarkupString(await Js.InvokeAsync<string>("highlightCsharp", plainCode));
         }
         catch (Exception e)
         {
@@ -153,10 +162,10 @@ else
             return null;
         }
     }
-    
+
     // Call highlighting when the parameters are set so the code is highlighted when NavigationManager.LocationChanged is called
     // Because oninitialization is not called when the page is navigated to from another page
-    
+
     protected override async Task OnParametersSetAsync()
     {
         _extraCode = false;
@@ -166,10 +175,11 @@ else
 
     string? ParseFilename(string filename)
     {
-            StringBuilder parsedFilename = new StringBuilder(filename);
-            string[] filenameSplits = filename.Split("/");
-            return filenameSplits.Last();
+        var parsedFilename = new StringBuilder(filename);
+        var filenameSplits = filename.Split("/");
+        return filenameSplits.Last();
     }
+
 }
 
 <style>
@@ -181,4 +191,3 @@ else
         padding: 5px;
     }
 </style>
-

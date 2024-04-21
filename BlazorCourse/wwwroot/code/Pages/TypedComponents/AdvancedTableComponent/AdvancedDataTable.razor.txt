@@ -1,6 +1,6 @@
 @typeparam TItem
 
-<CascadingValue Value="@this">
+<CascadingValue Value="@(this)">
     @ChildContent
 </CascadingValue>
 
@@ -8,43 +8,42 @@
 {
     <div class="alert alert-warning">
         <strong>Warning!</strong> No items to display.
-    </div>    
-} 
-else 
+    </div>
+}
+else
 {
     <table class="table table-hover table-striped table-bordered">
         <thead>
-            @foreach(var column in Columns)
-            {
-                <th>@column.HeaderText</th>
-            }
+        @foreach (var column in Columns)
+        {
+            <th>@column.HeaderText</th>
+        }
         </thead>
         <tbody>
-            @foreach (TItem item in Items)
-            {
-                <tr>
-                    @foreach (var column in Columns)
-                    {
-                        <td>@column.Selector(item)</td>
-                    }
-                </tr>
-            }
+        @foreach (var item in Items)
+        {
+            <tr>
+                @foreach (var column in Columns)
+                {
+                    <td>@column.Selector(item)</td>
+                }
+            </tr>
+        }
         </tbody>
     </table>
 }
 
 @code {
-    [Parameter, EditorRequired]
-    public List<TItem> Items { get; set; } = new List<TItem>();
-    
-    [Parameter]
-    public RenderFragment ChildContent { get; set; } = null!;
-    
-    private List<DataTableColumn<TItem>> Columns { get; set; } = new List<DataTableColumn<TItem>>();
-    
+    [Parameter] [EditorRequired] public List<TItem> Items { get; set; } = new();
+
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+
+    private List<DataTableColumn<TItem>> Columns { get; set; } = new();
+
     public void AddColumn(DataTableColumn<TItem> tableColumn)
     {
         Columns.Add(tableColumn);
         StateHasChanged(); //trick to force rendering when columns are added
     }
+
 }

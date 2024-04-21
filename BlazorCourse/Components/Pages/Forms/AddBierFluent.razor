@@ -15,25 +15,25 @@
     <div class="mb-3">
         <label for="naam" class="form-label">Naam</label>
         <InputText class="form-control" id="naam" @bind-Value="_bier.Naam"/>
-        <ValidationMessage For=@(() => _bier.Naam)/>
+        <ValidationMessage For="@(() => _bier.Naam)"/>
     </div>
 
     <div class="mb-3">
         <label for="type" class="form-label">Type</label>
         <InputText class="form-control" id="type" @bind-Value="_bier.Type"/>
-        <ValidationMessage For=@(() => _bier.Type)/>
+        <ValidationMessage For="@(() => _bier.Type)"/>
     </div>
 
     <div class="mb-3">
         <label for="stijl" class="form-label">Stijl</label>
         <InputText class="form-control" id="stijl" @bind-Value="_bier.Stijl"/>
-        <ValidationMessage For=@(() => _bier.Stijl)/>
+        <ValidationMessage For="@(() => _bier.Stijl)"/>
     </div>
 
     <div class="mb-3">
         <label for="alcohol" class="form-label">Alcohol</label>
         <InputNumber class="form-control" id="alcohol" @bind-Value="_bier.Alcohol"/>
-        <ValidationMessage For=@(() => _bier.Alcohol)/>
+        <ValidationMessage For="@(() => _bier.Alcohol)"/>
     </div>
 
     <div class="mb-3">
@@ -48,7 +48,7 @@
                 <option value="@brouwer.Brouwcode">@brouwer.Naam</option>
             }
         </InputSelect>
-        <ValidationMessage For=@(() => _bier.Brouwcode)/>
+        <ValidationMessage For="@(() => _bier.Brouwcode)"/>
     </div>
 
     <button class="btn btn-danger" type="reset">Reset</button>
@@ -56,7 +56,7 @@
 </EditForm>
 
 @code {
-    private Bier _bier = new Bier();
+    private Bier _bier = new();
     private List<Brouwer> _brouwers = null!;
 
     protected override void OnInitialized()

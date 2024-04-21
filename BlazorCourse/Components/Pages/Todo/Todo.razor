@@ -23,7 +23,7 @@
     @foreach (var todo in todos)
     {
         <li>
-            @if(todo.IsDone)
+            @if (todo.IsDone)
             {
                 <del>@todo.Title</del>
             }
@@ -45,22 +45,23 @@
 
 
 @code {
+
     public class TodoItem
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public bool IsDone { get; set; }
     }
-    
-    private List<TodoItem> todos = new List<TodoItem>();
 
-    private TodoItem newTodoItem = new TodoItem();
+    private List<TodoItem> todos = new();
+
+    private TodoItem newTodoItem = new();
 
     private void AddTodo()
     {
-        if(string.IsNullOrWhiteSpace(newTodoItem.Title))
+        if (string.IsNullOrWhiteSpace(newTodoItem.Title))
             return;
-        
+
         newTodoItem.Id = todos.Count + 1;
         todos.Add(newTodoItem);
         newTodoItem = new TodoItem();
@@ -70,7 +71,7 @@
     {
         todos.Remove(todoItem);
     }
-    
+
     private void Delete(int id)
     {
         todos = todos.Where(x => x.Id != id).ToList();

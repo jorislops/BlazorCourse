@@ -20,20 +20,25 @@ DROP TABLE IF EXISTS TodoItem;
 
 CREATE TABLE TodoItem
 (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    ParentId INT NULL REFERENCES TodoItem(Id),
-    Title VARCHAR(100) NOT NULL,
+    Id          INT PRIMARY KEY AUTO_INCREMENT,
+    ParentId    INT          NULL REFERENCES TodoItem (Id),
+    Title       VARCHAR(100) NOT NULL,
     Description TEXT,
-    IsDone BOOLEAN NOT NULL,
-    CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    IsDone      BOOLEAN      NOT NULL,
+    CreatedAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CompletedAt DATETIME
 );
 
-INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt) VALUES ('First Todo', 'This is the first todo', false, '2021-01-01 00:00:00', NULL);
-INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt) VALUES ('Second Todo', 'This is the second todo', false, '2021-01-02 00:00:00', NULL); 
+INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt)
+VALUES ('First Todo', 'This is the first todo', false, '2021-01-01 00:00:00', NULL);
+INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt)
+VALUES ('Second Todo', 'This is the second todo', false, '2021-01-02 00:00:00', NULL);
 SET @parentIdSecondTodo = (SELECT LAST_INSERT_ID());
-    INSERT INTO TodoItem (Title, ParentId, Description, IsDone, CreatedAt, CompletedAt) VALUES ('Second Todo - Child 1', @parentIdSecondTodo, 'Second Todo - Child 1', false, '2021-01-03 00:00:00', NULL);
-    INSERT INTO TodoItem (Title, ParentId, Description, IsDone, CreatedAt, CompletedAt) VALUES ('Second Todo - Child 2', @parentIdSecondTodo, 'Second Todo - Child 2', false, '2021-01-03 00:00:00', NULL);
+INSERT INTO TodoItem (Title, ParentId, Description, IsDone, CreatedAt, CompletedAt)
+VALUES ('Second Todo - Child 1', @parentIdSecondTodo, 'Second Todo - Child 1', false, '2021-01-03 00:00:00', NULL);
+INSERT INTO TodoItem (Title, ParentId, Description, IsDone, CreatedAt, CompletedAt)
+VALUES ('Second Todo - Child 2', @parentIdSecondTodo, 'Second Todo - Child 2', false, '2021-01-03 00:00:00', NULL);
 
-INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt) VALUES ('Third Todo', 'This is the third todo', false, '2021-01-03 00:00:00', NULL);
+INSERT INTO TodoItem (Title, Description, IsDone, CreatedAt, CompletedAt)
+VALUES ('Third Todo', 'This is the third todo', false, '2021-01-03 00:00:00', NULL);
 

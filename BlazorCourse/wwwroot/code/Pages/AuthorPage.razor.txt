@@ -1,20 +1,19 @@
 @page "/AuthorPage"
+@using SqlKata.Execution
 @using MySqlConnector
 @using SqlKata.Compilers
-@using SqlKata.Execution
 @using System.Text.Json
 <h3>AuthorPage</h3>
 
 @code {
+
     public class Author
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
-
-
     }
-    
+
     public class Book
     {
         public int Id { get; set; }
@@ -23,7 +22,7 @@
 
         public Author Author { get; set; } = null!;
     }
-    
+
     protected override void OnInitialized()
     {
         var connectionString = "Server=localhost;Database=Books;Uid=root;Pwd=Test@1234!;";
@@ -33,15 +32,15 @@
 
         var authors = db.Query("Authors")
             .Select("Id", "FirstName", "LastName");
-        
+
         var result = db.Query("Books")
             .Select("Id", "Title", "AuthorId")
-            .Include("Author", authors, "AuthorId", "Id")
+            .Include("Author", authors, "AuthorId")
             .Get();
-        
+
         var toJson = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
         var booksAsObject = JsonSerializer.Deserialize<List<Book>>(toJson);
-        
+
         base.OnInitialized();
     }
 

@@ -1,6 +1,7 @@
 <h3>ChildLifeCycle</h3>
 
 @code {
+
     public override Task SetParametersAsync(ParameterView parameters)
     {
         Console.WriteLine($"ChildLifecycle SetParametersAsync {DateTime.Now.ToLongTimeString()}");
@@ -29,4 +30,5 @@
     {
         Console.WriteLine($"ChildLifecycle Dispose {DateTime.Now.ToLongTimeString()}");
     }
+
 }

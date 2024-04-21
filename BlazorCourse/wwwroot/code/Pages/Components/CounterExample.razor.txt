@@ -3,32 +3,27 @@
 <div>
     @if (CounterText is null)
     {
-        <p>@_counter</p>    
+        <p>@_counter</p>
     }
     else
     {
         @CounterText(_counter)
     }
-    
+
 </div>
 <button @onclick="ChangeCounter">++</button>
 
 @code {
-    [Parameter, EditorRequired] 
-    public int Initial { get; set; }
+    [Parameter] [EditorRequired] public int Initial { get; set; }
 
-    [Parameter] 
-    public int Increment { get; set; } = 1;
-    
-    [Parameter]
-    public EventCallback<int> OnCountIncremented { get; set; }
+    [Parameter] public int Increment { get; set; } = 1;
 
-    [Parameter] 
-    public RenderFragment<int>? CounterText { get; set; } = null;
+    [Parameter] public EventCallback<int> OnCountIncremented { get; set; }
 
-    [Parameter] 
-    public Predicate<int>? ConditionToFireEvent { get; set; } = null;
-    
+    [Parameter] public RenderFragment<int>? CounterText { get; set; } = null;
+
+    [Parameter] public Predicate<int>? ConditionToFireEvent { get; set; } = null;
+
     private int _counter = 0;
 
     protected override void OnInitialized()
@@ -43,7 +38,7 @@
 
         if (ConditionToFireEvent is null)
         {
-            OnCountIncremented.InvokeAsync(_counter);    
+            OnCountIncremented.InvokeAsync(_counter);
         }
         else
         {
@@ -53,4 +48,5 @@
             }
         }
     }
+
 }

@@ -5,14 +5,12 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired]
-    public int Counter { get; set; }
-    
-    [Parameter]
-    public EventCallback<int> CounterChanged { get; set; }
+    [Parameter] [EditorRequired] public int Counter { get; set; }
+
+    [Parameter] public EventCallback<int> CounterChanged { get; set; }
 
     [Parameter] public int StepSize { get; set; } = 1;
-    
+
 
     private void Decrement()
     {
@@ -25,4 +23,5 @@
         Counter += StepSize;
         CounterChanged.InvokeAsync(Counter);
     }
+
 }

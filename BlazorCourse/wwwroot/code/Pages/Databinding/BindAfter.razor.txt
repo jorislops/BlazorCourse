@@ -4,7 +4,7 @@
 
 <h3>DataBindingBindAfter</h3>
 
-<input @bind="_filter"  @bind:after="Search" @bind:event="oninput"/>
+<input @bind="_filter" @bind:after="Search" @bind:event="oninput"/>
 
 <p>Filter: @_filter</p>
 <p>Search Status: @_searchStatus</p>
@@ -15,7 +15,7 @@
 @if (_filteredNames.Any())
 {
     <ul>
-        @foreach(var name in _filteredNames)
+        @foreach (var name in _filteredNames)
         {
             <li>@name</li>
         }
@@ -27,20 +27,20 @@ else
 }
 
 @code {
-    readonly List<string> _names = new List<string>();
-    
-    List<string> _filteredNames = new List<string>();
-    
-    private string _filter  = String.Empty;
+    readonly List<string> _names = new();
+
+    List<string> _filteredNames = new();
+
+    private string _filter = string.Empty;
     private string _searchStatus = string.Empty;
-    
+
     protected override void OnInitialized()
     {
         _names.Add("John");
         _names.Add("Paul");
         _names.Add("George");
         _names.Add("Ringo");
-        
+
         _filteredNames = _names;
     }
 
@@ -48,18 +48,19 @@ else
     private async Task Search()
     {
         _searchStatus = "Searching...";
-        
+
         await Task.Delay(3000);
-        
+
         if (!string.IsNullOrWhiteSpace(_filter))
         {
-            _filteredNames = _names.Where(n => n.Contains(_filter, StringComparison.OrdinalIgnoreCase)).ToList();    
+            _filteredNames = _names.Where(n => n.Contains(_filter, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         else
         {
             _filteredNames = _names;
         }
-        
+
         _searchStatus = "Completed.";
     }
+
 }

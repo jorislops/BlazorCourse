@@ -4,7 +4,7 @@
 <h3>@_message </h3>
 <CountDownCounter
     Zero="@(message => _message = message)"
-    One=@(message => SetMessage(message))
+    One="@(message => SetMessage(message))"
     Two="SetMessage"
     Ten="SetMessage">
 </CountDownCounter>
@@ -16,4 +16,5 @@
     {
         _message = message;
     }
+
 }

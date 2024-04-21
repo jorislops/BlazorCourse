@@ -1,4 +1,5 @@
 using BlazorCourse.Models;
+using BlazorCourse.Services;
 using Dapper;
 using MySqlConnector;
 
@@ -6,27 +7,27 @@ namespace BlazorCourse.Components.Pages.Databases.Repositories;
 
 public class TodoRepository
 {
-    private readonly string _connectionString = 
+    private readonly string _connectionString =
         ConfigurationHelper.Configuration.GetConnectionString("todo")!;
-    
+
     public List<TodoItem> Get()
     {
         using var connection = new MySqlConnection(_connectionString);
 
-        string sql =
+        var sql =
             """
-                SELECT Id, ParentId, Title, Description, IsDone, CreatedAt, CompletedAt 
-                FROM TodoItem 
+                SELECT Id, ParentId, Title, Description, IsDone, CreatedAt, CompletedAt
+                FROM TodoItem
                 WHERE ParentId IS NULL -- this select only the top level items
                 ORDER BY Id -- maybe we should order by CreatedAt
             """;
         var todos = connection.Query<TodoItem>(sql).ToList();
         return todos;
     }
-    
+
     public List<TodoItem> GetByParentId(int parentId)
     {
-        string sql =
+        var sql =
             """
                 SELECT Id, ParentId, Title, Description, IsDone, CreatedAt, CompletedAt
                 FROM TodoItem
@@ -34,65 +35,65 @@ public class TodoRepository
                 ORDER BY Id
             """;
         using var connection = new MySqlConnection(_connectionString);
-        var todos = connection.Query<TodoItem>(sql, new {ParentId = parentId}).ToList();
+        var todos = connection.Query<TodoItem>(sql, new { ParentId = parentId }).ToList();
         return todos;
     }
 
     public TodoItem? GetById(int todoId)
     {
-        string sql =
+        var sql =
             """
                 SELECT Id, ParentId, Title, Description, IsDone, CreatedAt, CompletedAt
                 FROM TodoItem
                 WHERE Id = @Id
             """;
         using var connection = new MySqlConnection(_connectionString);
-        var todo = connection.QueryFirstOrDefault<TodoItem>(sql, new {Id = todoId});
+        var todo = connection.QueryFirstOrDefault<TodoItem>(sql, new { Id = todoId });
         return todo;
     }
 
     public TodoItem Add(TodoItem newTodoItem)
     {
-        string sql =
+        var sql =
             """
                 INSERT INTO TodoItem (ParentId, Title, Description, IsDone, CreatedAt, CompletedAt)
                 VALUES (@ParentId, @Title, @Description, @IsDone, @CreatedAt, @CompletedAt);
                 SELECT LAST_INSERT_ID();
             """;
         using var connection = new MySqlConnection(_connectionString);
-        int newId = connection.ExecuteScalar<int>(sql, newTodoItem);
+        var newId = connection.ExecuteScalar<int>(sql, newTodoItem);
         return GetById(newId)!;
     }
 
 
     public void Remove(int todoItemId)
     {
-        string sql =
+        var sql =
             """
                 -- we need to delete all the children items first
                 -- or use a cascade delete
                 DELETE FROM TodoItem
-                WHERE ParentId = @Id;            
-
+                WHERE ParentId = @Id;
+            
                 DELETE FROM TodoItem
                 WHERE Id = @Id
             """;
         using var connection = new MySqlConnection(_connectionString);
-        int numEffectedRows = connection.Execute(sql, new {Id = todoItemId});
+        var numEffectedRows = connection.Execute(sql, new { Id = todoItemId });
     }
-    
+
     public void Update(TodoItem todoItem)
     {
-        string sql =
+        var sql =
             """
                 UPDATE TodoItem
-                SET Title = @Title, 
-                    Description = @Description, 
-                    IsDone = @IsDone, 
+                SET Title = @Title,
+                    Description = @Description,
+                    IsDone = @IsDone,
                     CompletedAt = @CompletedAt
                 WHERE Id = @Id
             """;
         using var connection = new MySqlConnection(_connectionString);
-        int numEffectedRows = connection.Execute(sql, todoItem);
+        var numEffectedRows = connection.Execute(sql, todoItem);
     }
 }

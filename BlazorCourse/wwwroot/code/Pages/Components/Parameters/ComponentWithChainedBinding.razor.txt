@@ -5,8 +5,9 @@
 <CounterWithChainedBinding @bind-Counter="_couter"></CounterWithChainedBinding>
 <div>
     Value of Counter: @_couter
-    <button @onclick="Reset" class="btn btn-primary">Reset</button>    
+    <button @onclick="Reset" class="btn btn-primary">Reset</button>
 </div>
+
 @code {
     private int _couter;
 
@@ -14,4 +15,5 @@
     {
         _couter = 0;
     }
+
 }

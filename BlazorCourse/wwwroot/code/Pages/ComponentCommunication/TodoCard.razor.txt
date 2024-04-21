@@ -1,11 +1,8 @@
-@using BlazorCourse.Models
-
-
 <div class="card" xmlns="http://www.w3.org/1999/html">
     <div class="card-body">
         <h5 class="card-title">@Item.Title</h5>
-        
-        @if(TextContent != null)
+
+        @if (TextContent != null)
         {
             @TextContent(Item)
         }
@@ -13,13 +10,13 @@
         {
             <p class="card-text">@Item.Description</p>
         }
-        
+
         <a class="btn btn-primary" href="details/@Item.Id">Details</a>
         <button class="btn btn-primary" @onclick="ToggleDetails">ToggleDetails</button>
-        <button class="btn btn-danger" @onclick=@(() => DeleteItem(Item))>Delete</button>
+        <button class="btn btn-danger" @onclick="@(() => DeleteItem(Item))">Delete</button>
     </div>
     <div class="card-footer">
-        @if(_showDetails)
+        @if (_showDetails)
         {
             <TodoDetails TodoItem="Item"></TodoDetails>
         }
@@ -27,15 +24,12 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired] 
-    public TodoItem Item { get; set; } = null!;
+    [Parameter] [EditorRequired] public TodoItem Item { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public EventCallback<TodoItem> OnDeleteItem { get; set; }
-    
-    [Parameter]
-    public RenderFragment<TodoItem>? TextContent { get; set; }
-    
+    [Parameter] [EditorRequired] public EventCallback<TodoItem> OnDeleteItem { get; set; }
+
+    [Parameter] public RenderFragment<TodoItem>? TextContent { get; set; }
+
     private void DeleteItem(TodoItem item)
     {
         // Call the delete method from the parent component

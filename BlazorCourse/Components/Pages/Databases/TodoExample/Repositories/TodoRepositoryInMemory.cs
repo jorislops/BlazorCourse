@@ -8,22 +8,24 @@ public class TodoRepositoryInMemory
     {
         var todos = new List<TodoItem>
         {
-            new TodoItem { Id = 1, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now, Items = new List<TodoItem>()
+            new()
             {
-                new TodoItem() { Id = 4, Title = "Do that", IsDone = true, CreatedAt = DateTime.Now.AddDays(-1) },
-                new TodoItem() { Id = 5, Title = "Do something else", IsDone = false, CreatedAt = DateTime.Now.AddDays(-2) }
-            } },
-            new TodoItem
+                Id = 1, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now, Items = new List<TodoItem>
+                {
+                    new() { Id = 4, Title = "Do that", IsDone = true, CreatedAt = DateTime.Now.AddDays(-1) },
+                    new() { Id = 5, Title = "Do something else", IsDone = false, CreatedAt = DateTime.Now.AddDays(-2) }
+                }
+            },
+            new()
             {
                 Id = 2, Title = "Do that", IsDone = false, CreatedAt = DateTime.Now.AddDays(-1),
-                Items = new List<TodoItem>()
+                Items = new List<TodoItem>
                 {
-                    new TodoItem() { Id = 6, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now },
-                    new TodoItem() { Id = 7, Title = "Do something else", IsDone = false, CreatedAt = DateTime.Now.AddDays(-2) }
+                    new() { Id = 6, Title = "Do this", IsDone = false, CreatedAt = DateTime.Now },
+                    new() { Id = 7, Title = "Do something else", IsDone = false, CreatedAt = DateTime.Now.AddDays(-2) }
                 }
-            
             },
-            new TodoItem { Id = 3, Title = "Do something else", IsDone = true, CreatedAt = DateTime.Now.AddDays(-2) }
+            new() { Id = 3, Title = "Do something else", IsDone = true, CreatedAt = DateTime.Now.AddDays(-2) }
         };
         return todos;
     }

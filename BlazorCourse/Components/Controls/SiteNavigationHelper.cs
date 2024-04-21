@@ -31,10 +31,12 @@ public static class SiteNavigationHelper
                 r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
                     .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
             .ToList();
-        var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") + ".razor";
-        var codeFileUri = baseUri + "code/Pages" +codeFile;
+        var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") +
+                       ".razor";
+        var codeFileUri = baseUri + "code/Pages" + codeFile;
         return codeFileUri.Replace(".razor", "");
     }
+
     public record RouteAttributeResult
     {
         public required string FullName { get; set; }

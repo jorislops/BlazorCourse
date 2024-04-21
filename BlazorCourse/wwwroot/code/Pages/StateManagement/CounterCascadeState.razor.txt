@@ -10,11 +10,12 @@
 <div>
     <button class="btn btn-primary" @onclick="() => AppState.IncrementCounter()">Increment With StateHasChanged Property</button>
 </div>
+
 @code {
     // This will only works with
     // <Routes @rendermode="InteractiveServer"/> in App.razor 
     // otherwise AppState will be null.
-    
+
     // The AppState is injected by the CascadingParameter attribute
     // The AppState is a CascadingParameter because it is defined in App.razor
     // and it is cascaded down to all the pages in the app
@@ -26,6 +27,5 @@
     // The NavMenu.razor component registers a callback (+=StateHasChanged) to the AppState.CountHasChanged event
     // in the OnInitialized() method. StateHasChanged() is called when the event is raised.
     // This will re-render the NavMenu.razor component.
-    [CascadingParameter] 
-    public AppState AppState { get; set; } = null!;
+    [CascadingParameter] public AppState AppState { get; set; } = null!;
 }

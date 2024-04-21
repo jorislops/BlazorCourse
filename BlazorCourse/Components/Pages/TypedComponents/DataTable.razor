@@ -11,36 +11,34 @@
     </tr>
     </thead>
     <tbody>
-        @if(Items == null || Items.Count == 0)
+    @if (Items == null || Items.Count == 0)
+    {
+        <tr>
+            <td colspan="@_properties.Length">No data</td>
+        </tr>
+    }
+    else
+    {
+        @foreach (var item in Items)
         {
             <tr>
-                <td colspan="@_properties.Length">No data</td>
+                @foreach (var property in _properties)
+                {
+                    <td>@property.GetValue(item)</td>
+                }
             </tr>
         }
-        else
-        {
-            @foreach (var item in Items)
-            {
-                <tr>
-                    @foreach (var property in _properties)
-                    {
-                        <td>@property.GetValue(item)</td>
-                    }
-                </tr>
-            }
-        }
+    }
     </tbody>
 </table>
 
 @code {
     private PropertyInfo[] _properties = null!;
 
-    [Parameter] 
-    public List<TItem>? Items { get; set; }
-    
-    [Parameter]
-    public string? ExcludeColumnsCsv { get; set; }
-    
+    [Parameter] public List<TItem>? Items { get; set; }
+
+    [Parameter] public string? ExcludeColumnsCsv { get; set; }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();

@@ -5,30 +5,30 @@
 
 <h1>Tic Tac Toe</h1>
 
-<CurrentPlayer Player="@_currentPlayer" />
+<CurrentPlayer Player="@_currentPlayer"/>
 
-@if(_winner == Winner.Draw)
+@if (_winner == Winner.Draw)
 {
     <p>Draw!</p>
 }
-else if(_winner != Winner.None)
+else if (_winner != Winner.None)
 {
     <p>Winner: @_winner</p>
 }
-@if(_winner == Winner.Draw || _winner != Winner.None)
+@if (_winner == Winner.Draw || _winner != Winner.None)
 {
     <button @onclick="@Reset">Reset</button>
 }
 else
 {
-    @foreach(var row in Enumerable.Range(0, 3))
+    @foreach (var row in Enumerable.Range(0, 3))
     {
         <div class="row border border-dashed">
-            @foreach(var col in Enumerable.Range(0, 3))
+            @foreach (var col in Enumerable.Range(0, 3))
             {
                 <div class="col-1 border border-dashed">
                     @{
-                        var cell = @_board[row * 3 + col];
+                        var cell = _board[row * 3 + col];
                         var cellContent = cell == CellState.Empty ? "-" : cell.ToString();
                     }
 
@@ -37,15 +37,14 @@ else
                     </button>
                 </div>
             }
-        </div>          
+        </div>
     }
 }
 
 
-
 @code {
 
-    
+
     private void Reset()
     {
         Array.Fill(_board, CellState.Empty);
@@ -67,7 +66,7 @@ else
         None
     }
 
-    private CellState[] _board =
+    private readonly CellState[] _board =
     [
         CellState.Empty, CellState.Empty, CellState.Empty,
         CellState.Empty, CellState.Empty, CellState.Empty,
@@ -123,4 +122,5 @@ else
             _winner = Winner.Draw;
         }
     }
+
 }

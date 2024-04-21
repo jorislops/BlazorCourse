@@ -1,16 +1,12 @@
-﻿@using System.Web
-@using Syncfusion.Blazor.Buttons
-@using Syncfusion.Blazor.Navigations
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject IJSRuntime Js
 
-@using Syncfusion.Blazor.Layouts
-@using System.Runtime.InteropServices.JavaScript
 
 <CascadingValue Value="@AppState">
     <div class="page">
         <div>
-            <SfToolbar CssClass="defaultToolbar" Height="50px" >
+            <SfToolbar CssClass="defaultToolbar" Height="50px">
                 <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
                 <ToolbarItems>
                     <ToolbarItem PrefixIcon="e-icons e-menu" TooltipText="Menu"></ToolbarItem>
@@ -23,7 +19,7 @@
                     </ToolbarItem>
                     <ToolbarItem Align="ItemAlign.Right">
                         <Template>
-                            <SfButton @onclick="ToggleCode" IconCss="@(_showCode ? "e-icons e-insert-code" : "e-icons e-code-view")" IconPosition=@IconPosition.Right>
+                            <SfButton @onclick="ToggleCode" IconCss="@(_showCode ? "e-icons e-insert-code" : "e-icons e-code-view")" IconPosition="@IconPosition.Right">
                                 @(_showCode ? "Hide Code" : "Show Code")
                             </SfButton>
                         </Template>
@@ -38,7 +34,7 @@
                        Target=".main-content"
                        Type="SidebarType.Push"
                        @bind-IsOpen="_sidebarToggle"
-                       @attributes=_htmlAttribute
+                       @attributes="_htmlAttribute"
                        OnOpen="OnOpen">
                 <ChildContent>
                     <div class="main-menu">
@@ -75,9 +71,7 @@
                         @Body
                     }
                 </div>
-
             </div>
-
         </div>
     </div>
 </CascadingValue>
@@ -90,76 +84,52 @@
 
 @code
 {
-    [SupplyParameterFromQuery]
-    public bool presenting { get; set; }
-    
+    //Query parameter for presentation mode -> sfSidebar is disabled
+    [SupplyParameterFromQuery] public bool Presenting { get; set; }
+
     bool _showCode = true;
-    string _codeFileUri = "";
+
+    //string _codeFileUri = "";
     // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
     bool _sidebarToggle = true;
+
     readonly Dictionary<string, object> _htmlAttribute = new()
     {
         { "class", "sidebar-treeview" }
     };
-    
-    //possible bool for presentation mode
-    //private bool _showNav = true;
-    
+
     //make sure that AppState is initialized
     private AppState AppState { get; } = new();
-    
-    
+
+
     protected override void OnInitialized()
     {
-        if (presenting) _sidebarToggle = false;
-        /*NavigationManager.LocationChanged += LocationChanged;*/
-        // _codeFileUri = SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
+        //Close sidebar when in presenting mode
+        if (Presenting) _sidebarToggle = false;
     }
+
     void OnOpen()
     {
-        if (presenting) _sidebarToggle = false;
+        //force keep sidebar closed when in presenting mode
+        if (Presenting) _sidebarToggle = false;
     }
-    /*private void LocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        _codeFileUri = SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
-    }*/
-    
+
     // Specifies the event handler for Clicked event in the menu button component.
     void Toggle(ClickEventArgs args)
     {
         if (args.Item.TooltipText == "Menu")
         {
             _sidebarToggle = !_sidebarToggle;
-            
+            //remove focus from button
+            Js.InvokeAsync<string>("document.activeElement.blur");
         }
     }
-    
+
     //specifies the event handler for the click event in the Code button component
     void ToggleCode()
     {
         _showCode = !_showCode;
-        //_codeFileUri= SiteNavigationHelper.GetFileUrl(NavigationManager.Uri, NavigationManager.BaseUri);
+        //remove focus from button
+        Js.InvokeAsync<string>("document.activeElement.blur");
     }
 }
-
-@*Some silly css styling to override button focus and still keep original styling*@
-@*And then we need to override hover since focus takes precedence SIGH!!! :P *@
-@*TODO: fix with javascript. remove focus on click*@
-
-<style>
-    .e-toolbar .e-toolbar-item .e-tbar-btn:focus {
-        background: #f8f9fa;
-        box-shadow: none;
-        border: none;
-        }
-    .e-toolbar .e-toolbar-item .e-tbar-btn:hover{  
-             background: #5c636a !important;
-             border-color: #6c757d !important;
-             border-style: solid !important;
-             border-width: 0 !important;
-             border-radius: 4px !important;
-             color: #6c757d;
-    }
-</style>
-       
- 

@@ -1,9 +1,9 @@
 @page "/todo-without-repository"
-@using MySqlConnector
 @using Dapper
+@using MySqlConnector
 <h3>Todo Without Repository</h3>
 
-@foreach(var todo in _todos)
+@foreach (var todo in _todos)
 {
     <p>@todo.Title</p>
 }
@@ -19,4 +19,5 @@
         using var connection = new MySqlConnection(connectionString);
         _todos = connection.Query<TodoItem>("SELECT * FROM TodoItem").ToList();
     }
+
 }

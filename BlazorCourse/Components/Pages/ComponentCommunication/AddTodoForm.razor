@@ -1,5 +1,3 @@
-@using BlazorCourse.Models
-
 @if (_visible)
 {
     <div class="form-group">
@@ -12,8 +10,8 @@
         <input type="text" class="form-control" id="description"
                @bind="_newTodoItem.Description"/>
     </div>
-    
-    <button class="btn btn-primary" @onclick="Add">+</button>    
+
+    <button class="btn btn-primary" @onclick="Add">+</button>
 }
 
 
@@ -24,23 +22,22 @@
     {
         Title = ""
     };
-    
-    [Parameter, EditorRequired]
-    public EventCallback<TodoItem> OnAdd { get; set; }
-     
+
+    [Parameter] [EditorRequired] public EventCallback<TodoItem> OnAdd { get; set; }
+
     private void Add()
     {
-        if(String.IsNullOrWhiteSpace(_newTodoItem.Title))
+        if (string.IsNullOrWhiteSpace(_newTodoItem.Title))
             return;
-        
+
         OnAdd.InvokeAsync(_newTodoItem);
-        _newTodoItem = new TodoItem()
+        _newTodoItem = new TodoItem
         {
             Title = string.Empty
         };
         _visible = false;
     }
-    
+
     public void ToggleVisibility()
     {
         _visible = !_visible;

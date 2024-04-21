@@ -1,5 +1,5 @@
 <h3>ChildComponent</h3>
 
 @code {
-    
+
 }

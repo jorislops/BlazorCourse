@@ -16,9 +16,9 @@
 
 @code {
     private string _currentDay = "Not set yet.";
-    
-    private string Message = "Hello from SimpleComponentExample.";
-    
+
+    private readonly string Message = "Hello from SimpleComponentExample.";
+
     protected override void OnInitialized()
     {
         base.OnInitialized();

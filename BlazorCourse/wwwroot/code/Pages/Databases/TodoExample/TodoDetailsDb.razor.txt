@@ -1,5 +1,4 @@
 @page "/todo-details-db/{TodoId:int}"
-@using BlazorCourse.Models
 @using BlazorCourse.Components.Pages.Databases.Repositories
 
 @if (_item is null)
@@ -21,7 +20,7 @@ else
                     <h5 class="card-title">@todo.Title</h5>
                     @if (User is not null)
                     {
-                        <h6 class="card-subtitle">@User.Name</h6>    
+                        <h6 class="card-subtitle">@User.Name</h6>
                     }
                     <p class="card-text">@todo.Description</p>
                 </div>
@@ -32,13 +31,13 @@ else
 
 
 @code {
+
     [Parameter] //Route Parameter & Component Parameter
     public int TodoId { get; set; }
-    
+
     private TodoItem? _item { get; set; }
 
-    [CascadingParameter] 
-    public User User { get; set; } = null!;
+    [CascadingParameter] public User User { get; set; } = null!;
 
     protected override void OnInitialized()
     {

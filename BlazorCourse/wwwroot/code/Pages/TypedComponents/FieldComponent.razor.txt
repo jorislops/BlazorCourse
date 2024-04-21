@@ -1,26 +1,23 @@
 <div class="form-group">
     @if (!string.IsNullOrWhiteSpace(Label))
     {
-        <label>@Label</label>    
+        <label>@Label</label>
     }
-    
+
     @ChildContent
-    
+
     @if (!string.IsNullOrWhiteSpace(HelpMessage))
     {
-        <small class="form-text text-muted">@HelpMessage</small>    
+        <small class="form-text text-muted">@HelpMessage</small>
     }
-    
+
 </div>
 
 @code {
-    [Parameter]
-    public string? Label { get; set; }
+    [Parameter] public string? Label { get; set; }
 
-    [Parameter, EditorRequired] 
-    public RenderFragment ChildContent { get; set; } = null!;
-    
-    [Parameter]
-    public string? HelpMessage { get; set; }
+    [Parameter] [EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+
+    [Parameter] public string? HelpMessage { get; set; }
 
 }

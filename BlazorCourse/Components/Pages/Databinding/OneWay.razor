@@ -5,19 +5,23 @@
 
 <h2>One way binding</h2>
 <p>@_dateTimeMessage</p>
+
 @code {
-    readonly string _dateTimeMessage = "The date and time is: " + @DateTime.Now;
+    readonly string _dateTimeMessage = "The date and time is: " + DateTime.Now;
 }
+
 <hr>
 
 <h2>Binding to an object</h2>
 <p>@_person.FirstName @_person.LastName</p>
+
 @code {
+
     public class Person
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
     }
 
-    readonly Person _person = new Person { FirstName = "John", LastName = "Doe" };
+    readonly Person _person = new() { FirstName = "John", LastName = "Doe" };
 }

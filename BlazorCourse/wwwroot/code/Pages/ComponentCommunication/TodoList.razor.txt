@@ -1,66 +1,77 @@
 @page "/todo-list"
 <h3>Todo List</h3>
 
-@if(_todos.Count == 0)
+@if (_todos.Count == 0)
 {
     <p>No items found</p>
 }
 else
 {
-    @foreach(var todo in _todos)
+    @foreach (var todo in _todos)
     {
         <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
             <TextContent>
-                @if(todo.IsDone)
+                @if (todo.IsDone)
                 {
-                    <h4><del>@todo.Title</del></h4>
+                    <h4>
+                        <del>@todo.Title</del>
+                    </h4>
                 }
                 else
                 {
                     <h4>@todo.Title</h4>
                 }
-            </TextContent>    
+            </TextContent>
         </TodoCard>
         <br/>
     }
 }
 <hr/>
-<button class="btn btn-primary" 
-        @onclick=@(() => _addTodoForm.ToggleVisibility())>Add</button>
-<AddTodoForm 
+<button class="btn btn-primary"
+        @onclick="@(() => _addTodoForm.ToggleVisibility())">
+    Add
+</button>
+<AddTodoForm
     @ref="_addTodoForm"
-    OnAdd="AddNewTodo"></AddTodoForm>
+    OnAdd="AddNewTodo">
+</AddTodoForm>
 
 @code {
-    private List<TodoItem> _todos = new List<TodoItem>();
-    private AddTodoForm _addTodoForm = new AddTodoForm();
+    private List<TodoItem> _todos = new();
+    private AddTodoForm _addTodoForm = new();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        _todos = new List<TodoItem>()
+        _todos = new List<TodoItem>
         {
-            new TodoItem() { Id = 1, Title = "Buy groceries", Items = new List<TodoItem>()
+            new()
             {
-                new TodoItem() { Id = 6, Title = "Milk" },
-                new TodoItem() { Id = 7, Title = "Bread" },
-                new TodoItem() { Id = 8, Title = "Eggs" }   
-            }},
-            new TodoItem() { Id = 2, Title = "Do laundry", Items = new List<TodoItem>()
+                Id = 1, Title = "Buy groceries", Items = new List<TodoItem>
+                {
+                    new() { Id = 6, Title = "Milk" },
+                    new() { Id = 7, Title = "Bread" },
+                    new() { Id = 8, Title = "Eggs" }
+                }
+            },
+            new()
             {
-                new TodoItem() { Id = 9, Title = "Whites" },
-                new TodoItem() { Id = 10, Title = "Colors" }
-            }},
-            new TodoItem() { Id = 3, Title = "Clean the house" },
-            new TodoItem() { Id = 4, Title = "Cook dinner" },
-            new TodoItem() { Id = 5, Title = "Wash the car" }
+                Id = 2, Title = "Do laundry", Items = new List<TodoItem>
+                {
+                    new() { Id = 9, Title = "Whites" },
+                    new() { Id = 10, Title = "Colors" }
+                }
+            },
+            new() { Id = 3, Title = "Clean the house" },
+            new() { Id = 4, Title = "Cook dinner" },
+            new() { Id = 5, Title = "Wash the car" }
         };
     }
 
     private void AddTodoItem()
     {
-        _todos.Add(new TodoItem()
+        _todos.Add(new TodoItem
         {
             Id = _todos.Max(x => x.Id) + 1,
             Title = "aap"
@@ -77,4 +88,5 @@ else
         newTodoItem.Id = _todos.Max(x => x.Id) + 1;
         _todos.Add(newTodoItem);
     }
+
 }

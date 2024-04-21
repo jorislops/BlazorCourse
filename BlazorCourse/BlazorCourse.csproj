@@ -12,13 +12,10 @@
       <PackageReference Include="Blazorise.Bootstrap5" Version="1.4.3" />
       <PackageReference Include="Blazorise.DataGrid" Version="1.4.3" />
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.3" />
-      <PackageReference Include="Blazorise.TreeView" Version="1.4.3" />
-      <PackageReference Include="BlazorMonaco" Version="3.2.0" />
       <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="MySqlConnector" Version="2.3.5" />
       <PackageReference Include="SqlKata" Version="2.4.0" />
       <PackageReference Include="SqlKata.Execution" Version="2.4.0" />
-      <PackageReference Include="Syncfusion.Blazor.Calendars" Version="25.1.40" />
       <PackageReference Include="Syncfusion.Blazor.Layouts" Version="25.1.40" />
       <PackageReference Include="Syncfusion.Blazor.Navigations" Version="25.1.40" />
       <PackageReference Include="Syncfusion.Blazor.Themes" Version="25.1.40" />

@@ -28,11 +28,11 @@
     //this can cause performance problems. 
     //Of course count a good example of state but idea applies to any state.
     //SO NEVER EVER USE STATIC VARIABLES TO MAINTAIN STATE IN A WEB APPLICATION!
-    
+
 
     //Remark: A component and page are the same things,
     //except a page can be called from an url (router)
-    private static int _count = 0;
+    private static int _count;
 
     protected override void OnInitialized()
     {

@@ -1,18 +1,14 @@
 <h3>Count: @_count</h3>
-<button class="btn btn-primary" @onclick=@Decrement>--</button>
+<button class="btn btn-primary" @onclick="@Decrement">--</button>
 
 @code {
     private int _count = 12;
 
-    [Parameter]
-    public EventCallback<string> Zero { get; set; }
-    [Parameter]
-    public EventCallback<string> One { get; set; }
-    [Parameter]
-    public EventCallback<string> Two { get; set; }
-    [Parameter]
-    public EventCallback<string> Ten { get; set; }
-    
+    [Parameter] public EventCallback<string> Zero { get; set; }
+    [Parameter] public EventCallback<string> One { get; set; }
+    [Parameter] public EventCallback<string> Two { get; set; }
+    [Parameter] public EventCallback<string> Ten { get; set; }
+
     public void Decrement()
     {
         _count--;
@@ -33,4 +29,5 @@
                 break;
         }
     }
+
 }

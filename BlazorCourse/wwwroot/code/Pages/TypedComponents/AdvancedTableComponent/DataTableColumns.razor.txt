@@ -1,8 +1,7 @@
-<CascadingValue Value="@this">
+<CascadingValue Value="@(this)">
     @ChildContent
 </CascadingValue>
 
 @code {
-    [Parameter] 
-    public RenderFragment? ChildContent { get; set; }    
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 }

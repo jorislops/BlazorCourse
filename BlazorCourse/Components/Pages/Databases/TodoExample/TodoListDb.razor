@@ -3,34 +3,39 @@
 @using BlazorCourse.Components.Pages.Databases.Repositories
 <h3>Todo List with Database</h3>
 
-@foreach(var todo in _todos)
+@foreach (var todo in _todos)
 {
     <TodoCardDb Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
         <TextContent>
-            @if(todo.IsDone)
+            @if (todo.IsDone)
             {
-                <h4><del>@todo.Title</del></h4>
+                <h4>
+                    <del>@todo.Title</del>
+                </h4>
             }
             else
             {
                 <h4>@todo.Title</h4>
             }
-        </TextContent>    
+        </TextContent>
     </TodoCardDb>
     <br/>
 }
 
 <hr>
 
-<button class="btn btn-primary" 
-        @onclick=@(() => _addTodoForm.ToggleVisibility())>Display/Hide Add Form</button>
-<AddTodoForm 
+<button class="btn btn-primary"
+        @onclick="@(() => _addTodoForm.ToggleVisibility())">
+    Display/Hide Add Form
+</button>
+<AddTodoForm
     @ref="_addTodoForm"
-    OnAdd="AddNewTodo"></AddTodoForm>
+    OnAdd="AddNewTodo">
+</AddTodoForm>
 
 @code {
     private List<TodoItem> _todos = null!;
-    private AddTodoForm _addTodoForm = new AddTodoForm();
+    private AddTodoForm _addTodoForm = new();
 
     protected override void OnInitialized()
     {
@@ -49,8 +54,9 @@
     {
         var addedTodoItem = new TodoRepository().Add(newTodoItem);
         _todos.Add(addedTodoItem);
-        
+
         // newTodoItem.Id = _todos.Max(x => x.Id) + 1;
         // _todos.Add(newTodoItem);
     }
+
 }

@@ -39,44 +39,44 @@
 <p>
     <label>
         <input type="radio" value="1" name="group1" checked="@(selectedGroup == 1)"
-               @onclick=@(() => selectedGroup = 2)/>1
+               @onclick="@(() => selectedGroup = 2)"/>1
         <input type="radio" value="2" name="group1" checked="@(selectedGroup == 2)"
-               @onclick=@(() => selectedGroup = 2)/>2
+               @onclick="@(() => selectedGroup = 2)"/>2
     </label>
 </p>
 
 
-    <ul>
-        @foreach (var city in _cities)
-        {
-            <li>@city.Name</li>
-        }
-    </ul>
+<ul>
+    @foreach (var city in _cities)
+    {
+        <li>@city.Name</li>
+    }
+</ul>
 
 
-    <table>
-        @foreach (var person in _persons)
-        {
-            <tr>
-                <td>
-                    @person.FirstName
-                </td>
-                <td>
-                    <input @bind=@person.City.Name @bind:event="oninput"/>
-                </td>
-            </tr>    
-        }
-    </table>
+<table>
+    @foreach (var person in _persons)
+    {
+        <tr>
+            <td>
+                @person.FirstName
+            </td>
+            <td>
+                <input @bind=@person.City.Name @bind:event="oninput"/>
+            </td>
+        </tr>
+    }
+</table>
 
 
 @code {
     private List<Person> _persons { get; set; } = null!;
 
-    private List<City> _cities = new List<City>
+    private readonly List<City> _cities = new()
     {
-        new City { Id = 1, Name = "New York" },
-        new City { Id = 2, Name = "Los Angeles" },
-        new City { Id = 3, Name = "Chicago" }
+        new() { Id = 1, Name = "New York" },
+        new() { Id = 2, Name = "Los Angeles" },
+        new() { Id = 3, Name = "Chicago" }
     };
 
     int selectedGroup = 1;
@@ -86,7 +86,7 @@
         base.OnInitialized();
         _persons = new List<Person>
         {
-            new Person
+            new()
             {
                 FirstName = "John",
                 LastName = "Doe",
@@ -95,7 +95,7 @@
                 IsMarried = true,
                 City = _cities[1]
             },
-            new Person
+            new()
             {
                 FirstName = "Jane",
                 LastName = "Doe",

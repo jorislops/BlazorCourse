@@ -17,9 +17,9 @@ else
         @* <h2>Brouwer: @_bier.Brouwer.Naam</h2> *@
     </div>
     <hr/>
-    <h3>Are you sure to delete?</h3> 
+    <h3>Are you sure to delete?</h3>
     <div>
-        <button class="btn btn-danger" @onclick="@(() =>Delete(_bier.Biercode))">Delete</button>
+        <button class="btn btn-danger" @onclick="@(() => Delete(_bier.Biercode))">Delete</button>
         <a class="btn btn-success" href="/BierPage">No</a>
     </div>
 }
@@ -27,13 +27,12 @@ else
 @code {
     private Bier? _bier;
 
-    [Parameter]
-    public int Biercode { get; set; }
-    
+    [Parameter] public int Biercode { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
+
         _bier = new BierRepository().GetByCode(Biercode);
     }
 

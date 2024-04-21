@@ -122,6 +122,7 @@ body {
 }
 
 .e-sidebar {
+    padding-bottom: 50px !important;
     height: calc(100dvh - 50px) !important;
     /*background: #b7d2d8 !important;*/
     background: linear-gradient(180deg, #dee2e6, transparent) !important;

@@ -154,7 +154,7 @@ body {
     content: '\e83c';
 }
 
-.html::before {
+.e-list-icon.html::before {
     font-family: 'e-icons';
     content: '\e7d3';
 }

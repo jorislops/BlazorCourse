@@ -11,7 +11,7 @@ TOC:
 
 Met `git clone` kan je het project clonen.
 Je zult dan wel de databases moeten aanmaken in MySQL of MariaDb. 
-De SQL code staat in `/SQL`. Voer deze code uit. 
+De SQL-code staat in `/SQL`. Voer deze code uit. 
 De connection strings staan in `appsettings.json`.
 
 Voer af en toe een git pull uit om de laatste versie te krijgen, mocht je dingen tegenkomen die niet kloppen 
@@ -35,7 +35,7 @@ of onduidelijk zijn schroom om te vragen zodat wij het kunnen verbeteren. Alvast
 - Filmpjes van Frank Lui 
 
 ## Les 2 Componenten
-- SPA framework (zie filmpje van Frank Lui over SPA en componenten)
+- SPA-framework (zie filmpje van Frank Lui over SPA en componenten)
 - Structuur van Blazor Project (nogmaals herhaling om te kijken of het is blijven hangen en omdat het belangrijk is ivm componenten)
   - Componenten idee
   - Pages

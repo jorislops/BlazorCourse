@@ -95,7 +95,7 @@ Maak gebruik van de volgende connectie string om vanuit C# Blazor connectie te m
 ```
 
 #### phpMyAdmin
-Je kan deze database server managen via een webbased adminstratietool genaamd phpMyAdmin.
+Je kan de mySql server managen via een webbased adminstratietool genaamd phpMyAdmin.
 Deze kan je bereiken op het volgende adres, waarbij {x} je groepnummer is
 ```
 group{x}-database.webdeployment.nl

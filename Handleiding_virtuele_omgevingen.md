@@ -76,7 +76,9 @@ https://group{x}-files.webdeployment.nl
 ```
 
 De standaar login is:
+
 Username: admin
+
 Password: admin
 
 Het wachtwoord kan je aanpassen in de webinterface bij settings.
@@ -104,6 +106,7 @@ group{x}-database.webdeployment.nl
 De standaard login voor mySql server is net zoals in periode 3:
 
 Username: root
+
 Password: Test@1234!
 
 Je kan het wachtwoord veranderen door boven op de pagina op Server: 127.0.0.1 te klikken en dan op change password:

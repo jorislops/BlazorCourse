@@ -143,10 +143,11 @@ group{x}.webdeployment.nl
 nick.burgmeijer@nhlstenden.com
 
 
-Mogelijkheden zijn:
+Mogelijke problemen zijn:
 
     - wachtwoord vergeten, dan kan je een wachtwoord reset vragen
     - er is iets mis met de mysql, filebrowser of phpMyAdmin containers
     - je server is gecrashed
+    - evt. andere problemen zoals een gecrashte docker daemon
 
-Dan is er de mogelijkheid om eventeel een verse omgeving aan te vragen of een eerder backup te herstellen (let op: de laatste 2 backups worden bewaard!)
+Er is dan de mogelijkheid om eventeel een verse omgeving aan te vragen of een eerdere backup te herstellen (let op: de laatste 2 backups worden bewaard!)

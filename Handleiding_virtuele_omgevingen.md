@@ -109,13 +109,13 @@ Username: root
 
 Password: Test@1234!
 
-Je kan het wachtwoord veranderen door boven op de pagina op Server: 127.0.0.1 te klikken en dan op change password:
+Je kan het wachtwoord veranderen door boven aan de pagina op Server: 127.0.0.1 te klikken en dan op change password:
 
 ![alt text](image-2.png)
 
 ## Standaard docker containers
 
-Voor het volgende commando uit in de shell van de server om te zien welke docker containers momenteel actief zijn
+Voer het volgende commando uit in de shell van de server om te zien welke docker containers momenteel actief zijn
 
 ```
 docker ps

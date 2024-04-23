@@ -80,7 +80,7 @@ De standaar login is:
 Username: admin
 Password: admin
 
-Het wachtwoord kan je aanpassen in de webinterface.
+Het wachtwoord kan je aanpassen in de webinterface bij settings.
 
 ![alt text](image.png)
 

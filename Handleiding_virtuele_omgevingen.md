@@ -20,7 +20,7 @@ Deze omgeving is van buitenaf bereikbaar en bevat de volgende opties.
 ## Secure Shell
 
 Om toegang te krijgen tot de CLI(command line interface) van de server gaan we een SSH(secure shell) connectie maken met de server.
-Doorloop de volgende stappen om vanaf het internet een SSH connectie te kunnen maken.
+Doorloop de volgende stappen om vanaf je pc of laptop een SSH connectie te kunnen maken.
 
 ##### WINDOWS
 
@@ -102,7 +102,7 @@ Deze kan je bereiken op het volgende adres, waarbij {x} je groepnummer is
 group{x}-database.webdeployment.nl
 ```
 
-De standaard login voor de database is net zoals in periode 3:
+De standaard login voor mySql server is net zoals in periode 3:
 
 Username: root
 Password: Test@1234!

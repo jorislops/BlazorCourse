@@ -132,7 +132,7 @@ group{x}.webdeployment.nl
 - mysql: de mySql Server
 - phpmyadmin: Database administratie tool
 
-# Belanrijke informatie
+# Belangrijke informatie
 
 - Tussen 2:00 uur en 2:30 uur 's nachts wordt van elke omgeving een backup gemaakt. De server wordt dan een paar minuten in een soort stop staat gezet. Op dat moment is de server niet beschikbaar.
 - Laat de containers die draaiden toen je voor het eerst inlogde met rust! Met uitzondering van de nginx container. Deze wordt ook vervangen door een container met jullie webapplicatie

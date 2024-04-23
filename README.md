@@ -7,6 +7,11 @@ TOC:
 - opdrachten per week
 - bronnen
 
+Hier vind je de handleiding met betrekking tot the virtuele servers voor webdeployment:
+
+https://github.com/jorislops/BlazorCourse/blob/main/Handleiding_virtuele_omgevingen.md
+
+
 # Instalatie 
 
 Met `git clone` kan je het project clonen.

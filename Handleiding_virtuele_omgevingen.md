@@ -58,8 +58,7 @@ Nu zitten we in de zogenaamde shell van de linux server.
 
 ![image](https://github.com/nburgmeijer/Webdeployment-jaar1-23-24/assets/31646458/2f360baa-bdcb-41f7-9f7d-9392847aba0c)
 
-6. Om er voor te zorgen dat niet iedereen toegang heeft tot jullie server, gaan we het wachtwoord veranderen. Met het volgende commando in de shell
-   Sla dit wachtwoord ergens veilig op!!!
+6. Om er voor te zorgen dat niet iedereen toegang heeft tot jullie server, gaan we het wachtwoord veranderen. Met het volgende commando in de shell. Berg dit wachtwoord ergens veilig op!!!
 ```sh
 passwd
 ```

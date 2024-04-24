@@ -45,7 +45,8 @@ New-Item -f config
 notepad config
 ```
 
-6. Vervang de inhoud van config met het volgende, waarbij {x} je groepnummer is (bijvoorbeeld group12-terminal.webdeploy)
+6. Vervang de inhoud van config file met het volgende, waarbij {x} je groepnummer is (bijvoorbeeld group12-terminal.webdeploy)
+   Save de config file
 ```sh
 Host group{x}-terminal.webdeployment.nl
 ProxyCommand C:\Program Files (x86)\cloudflared\cloudflared.exe access ssh --hostname %h

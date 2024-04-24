@@ -37,7 +37,7 @@ cd .ssh
 
 4. Voer het volgende commando uit om er zeker van te zijn dat de file genaamd 'config' bestaat
 ```sh
-echo "" > config
+New-Item -f config
 ```
 
 5. Voer het volgende commando uit om notepad te openen voor de config file 

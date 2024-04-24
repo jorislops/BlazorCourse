@@ -71,8 +71,52 @@ passwd
 ```
 
 #### MacOs
->Volgt
 
+1. Open een terminal sessie. Launchpad -> Terminal
+2. Installeer de cloudflare connector met het volgende commando in de terminal. Deze zorgt ervoor dat je de connectie van buitenaf met de server kan maken
+```sh
+brew install cloudflared
+```
+
+3. Ga naar de .shh directory met het volgende commando
+```sh
+cd .ssh
+```
+
+4. Voer het volgende commando uit om er zeker van te zijn dat de file genaamd 'config' bestaat
+```sh
+touch config
+```
+
+5. Voer het volgende commando uit om notepad te openen voor de config file 
+```sh
+nano config
+```
+
+6. Vervang de inhoud van config file met het volgende, waarbij {x} je groepnummer is (bijvoorbeeld group12-terminal.webdeploy)
+   Save de config file met CTRL+C. Sluit nano af met CTRL+X
+```sh
+Host group{x}-terminal.webdeployment.nl
+ProxyCommand cloudflared access ssh --hostname %h
+```
+
+7. Nu kan je een SSH connectie maken met de server met het volgende commando, waarbij {x} je groepnummer is
+   - waarschijnlijk krijg je de melding dat de host nog niet bekend is en of je wil doorgaan met de aangegeven key fingerprint)
+   - Type 'yes'
+   - Het standaard wachtwoord van de server is: 12345
+   
+```sh
+ssh ict@group{x}-terminal.webdeployment.nl
+```
+
+Nu zitten we in de zogenaamde shell van de linux server
+
+![image](https://github.com/nburgmeijer/Webdeployment-jaar1-23-24/assets/31646458/2f360baa-bdcb-41f7-9f7d-9392847aba0c)
+
+6. Om er voor te zorgen dat niet iedereen toegang heeft tot jullie server, gaan we het wachtwoord veranderen. Met het volgende commando in de shell. Berg dit wachtwoord ergens veilig op!!!
+```sh
+passwd
+```
 <br/>
 
 ## Filebrowser

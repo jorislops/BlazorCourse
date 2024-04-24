@@ -53,13 +53,14 @@ ProxyCommand C:\Program Files (x86)\cloudflared\cloudflared.exe access ssh --hos
 
 7. Nu kan je een SSH connectie maken met de server met het volgende commando, waarbij {x} je groepnummer is
    - waarschijnlijk krijg je de melding dat de host nog niet bekend is en of je wil doorgaan met de aangegeven key fingerprint)
-   - Type dan 'y' of ' yes'
-   - Het standaard wachtwoord van de server is: 12345 
+   - Type 'yes'
+   - Het standaard wachtwoord van de server is: 12345
+   
 ```sh
 ssh ict@group{x}-terminal.webdeployment.nl
 ```
 
-Nu zitten we in de zogenaamde shell van de linux server. 
+Nu zitten we in de zogenaamde shell van de linux server
 
 ![image](https://github.com/nburgmeijer/Webdeployment-jaar1-23-24/assets/31646458/2f360baa-bdcb-41f7-9f7d-9392847aba0c)
 
@@ -67,6 +68,7 @@ Nu zitten we in de zogenaamde shell van de linux server.
 ```sh
 passwd
 ```
+
 #### MacOs
 >Volgt
 
@@ -146,7 +148,6 @@ group{x}.webdeployment.nl
 - Mocht er onverhoopt iets verkeerd gaan stuur dan een mail naar. 
 
 nick.burgmeijer@nhlstenden.com
-
 
 Mogelijke problemen zijn:
 

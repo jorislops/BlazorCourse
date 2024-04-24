@@ -25,28 +25,33 @@ Doorloop de volgende stappen om vanaf je pc of laptop een SSH connectie te kunne
 ##### WINDOWS
 
 1. Start bij voorkeur Powershell. En anders command prompt(cmd.exe)
-2. Installeer de cloudflare connector. Deze zorgt ervoor dat je de connectie van buitenaf met de server kan maken
+2. Installeer de cloudflare connector met het volgende commando in de terminal. Deze zorgt ervoor dat je de connectie van buitenaf met de server kan maken
 ```ps
 winget install --id cloudflare.cloudflared
 ```
 
-2. Ga naar de .shh directory
+3. Ga naar de .shh directory met het volgende commando
 ```ps
 cd .ssh
 ```
 
-3. Voor het volgende uit om notepad te openen voor de file config 
+4. Voer het volgende commando uit om er zeker van te zijn dat de file genaamd 'config' bestaat
+```ps
+echo "" > config
+```
+
+5. Voer het volgende commando uit om notepad te openen voor de config file 
 ```ps
 notepad config
 ```
 
-4. Vervang de inhoud van config met het volgende, waarbij {x} je groepnummer is (bijvoorbeeld group12-terminal.webdeploy)
+6. Vervang de inhoud van config met het volgende, waarbij {x} je groepnummer is (bijvoorbeeld group12-terminal.webdeploy)
 ```
 Host group{x}-terminal.webdeployment.nl
 ProxyCommand C:\Program Files (x86)\cloudflared\cloudflared.exe access ssh --hostname %h
 ```
 
-5. Nu kan je een SSH connectie maken met de server met het volgende commando, waarbij {x} je groepnummer is
+7. Nu kan je een SSH connectie maken met de server met het volgende commando, waarbij {x} je groepnummer is
    - waarschijnlijk krijg je de melding dat de host nog niet bekend is en of je wil doorgaan met de aangegeven key fingerprint)
    - Type dan 'y' of ' yes'
    - Het standaard wachtwoord van de server is: 12345 

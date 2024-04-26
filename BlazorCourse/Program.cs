@@ -1,5 +1,6 @@
 using BlazorCourse;
 using BlazorCourse.Components;
+using BlazorCourse.Components.Pages.Components.ParentChildServiceExample;
 using BlazorCourse.Services;
 using Blazorise;
 using Blazorise.Bootstrap5;
@@ -15,6 +16,7 @@ builder.Services.AddRazorComponents()
     .AddHubOptions(options => { options.MaximumReceiveMessageSize = 1024 * 1024; });
 
 builder.Services.AddScoped<CounterService>();
+builder.Services.AddScoped<MessageService>();
 
 builder.Services.AddSyncfusionBlazor();
 var syncfusionLicenseKey = Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");

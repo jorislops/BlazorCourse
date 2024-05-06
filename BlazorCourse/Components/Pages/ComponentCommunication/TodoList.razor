@@ -10,18 +10,17 @@ else
     @foreach (var todo in _todos)
     {
         <TodoCard Item="todo" OnDeleteItem="DeleteTodoItem" @key="todo.Id">
-            <TextContent>
+            <TitleContent>
                 @if (todo.IsDone)
                 {
-                    <h4>
-                        <del>@todo.Title</del>
-                    </h4>
+                    <del>@todo.Title</del>
+                    
                 }
                 else
                 {
-                    <h4>@todo.Title</h4>
+                    @todo.Title
                 }
-            </TextContent>
+            </TitleContent>
         </TodoCard>
         <br/>
     }
@@ -48,7 +47,9 @@ else
         {
             new()
             {
-                Id = 1, Title = "Buy groceries", Items = new List<TodoItem>
+                Id = 1, Title = "Buy groceries", 
+                        Description = "Don't forget the milk, bread, and eggs",
+                Items = new List<TodoItem>
                 {
                     new() { Id = 6, Title = "Milk" },
                     new() { Id = 7, Title = "Bread" },
@@ -57,25 +58,18 @@ else
             },
             new()
             {
-                Id = 2, Title = "Do laundry", Items = new List<TodoItem>
+                Id = 2, Title = "Do laundry", IsDone = true, 
+                    Description = "Separate whites and colors",
+                Items = new List<TodoItem>
                 {
-                    new() { Id = 9, Title = "Whites" },
-                    new() { Id = 10, Title = "Colors" }
+                    new() { Id = 9, Title = "Whites", IsDone = true  },
+                    new() { Id = 10, Title = "Colors", IsDone = true }
                 }
             },
-            new() { Id = 3, Title = "Clean the house" },
-            new() { Id = 4, Title = "Cook dinner" },
-            new() { Id = 5, Title = "Wash the car" }
+            new() { Id = 3, Title = "Clean the house", Description = "Vacuum and dust"},
+            new() { Id = 4, Title = "Cook dinner", Description = "Spaghetti and meatballs"},
+            new() { Id = 5, Title = "Wash the car", Description = "Don't forget to wax it"}
         };
-    }
-
-    private void AddTodoItem()
-    {
-        _todos.Add(new TodoItem
-        {
-            Id = _todos.Max(x => x.Id) + 1,
-            Title = "aap"
-        });
     }
 
     private void DeleteTodoItem(TodoItem todoItem)
@@ -88,5 +82,4 @@ else
         newTodoItem.Id = _todos.Max(x => x.Id) + 1;
         _todos.Add(newTodoItem);
     }
-
 }

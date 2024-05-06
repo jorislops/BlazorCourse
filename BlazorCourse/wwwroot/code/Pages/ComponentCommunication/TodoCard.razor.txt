@@ -1,19 +1,19 @@
-<div class="card" xmlns="http://www.w3.org/1999/html">
+<div class="card">
     <div class="card-body">
-        <h5 class="card-title">@Item.Title</h5>
-
-        @if (TextContent != null)
-        {
-            @TextContent(Item)
-        }
-        else
-        {
-            <p class="card-text">@Item.Description</p>
-        }
-
-        <a class="btn btn-primary" href="details/@Item.Id">Details</a>
-        <button class="btn btn-primary" @onclick="ToggleDetails">ToggleDetails</button>
-        <button class="btn btn-danger" @onclick="@(() => DeleteItem(Item))">Delete</button>
+        <h5 class="card-title"> 
+            @if (TitleContent != null)
+            {
+                @TitleContent(Item)
+            }
+            else
+            {
+                @Item.Description
+            }
+        </h5>
+        <div class="card-body">
+            <button class="btn btn-primary" @onclick="ToggleDetails">ToggleDetails</button>
+            <button class="btn btn-danger" @onclick="@(() => DeleteItem(Item))">Delete</button>
+        </div>
     </div>
     <div class="card-footer">
         @if (_showDetails)
@@ -28,7 +28,7 @@
 
     [Parameter] [EditorRequired] public EventCallback<TodoItem> OnDeleteItem { get; set; }
 
-    [Parameter] public RenderFragment<TodoItem>? TextContent { get; set; }
+    [Parameter] public RenderFragment<TodoItem>? TitleContent { get; set; }
 
     private void DeleteItem(TodoItem item)
     {

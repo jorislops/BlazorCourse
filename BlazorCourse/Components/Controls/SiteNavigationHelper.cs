@@ -27,10 +27,17 @@ public static class SiteNavigationHelper
             );
 
         var currentUrl = uri.Replace(baseUri, "");
+        if (currentUrl.Contains("/"))
+        {
+            currentUrl = currentUrl.Substring(0, currentUrl.IndexOf("/", StringComparison.Ordinal));
+        }
+            
+
         var route = routings.Where(r =>
                 r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
                     .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
             .ToList();
+        
         var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") +
                        ".razor";
         var codeFileUri = baseUri + "code/Pages" + codeFile;

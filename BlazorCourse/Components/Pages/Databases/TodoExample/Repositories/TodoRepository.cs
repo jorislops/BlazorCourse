@@ -68,6 +68,24 @@ public class TodoRepository
 
     public void Remove(int todoItemId)
     {
+        //Note: I don't like this method and didn't test it, so it may not work 
+        
+        //This method becomes complex because we have to delete all the children items first
+        //I think is better to use a cascade delete (https://www.mysqltutorial.org/mysql-basics/mysql-on-delete-cascade/)
+        var getChildrenSql =
+            """
+                SELECT Id
+                FROM TodoItem
+                WHERE ParentId = @Id
+            """;
+        
+        using var connection = new MySqlConnection(_connectionString);
+        var childrenIds = connection.Query<int>(getChildrenSql, new { Id = todoItemId }).ToList();
+        foreach (var childrenId in childrenIds)
+        {
+            Remove(childrenId);
+        }
+        
         var sql =
             """
                 -- we need to delete all the children items first
@@ -78,7 +96,7 @@ public class TodoRepository
                 DELETE FROM TodoItem
                 WHERE Id = @Id
             """;
-        using var connection = new MySqlConnection(_connectionString);
+        // using var connection = new MySqlConnection(_connectionString);
         var numEffectedRows = connection.Execute(sql, new { Id = todoItemId });
     }
 

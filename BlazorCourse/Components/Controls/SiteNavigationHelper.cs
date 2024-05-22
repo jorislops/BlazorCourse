@@ -27,10 +27,10 @@ public static class SiteNavigationHelper
             );
 
         var currentUrl = uri.Replace(baseUri, "");
-        if (currentUrl.Contains("/"))
-        {
-            currentUrl = currentUrl.Substring(0, currentUrl.IndexOf("/", StringComparison.Ordinal));
-        }
+        // if (currentUrl.Contains("/"))
+        // {
+        //     currentUrl = currentUrl.Substring(0, currentUrl.IndexOf("/", StringComparison.Ordinal));
+        // }
             
 
         var route = routings.Where(r =>

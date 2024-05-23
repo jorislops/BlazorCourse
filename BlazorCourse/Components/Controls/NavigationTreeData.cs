@@ -2,7 +2,7 @@ using BlazorCourse.Models;
 
 namespace BlazorCourse.Components.Controls;
 
-public class NavigationTreeData
+public static class NavigationTreeData
 {
     public static List<TreeItem> GetNavigationTree()
     {

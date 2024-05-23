@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject IJSRuntime Js
+@inject CounterService CounterService
 
 
 <CascadingValue Value="@AppState">
@@ -14,6 +15,7 @@
                         <Template>
                             <div class="e-folder">
                                 <div class="e-folder-name">Blazor Examples</div>
+                                <div>Counter: @CounterService.Counter</div>
                             </div>
                         </Template>
                     </ToolbarItem>
@@ -106,6 +108,11 @@
     {
         //Close sidebar when in presenting mode
         if (Presenting) _sidebarToggle = false;
+
+        CounterService.CountHasChanged += () =>
+        {
+            InvokeAsync(StateHasChanged);
+        };
     }
 
     void OnOpen()

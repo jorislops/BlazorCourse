@@ -92,10 +92,12 @@
     };
 
 
-    //FromQuery bier?brouwcode=1
+    //from querystring bier?brouwcode=682
     [Parameter] public int? Brouwcode { get; set; }
-
-
+    
+    //From querystring bier?codeFromBrouwer=682
+    [Parameter, SupplyParameterFromQuery] public int? CodeFromBrouwer { get; set; }
+    
     [Parameter] public string? Brouwnaam { get; set; }
 
     [Parameter] public string? Land { get; set; }
@@ -103,11 +105,13 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
+        
         var uriAsString = NavigationManager.Uri;
         var url = new Uri(uriAsString);
         var queryString = url.Query; // returns "?Brouwcode=someInt"
         var queryParameters = HttpUtility.ParseQueryString(queryString);
+        
+        //Query parameters are always strings and the key (Brouwcode) is case sensitive!!
         var brouwcodeAsString = queryParameters["Brouwcode"]; // returns "someInt"
         if (int.TryParse(brouwcodeAsString, out var brouwcode))
         {
@@ -125,7 +129,11 @@
     {
         if (Brouwcode is not null)
         {
-            Brouwcode = Brouwcode;
+            _pageFilterSorting.BrouwCode = Brouwcode;
+        }
+        else if(CodeFromBrouwer is not null)
+        {
+            _pageFilterSorting.BrouwCode = CodeFromBrouwer;
         }
         else if (Brouwnaam is not null)
         {

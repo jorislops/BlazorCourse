@@ -109,6 +109,8 @@
         //Close sidebar when in presenting mode
         if (Presenting) _sidebarToggle = false;
 
+        //CounterService.CountHasChanged += StateHasChanged; 
+        //same as above
         CounterService.CountHasChanged += () =>
         {
             InvokeAsync(StateHasChanged);

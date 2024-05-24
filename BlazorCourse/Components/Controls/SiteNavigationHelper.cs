@@ -26,22 +26,41 @@ public static class SiteNavigationHelper
                 }
             );
 
-        var currentUrl = uri.Replace(baseUri, "");
-        // if (currentUrl.Contains("/"))
-        // {
-        //     currentUrl = currentUrl.Substring(0, currentUrl.IndexOf("/", StringComparison.Ordinal));
-        // }
-            
+        
+        
 
-        var route = routings.Where(r =>
-                r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
-                    .Equals("/" + currentUrl, StringComparison.OrdinalIgnoreCase))))
-            .ToList();
+        var currentUrl = new Uri(uri).AbsolutePath; 
+        
+        //remove query parameter part
+        if(currentUrl.Contains("?"))
+            currentUrl = currentUrl.Substring(0, currentUrl.IndexOf("?", StringComparison.Ordinal));
+
+        var route = FindRoute(currentUrl);
         
         var codeFile = "/" + route[0].FullName.Replace("BlazorCourse.Components.Pages.", "").Replace(".", "/") +
                        ".razor";
         var codeFileUri = baseUri + "code/Pages" + codeFile;
         return codeFileUri.Replace(".razor", "");
+
+        List<RouteAttributeResult> FindRoute(string url)
+        {
+            var routeAttributeResults = routings.Where(r =>
+                    r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
+                        .Equals(url, StringComparison.OrdinalIgnoreCase))))
+                .ToList();
+
+            if (routeAttributeResults.Count == 0)
+            {
+                var urlParts = url.Split("/");
+                if (urlParts.Length > 1)
+                {
+                    var newUrl = string.Join("/", urlParts.Take(urlParts.Length - 1));
+                    return FindRoute(newUrl);
+                }
+            }
+            
+            return routeAttributeResults;
+        }
     }
 
     public record RouteAttributeResult

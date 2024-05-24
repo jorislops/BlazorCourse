@@ -1,5 +1,4 @@
 @page "/counter-component-state"
-@rendermode InteractiveServer
 <h3>Counter</h3>
 
 <button class="btn btn-primary" @onclick="() => _count++">++</button>

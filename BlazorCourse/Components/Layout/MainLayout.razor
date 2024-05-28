@@ -115,6 +115,8 @@
         {
             InvokeAsync(StateHasChanged);
         };
+
+        AppState.CountHasChanged += StateHasChanged;
     }
 
     void OnOpen()

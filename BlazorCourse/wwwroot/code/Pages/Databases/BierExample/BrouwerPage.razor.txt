@@ -12,6 +12,8 @@
         <li>
             <span @onclick="@(() => GoToBeerPage(brouwer.Brouwcode))">@brouwer.Naam (@brouwer.AantalBieren) (@brouwer.AantalBrouwersZelfdeNaam)</span>
 
+            
+            
             @{
                 var link = brouwer.Naam;
                 if (brouwer.AantalBrouwersZelfdeNaam > 1)
@@ -21,7 +23,7 @@
             }
 
             <a href="/Bier/@link">Show Beers</a>
-            
+            <a class="btn btn-primary" @onclick="@(() => GoToBeerPage(brouwer))">Show Beers</a>
             
         </li>
     }
@@ -41,6 +43,16 @@
     private void GoToBeerPage(int brouwcode)
     {
         NavigationManager.NavigateTo($"/Bier/{brouwcode}");
+    }
+
+    private void GoToBeerPage(BrouwerVm brouwer)
+    {
+        var link = brouwer.Naam;
+        if (brouwer.AantalBrouwersZelfdeNaam > 1)
+        {
+            link += $"/{brouwer.Land}";
+        }   
+        NavigationManager.NavigateTo($"/Bier/{link}");
     }
 
 }

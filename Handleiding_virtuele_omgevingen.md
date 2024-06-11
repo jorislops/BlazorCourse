@@ -14,7 +14,7 @@ Deze omgeving is van buitenaf bereikbaar en bevat de volgende opties.
 > group{x}-database.webdeployment.nl
 -  localhost:8080(intern andres van de webapplicaties straks) is te bereiken op
 >group{x}.webdeployment.nl
-
+(lees onderaan meer over het deployen van je applicatie!)
 \* {x} = je groupnummer
 
 ## Secure Shell
@@ -179,13 +179,12 @@ docker ps
 
 - nginx: Een webserver op poort 8080 die je kan bereiken op onderstaand adres, waarbij {x} je groepsnummer is:
 (deze staat hier tijdelijk zodat je kan zien dat je webapplicatie straks bereikbaar is op poort 8080)
-LET OP! Je moet deze container verwijderen en vervangen door je eigen container waar je Blazor Web App in draait. Deploy deze container m.b.v. docker met het argument --network host. Dit zorgt ervoor dat je applicatie de MySql database container kan bereiken op 'localhost'(je hoeft dan niet je connectionstring aan te passen).
+LET OP! Je moet deze container verwijderen en vervangen door je eigen container waar je Blazor Web App in draait. Deploy deze container m.b.v. docker met het argument --network host (en zonder het -p argument). Dit zorgt ervoor dat je applicatie de MySql database container kan bereiken op 'localhost'(je hoeft dan niet je connectionstring aan te passen).
 
 Voorbeeld:
 
-
 ```
-group{x}.webdeployment.nl 
+docker run -d --name MyWebApp --restart unless-stopped --network host MyWebAppDockerImage:TAG 
 ```
 - filebrowser: De filebrowser applicatie
 - mysql: de mySql Server

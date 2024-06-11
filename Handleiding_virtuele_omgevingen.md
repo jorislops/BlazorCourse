@@ -184,7 +184,7 @@ LET OP! Je moet deze container verwijderen en vervangen door je eigen container 
 Voorbeeld:
 
 ```
-docker run -d --name MyWebApp --restart unless-stopped --network host MyWebAppDockerImage:TAG 
+docker run -d --name MyWebApp --restart unless-stopped --network host MyDockerHubUsername/MyWebAppDockerImage:TAG 
 ```
 - filebrowser: De filebrowser applicatie
 - mysql: de mySql Server

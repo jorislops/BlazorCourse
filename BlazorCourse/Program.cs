@@ -5,6 +5,7 @@ using BlazorCourse.Services;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Radzen;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
 
@@ -22,6 +23,8 @@ builder.Services.AddSyncfusionBlazor();
 var syncfusionLicenseKey = Environment.GetEnvironmentVariable("SYNCFUSION_LICENSE");
 Console.WriteLine("syncfusionLicenseKey: " + syncfusionLicenseKey);
 if (!string.IsNullOrWhiteSpace(syncfusionLicenseKey)) SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
+
+builder.Services.AddRadzenComponents();
 
 builder.Services
     .AddBlazorise(options => { options.Immediate = true; })

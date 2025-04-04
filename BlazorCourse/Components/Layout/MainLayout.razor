@@ -1,81 +1,49 @@
-﻿@inherits LayoutComponentBase
+﻿@using Orientation = Radzen.Orientation
+@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject IJSRuntime Js
 @inject CounterService CounterService
 
+<RadzenComponents @rendermode="InteractiveServer" />
 
 <CascadingValue Value="@AppState">
-    <div class="page">
-        <div>
-            <SfToolbar CssClass="defaultToolbar" Height="50px">
-                <ToolbarEvents Clicked="@Toggle"></ToolbarEvents>
-                <ToolbarItems>
-                    <ToolbarItem PrefixIcon="e-icons e-menu" TooltipText="Menu"></ToolbarItem>
-                    <ToolbarItem>
-                        <Template>
-                            <div class="e-folder">
-                                <div class="e-folder-name">Blazor Examples</div>
-                                <div>Counter by Service: @CounterService.Counter - by Cascade Parameter:  @AppState.Counter</div>
-                            </div>
-                        </Template>
-                    </ToolbarItem>
-                    <ToolbarItem Align="ItemAlign.Right">
-                        <Template>
-                            <SfButton @onclick="ToggleCode" IconCss="@(_showCode ? "e-icons e-insert-code" : "e-icons e-code-view")" IconPosition="@IconPosition.Right">
-                                @(_showCode ? "Hide Code" : "Show Code")
-                            </SfButton>
-                        </Template>
-                    </ToolbarItem>
-                </ToolbarItems>
-            </SfToolbar>
-        </div>
-        <div id="wrapper">
-            @*Initialize the Sidebar component*@
-            @*querymedia isnt't possible when you want to force the sidebar closed in presenting mode*@
-            <SfSidebar Width="386px"
-                       Target=".main-content"
-                       Type="SidebarType.Push"
-                       @bind-IsOpen="_sidebarToggle"
-                       @attributes="_htmlAttribute"
-                       OnOpen="OnOpen">
-                <ChildContent>
-                    <div class="main-menu">
-                        <div>
-                            <SiteNavigation></SiteNavigation>
-                        </div>
-                    </div>
-                </ChildContent>
-            </SfSidebar>
-        </div>
-        @*main-content declaration*@
-        <div class="main-content" id="main-text">
-            <div class="sidebar-content">
-                <div class="content px-4">
-                    @if (_showCode)
-                    {
-                        <SfSplitter Width="100%" SeparatorSize="3">
-                            <SplitterPanes >
-                                <SplitterPane size="50%">
-                                    <ContentTemplate>
-                                        <CodeViewer Uri="@NavigationManager.GetUriWithQueryParameter("presenting", (bool?)null)" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
-                                    </ContentTemplate>
-                                </SplitterPane>
-                                <SplitterPane>
-                                    <ContentTemplate >
-                                        @Body
-                                    </ContentTemplate>
-                                </SplitterPane>
-                            </SplitterPanes>
-                        </SfSplitter>
-                    }
-                    else
-                    {
-                        @Body
-                    }
-                </div>
+
+    <RadzenLayout>
+        <RadzenHeader>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                <RadzenSidebarToggle Click="@(() => _sideBarExpanded = !_sideBarExpanded)" />
+                <RadzenLabel Text="Blazor Examples" />
+                @* <RadzenLabel Text="Joris Lops 2025&copy;"></RadzenLabel> *@
+            </RadzenStack>
+        </RadzenHeader>
+        <RadzenSidebar @bind-Expanded="@_sideBarExpanded">
+            
+            <div class="rz-p-4">
+                <SiteNavigation></SiteNavigation>
             </div>
-        </div>
-    </div>
+        </RadzenSidebar>
+        <RadzenBody>
+            <div class="rz-p-4">
+                @if (_showCode)
+                {
+                    <RadzenSplitter Orientation="Orientation.Horizontal">
+                        <RadzenSplitterPane>
+                            <CodeViewer Uri="@NavigationManager.GetUriWithQueryParameter("presenting", (bool?)null)" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
+                        </RadzenSplitterPane>
+                        <RadzenSplitterPane>
+                            @Body
+                        </RadzenSplitterPane>
+                    </RadzenSplitter>
+                }
+                else
+                {
+                    @Body
+                }
+            </div>
+        </RadzenBody>
+    </RadzenLayout>
+
+
 </CascadingValue>
 
 <div id="blazor-error-ui">
@@ -90,16 +58,9 @@
     [SupplyParameterFromQuery] public bool Presenting { get; set; }
 
     bool _showCode = true;
-
-    //string _codeFileUri = "";
-    // Specify the value of Sidebar component state. It indicates whether the sidebar component is in an open/close state.
-    bool _sidebarToggle = true;
-
-    readonly Dictionary<string, object> _htmlAttribute = new()
-    {
-        { "class", "sidebar-treeview" }
-    };
-
+    
+    bool _sideBarExpanded = true;
+    
     //make sure that AppState is initialized
     private AppState AppState { get; } = new();
 
@@ -107,7 +68,7 @@
     protected override void OnInitialized()
     {
         //Close sidebar when in presenting mode
-        if (Presenting) _sidebarToggle = false;
+        if (Presenting) _sideBarExpanded = false;
 
         //CounterService.CountHasChanged += StateHasChanged; 
         //same as above
@@ -117,30 +78,5 @@
         };
 
         AppState.CountHasChanged += StateHasChanged;
-    }
-
-    void OnOpen()
-    {
-        //force keep sidebar closed when in presenting mode
-        if (Presenting) _sidebarToggle = false;
-    }
-
-    // Specifies the event handler for Clicked event in the menu button component.
-    void Toggle(ClickEventArgs args)
-    {
-        if (args.Item.TooltipText == "Menu")
-        {
-            _sidebarToggle = !_sidebarToggle;
-            //remove focus from button
-            Js.InvokeAsync<string>("document.activeElement.blur");
-        }
-    }
-
-    //specifies the event handler for the click event in the Code button component
-    void ToggleCode()
-    {
-        _showCode = !_showCode;
-        //remove focus from button
-        Js.InvokeAsync<string>("document.activeElement.blur");
     }
 }

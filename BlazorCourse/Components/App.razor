@@ -26,7 +26,7 @@
     <link href="_content/Blazorise/blazorise.css" rel="stylesheet"/>
     <link href="_content/Blazorise.Bootstrap5/blazorise.bootstrap5.css" rel="stylesheet"/>
 
-
+    <RadzenTheme Theme="material" @rendermode="InteractiveServer" />
 </head>
 
 <body>
@@ -48,8 +48,8 @@
         window.highlightCss = (code) => {
             return Prism.highlight(code, Prism.languages.css, 'css');
         };
-    </script>
-
+</script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
 </body>
 
 </html>

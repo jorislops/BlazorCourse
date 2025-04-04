@@ -1,27 +1,22 @@
 @inject NavigationManager NavigationManager
 
+@if (_selection is not null)
+{
+    <p>@((_selection as TreeItem).NodeText)</p>    
+}
 
-<SfTreeView TValue="TreeItem"
-            @ref="_treeView"
-            ExpandOn="ExpandAction.Click"
-            SelectedNodes="_selectedNodes"
-            FullRowNavigable="true">
-    <TreeViewFieldsSettings DataSource="@_treeDataSource"
-                            Id="NodeId"
-                            Text="NodeText"
-                            TValue="TreeItem"
-                            IconCss="Icon"
-                            NavigateUrl="Url"
-                            Child="@("Child")">
-    </TreeViewFieldsSettings>
-    <TreeViewEvents TValue="TreeItem"
-                    NodeSelecting="OnNodeSelecting"/>
-</SfTreeView>
+<RadzenTree Data="_treeDataSource" Change="NodeSelected" @ref="_radzenTreeView" @bind-Value="_selection">
+    <RadzenTreeLevel 
+        TextProperty="@nameof(TreeItem.NodeText)" ChildrenProperty="@nameof(TreeItem.Child)"
+        HasChildren="item => HasChildren(item as TreeItem)"
+        />
+</RadzenTree>
 
 @code{
     List<TreeItem>? _treeDataSource;
-    SfTreeView<TreeItem>? _treeView;
-    string[] _selectedNodes = { "" };
+    
+    private RadzenTree _radzenTreeView;
+    private object _selection;
 
     protected override void OnInitialized()
     {
@@ -30,18 +25,14 @@
         NavigationManager.LocationChanged += LocationChanged;
     }
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-    }
-
     private void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         var url = e.Location;
         url = url.Replace(NavigationManager.BaseUri, "");
         if (url == "")
         {
-            _selectedNodes[0] = "";
+            _selection = null;
+            
             StateHasChanged();
         }
         else
@@ -49,52 +40,43 @@
             var navigatedNode = TreeItem.FindNodeByUrl(_treeDataSource!, url);
             if (navigatedNode != null)
             {
-                _selectedNodes[0] = navigatedNode.NodeId;
-                ExpandNodes(navigatedNode.NodeId);
+                _selection = navigatedNode;
             }
+            StateHasChanged();
         }
     }
-
-    void ExpandNodes(string nodeId)
+    
+    void SelectTreeItem(string url)
     {
-        var nodesToExpand = TreeItem.FindParentIds(_treeDataSource!, nodeId);
-        _treeView!.ExpandAllAsync(nodesToExpand.ToArray());
-        StateHasChanged();
-    }
-
-    void OnNodeSelecting(NodeSelectEventArgs args)
-    {
-        if (args.NodeData.HasChildren)
+        var node = TreeItem.FindNodeByUrl(_treeDataSource, url);
+        if (node is not null)
         {
-            args.Cancel = true;
+            _selection = node;    
         }
     }
-
+    
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
             var url = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
-            var navigatedNode = TreeItem.FindNodeByUrl(_treeDataSource!, url);
-            _selectedNodes[0] = navigatedNode?.NodeId ?? "";
-            if (navigatedNode != null)
+            if (!string.IsNullOrWhiteSpace(url))
             {
-                ExpandNodes(navigatedNode.NodeId);
+                SelectTreeItem(url);
             }
         }
     }
 
-}
-
-
-@*remove focus styling when not selected*@
-<style>
-    .e-treeview .e-list-item.e-node-focus>.e-fullrow {
-        background-color: rgba(0,0,0,0);
-        border-color:  rgba(0,0,0,0) ;
+    private bool HasChildren(TreeItem? item)
+    {
+        return item?.Child != null && item.Child.Any();
     }
-     .e-treeview .e-list-item.e-hover>.e-fullrow {
-            background-color: #e9ecef;
-            border-color: #e9ecef ;
-        }
-</style>
+
+    private void NodeSelected(TreeEventArgs obj)
+    {
+        if(obj.Value is TreeItem treeItem && !string.IsNullOrWhiteSpace(treeItem.Url) )
+        {
+            NavigationManager.NavigateTo(treeItem.Url);
+        }   
+    }
+}

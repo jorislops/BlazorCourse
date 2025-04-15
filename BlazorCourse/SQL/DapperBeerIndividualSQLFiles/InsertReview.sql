@@ -1,0 +1,1 @@
+INSERT INTO Review (BeerId, Score) VALUES (338, 4.5);

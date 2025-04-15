@@ -1,0 +1,62 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Address {
+   Street: text
+   City: text
+   Country: text
+   AddressId: int
+}
+class Beer {
+   Name: text
+   Type: text
+   Style: text
+   Alcohol: double
+   BrewerId: int
+   BeerId: int
+}
+class Brewer {
+   Name: text
+   Country: text
+   BrewerId: int
+}
+class Brewmaster {
+   Name: text
+   BrewerId: int
+   AddressId: int
+   BrewmasterId: int
+}
+class Cafe {
+   Name: text
+   Address: text
+   City: text
+   CafeId: int
+}
+class Review {
+   BeerId: int
+   Score: decimal(4,2)
+   ReviewId: int
+}
+
+'class Sells {
+'   CafeId: int
+'   BeerId: int
+'}
+
+
+Beer "1..*" -- "1" Brewer : brews <
+Brewmaster "1" -- "1" Address : lives >
+Brewer "1" -- "0..1" Brewmaster : employees >
+Beer "1" -- "0..*" Review : has >
+Beer "*" -- "*" Cafe : sells >
+
+'Beer        -[#595959,plain]-^  Brewer     : "BrewerId"
+'Brewmaster  -[#595959,plain]-^  Address    : "AddressId"
+'Brewmaster  -[#595959,plain]-^  Brewer     : "BrewerId"
+'Review      -[#595959,plain]-^  Beer       : "BeerId"
+'Sells       -[#595959,plain]-^  Beer       : "BeerId"
+'Sells       -[#595959,plain]-^  Cafe       : "CafeId"
+@enduml

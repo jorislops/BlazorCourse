@@ -7,18 +7,18 @@
 <h3>Brouwer Page</h3>
 
 <ul>
-    @foreach (var brouwer in _brouwers)
+    @foreach (var brouwer in _brewerVms)
     {
         <li>
-            <span @onclick="@(() => GoToBeerPage(brouwer.Brouwcode))">@brouwer.Naam (@brouwer.AantalBieren) (@brouwer.AantalBrouwersZelfdeNaam)</span>
+            <span @onclick="@(() => GoToBeerPage(brouwer.BrewerCode))">@brouwer.Name (@brouwer.NumberOfBeers) (@brouwer.NumberOfBrewersWithSameName)</span>
 
             
             
             @{
-                var link = brouwer.Naam;
-                if (brouwer.AantalBrouwersZelfdeNaam > 1)
+                var link = brouwer.Name;
+                if (brouwer.NumberOfBrewersWithSameName > 1)
                 {
-                    link += $"/{brouwer.Land}";
+                    link += $"/{brouwer.Country}";
                 }
             }
 
@@ -32,12 +32,12 @@
 @code {
 
 
-    private List<BrouwerVm> _brouwers = null!;
+    private List<BrewerVm> _brewerVms = null!;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _brouwers = new BrouwerRepository().GetBrouwersVm();
+        _brewerVms = new BrouwerRepository().GetBrouwersVm();
     }
 
     private void GoToBeerPage(int brouwcode)
@@ -45,12 +45,12 @@
         NavigationManager.NavigateTo($"/Bier/{brouwcode}");
     }
 
-    private void GoToBeerPage(BrouwerVm brouwer)
+    private void GoToBeerPage(BrewerVm brewer)
     {
-        var link = brouwer.Naam;
-        if (brouwer.AantalBrouwersZelfdeNaam > 1)
+        var link = brewer.Name;
+        if (brewer.NumberOfBrewersWithSameName > 1)
         {
-            link += $"/{brouwer.Land}";
+            link += $"/{brewer.Country}";
         }   
         NavigationManager.NavigateTo($"/Bier/{link}");
     }

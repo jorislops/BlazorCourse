@@ -10,10 +10,13 @@
     <RadzenLayout>
         <RadzenHeader>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                
                 <RadzenSidebarToggle Click="@(() => _sideBarExpanded = !_sideBarExpanded)" />
                 <RadzenLabel Text="Blazor Examples" />
-                @* <RadzenLabel Text="Joris Lops 2025&copy;"></RadzenLabel> *@
-                <p>@_sideBarExpanded</p>
+                
+                
+                <RadzenLabel Style="margin-left: auto;margin-right: 15px;">Counter by Service: @CounterService.Counter - by Cascade Parameter:  @AppState.Counter</RadzenLabel>
+                
             </RadzenStack>
         </RadzenHeader>
         <RadzenSidebar @bind-Expanded="@(_sideBarExpanded)" Responsive="false">

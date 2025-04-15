@@ -45,8 +45,12 @@ public static class SiteNavigationHelper
         List<RouteAttributeResult> FindRoute(string url)
         {
             var routeAttributeResults = routings.Where(r =>
-                    r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => a.Value!.ToString()!
-                        .Equals(url, StringComparison.OrdinalIgnoreCase))))
+                    r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => 
+                        a.Value!.ToString()!.Equals(url, StringComparison.OrdinalIgnoreCase)
+                        ||
+                        a.Value!.ToString()!.StartsWith(url, StringComparison.OrdinalIgnoreCase)
+                        
+                        )))
                 .ToList();
 
             if (routeAttributeResults.Count == 0)

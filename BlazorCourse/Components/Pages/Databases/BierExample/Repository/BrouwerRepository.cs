@@ -13,31 +13,31 @@ public class BrouwerRepository
         return ConfigurationHelper.Configuration.GetConnectionString("Bieren")!;
     }
 
-    public List<Brouwer> Get()
+    public List<Brewer> Get()
     {
-        var sql = "SELECT brouwcode, naam, land FROM brouwer ORDER BY naam";
+        var sql = "SELECT BrewerId, Name, Country FROM Brewer ORDER BY Name";
 
         using var connection = new MySqlConnection(GetConnectionString());
-        return connection.Query<Brouwer>(sql).ToList();
+        return connection.Query<Brewer>(sql).ToList();
     }
 
-    public List<BrouwerVm> GetBrouwersVm()
+    public List<BrewerVm> GetBrouwersVm()
     {
         using var connection = new MySqlConnection(GetConnectionString());
 
         var sql =
             """
-                    SELECT br.brouwcode, br.naam, br.land, COUNT(b.biercode) AS AantalBieren,
-                       (SELECT COUNT(bb.naam) FROM brouwer bb WHERE bb.naam = br.naam)
-                           AS AantalBrouwersZelfdeNaam
+                    SELECT br.BrewerId, br.Name, br.Country, COUNT(b.BeerId) AS NumberOfBeers,
+                       (SELECT COUNT(bb.Name) FROM Brewer bb WHERE bb.Name = br.Name)
+                           AS NumberOfBrewersWithSameName
                 FROM
-                    brouwer as br
-                        JOIN bier as b ON br.brouwcode = b.brouwcode
-                GROUP BY br.brouwcode, br.naam, br.land
-                ORDER BY AantalBieren DESC
+                    Brewer as br
+                        JOIN Beer as b ON br.BrewerId = b.BrewerId
+                GROUP BY br.BrewerId, br.Name, br.Country
+                ORDER BY NumberOfBeers DESC
             """;
 
-        var brouwerVms = connection.Query<BrouwerVm>(sql).ToList();
+        var brouwerVms = connection.Query<BrewerVm>(sql).ToList();
         return brouwerVms;
     }
 }

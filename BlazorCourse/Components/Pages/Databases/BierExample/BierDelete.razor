@@ -1,5 +1,5 @@
-@page "/bier-delete/{Biercode:int}"
-@page "/BierDelete/{Biercode:int}"
+@page "/bier-delete/{BeerId:int}"
+@page "/BierDelete/{BeerId:int}"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @inject NavigationManager NavigationManager
@@ -7,40 +7,40 @@
 @if (_bier == null)
 {
     <h1>No bier found</h1>
-    <a href="BierPage">Go back to bieren</a>
+    <a href="Bier">Go back to bieren</a>
 }
 else
 {
     <div>
-        <h1>Bier: @_bier.Naam</h1>
+        <h1>Bier: @_bier.Name</h1>
         <!-- Not working please fix -->
         @* <h2>Brouwer: @_bier.Brouwer.Naam</h2> *@
     </div>
     <hr/>
     <h3>Are you sure to delete?</h3>
     <div>
-        <button class="btn btn-danger" @onclick="@(() => Delete(_bier.Biercode))">Delete</button>
+        <button class="btn btn-danger" @onclick="@(() => Delete(_bier.BeerId))">Delete</button>
         <a class="btn btn-success" href="/BierPage">No</a>
     </div>
 }
 
 @code {
-    private Bier? _bier;
+    private Beer? _bier;
 
-    [Parameter] public int Biercode { get; set; }
+    [Parameter] public int BeerId { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        _bier = new BierRepository().GetByCode(Biercode);
+        _bier = new BierRepository().GetByCode(BeerId);
     }
 
 
-    private void Delete(int bierCode)
+    private void Delete(int beerId)
     {
-        new BierRepository().Delete(bierCode);
-        NavigationManager.NavigateTo("/BierPage");
+        new BierRepository().Delete(beerId);
+        NavigationManager.NavigateTo("/Bier");
     }
 
 }

@@ -7,30 +7,31 @@ namespace BlazorCourse.Components.Pages.Databases.BierExample.Repository;
 
 public class BierRepository
 {
-    public PagedResult<Bier> Get(PageFilterSorting pageFilterSorting)
+    public PagedResult<Beer> Get(PageFilterSorting pageFilterSorting)
     {
-        if (!string.IsNullOrWhiteSpace(pageFilterSorting.NaamFilter))
-            pageFilterSorting.NaamFilter = $"%{pageFilterSorting.NaamFilter}%";
+        if (!string.IsNullOrWhiteSpace(pageFilterSorting.BeerName))
+            pageFilterSorting.BeerName = $"%{pageFilterSorting.BeerName}%";
         else
-            pageFilterSorting.NaamFilter = null;
+            pageFilterSorting.BeerName = null;
 
         //To prevent SQL Injection, we only allow certain columns to be sorted on
-        var allowedColumns = new[] { "biercode", "naam", "type", "stijl", "alcohol", "brouwcode" };
-        if (!allowedColumns.Contains(pageFilterSorting.OrderBy)) pageFilterSorting.OrderBy = "naam";
-        if (pageFilterSorting.Dir != "ASC" && pageFilterSorting.Dir != "DESC") pageFilterSorting.Dir = "ASC";
+        var allowedColumns = new[] { "BeerId", "Name", "Type", "Style", "Alcohol", "BrewerId" };
+        if (!allowedColumns.Contains(pageFilterSorting.OrderBy)) pageFilterSorting.OrderBy = "Name";
+        if (!pageFilterSorting.Dir.Equals("ASC", StringComparison.OrdinalIgnoreCase) 
+            && !pageFilterSorting.Dir.Equals("DESC", StringComparison.OrdinalIgnoreCase)) pageFilterSorting.Dir = "ASC";
 
         var sql = $"""
-                     SELECT biercode, naam, type, stijl, alcohol, brouwcode
-                     FROM bier
+                     SELECT BeerId, Name, Type, Style, Alcohol, BrewerId
+                     FROM Beer
                      WHERE
-                         (@BrouwCode IS NULL OR brouwcode = @brouwCode)
+                         (@BrewerId IS NULL OR BrewerId = @BrewerId)
                          AND
-                             (@Brouwnaam IS NULL OR
-                             brouwcode = (SELECT DISTINCT brouwcode FROM brouwer
-                                 WHERE naam = @Brouwnaam
-                                     AND (@Land IS NULL OR land = @Land)))
+                             (@BrewerName IS NULL OR
+                             BrewerId = (SELECT DISTINCT BrewerId FROM Brewer
+                                 WHERE Name = @BrewerName
+                                     AND (@Country IS NULL OR Country = @Country)))
                          AND
-                             (@NaamFilter IS NULL OR naam LIKE @NaamFilter)
+                             (@BeerName IS NULL OR Name LIKE @BeerName)
                      -- Be aware of SQL Injection, but this is a simple example!!!!
                      -- To solve this problem, check the valid values for the parameters
                      
@@ -40,7 +41,7 @@ public class BierRepository
 
         using var connection = new MySqlConnection(GetConnectionString());
         var bieren = connection
-            .Query<Bier>(sql, pageFilterSorting)
+            .Query<Beer>(sql, pageFilterSorting)
             .ToList();
 
         // Not the nicest way to get the total count, but it works!!
@@ -49,7 +50,7 @@ public class BierRepository
         var bierCount = connection.ExecuteScalar<int>(
             $"SELECT COUNT(1) FROM ({bierCountSQL}) as B", pageFilterSorting);
 
-        return new PagedResult<Bier>
+        return new PagedResult<Beer>
         {
             Items = bieren,
             TotalItems = bierCount,
@@ -58,21 +59,23 @@ public class BierRepository
         };
     }
 
-    public List<Bier> GetIncludeBrouwer()
+    public List<Beer> GetIncludeBrouwer()
     {
         var sql = """
-                     SELECT b.biercode, b.naam, b.type, b.stijl, b.alcohol, b.brouwcode, '' as splitcolumn, br.naam, br.land
-                     FROM bier b
-                         JOIN brouwer br ON b.brouwcode = br.brouwcode
-                     ORDER BY br.naam, b.naam
+                     SELECT b.BeerId, b.Name, b.Type, b.Style, b.Alcohol, b.BrewerId, 
+                            '' as brewerSplit, 
+                            br.Name, br.Country
+                     FROM Beer b
+                         JOIN Brewer br ON b.BrewerId = br.BrewerId
+                     ORDER BY br.Name, b.Name
                   """;
 
         var connection = new MySqlConnection(GetConnectionString());
-        return connection.Query<Bier, Brouwer, Bier>(sql, (bier, brouwer) =>
+        return connection.Query<Beer, Brewer, Beer>(sql, (bier, brouwer) =>
         {
-            bier.Brouwer = brouwer;
+            bier.Brewer = brouwer;
             return bier;
-        }, splitOn: "splitcolumn").ToList();
+        }, splitOn: "brewerSplit").ToList();
     }
 
     private string GetConnectionString()
@@ -83,28 +86,28 @@ public class BierRepository
         // return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
     }
 
-    public void Add(Bier bier)
+    public void Add(Beer beer)
     {
         using var connection = new MySqlConnection(GetConnectionString());
-        var sql = "INSERT INTO bier (naam, type, stijl, alcohol, brouwcode) " +
-                  "VALUES (@Naam, @Type, @Stijl, @Alcohol, @Brouwcode)";
-        connection.Execute(sql, bier);
+        var sql = "INSERT INTO Beer (Name, Type, Style, Alcohol, BrewerId) " +
+                  "VALUES (@Name, @Type, @Style, @Alcohol, @BrewerId)";
+        connection.Execute(sql, beer);
     }
 
-    public Bier? GetByCode(int biercode)
+    public Beer? GetByCode(int beerId)
     {
         using var connection = new MySqlConnection(GetConnectionString());
         var sql = """
-                    SELECT biercode, naam, type, stijl, alcohol, brouwcode
-                    FROM bier WHERE biercode = @Biercode
+                    SELECT BeerId, Name, Type, Style, Alcohol, BrewerId
+                    FROM Beer WHERE BeerId = @BeerId
                   """;
-        return connection.QueryFirstOrDefault<Bier>(sql, new { Biercode = biercode });
+        return connection.QueryFirstOrDefault<Beer>(sql, new { BeerId = beerId });
     }
 
-    public void Delete(int bierCode)
+    public void Delete(int beerId)
     {
         using var connection = new MySqlConnection(GetConnectionString());
-        var sql = "DELETE FROM bier WHERE biercode = @Biercode";
-        connection.Execute(sql, new { Biercode = bierCode });
+        var sql = "DELETE FROM Beer WHERE BeerId = @beerId";
+        connection.Execute(sql, new { BeerId = beerId });
     }
 }

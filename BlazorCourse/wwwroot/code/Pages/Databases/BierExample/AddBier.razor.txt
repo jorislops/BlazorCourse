@@ -8,46 +8,46 @@
 <h3>Bier Toevoegen</h3>
 
 
-<EditForm Model="_bier" OnValidSubmit="AddBierToDb">
+<EditForm Model="_beer" OnValidSubmit="AddBierToDb">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
     <div class="mb-3">
         <label for="naam" class="form-label">Naam</label>
-        <InputText class="form-control" id="naam" @bind-Value="_bier.Naam"/>
-        <ValidationMessage For="@(() => _bier.Naam)"/>
+        <InputText class="form-control" id="naam" @bind-Value="_beer.Name"/>
+        <ValidationMessage For="@(() => _beer.Name)"/>
     </div>
 
     <div class="mb-3">
         <label for="type" class="form-label">Type</label>
-        <InputText class="form-control" id="type" @bind-Value="_bier.Type"/>
-        <ValidationMessage For="@(() => _bier.Type)"/>
+        <InputText class="form-control" id="type" @bind-Value="_beer.Type"/>
+        <ValidationMessage For="@(() => _beer.Type)"/>
     </div>
 
     <div class="mb-3">
         <label for="stijl" class="form-label">Stijl</label>
-        <InputText class="form-control" id="stijl" @bind-Value="_bier.Stijl"/>
-        <ValidationMessage For="@(() => _bier.Stijl)"/>
+        <InputText class="form-control" id="stijl" @bind-Value="_beer.Style"/>
+        <ValidationMessage For="@(() => _beer.Style)"/>
     </div>
 
     <div class="mb-3">
         <label for="alcohol" class="form-label">Alcohol</label>
-        <InputNumber class="form-control" id="alcohol" @bind-Value="_bier.Alcohol"/>
-        <ValidationMessage For="@(() => _bier.Alcohol)"/>
+        <InputNumber class="form-control" id="alcohol" @bind-Value="_beer.Alcohol"/>
+        <ValidationMessage For="@(() => _beer.Alcohol)"/>
     </div>
 
     <div class="mb-3">
         <label for="brouwer" class="form-label">Brouwer</label>
 
-        <InputSelect class="form-control" id="brouwer" @bind-Value="_bier.Brouwcode">
+        <InputSelect class="form-control" id="brouwer" @bind-Value="_beer.BrewerId">
             <option value="">
                 Selecteer een brouwer
             </option>
             @foreach (var brouwer in _brouwers)
             {
-                <option value="@brouwer.Brouwcode">@brouwer.Naam</option>
+                <option value="@brouwer.BrewerId">@brouwer.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => _bier.Brouwcode)"/>
+        <ValidationMessage For="@(() => _beer.BrewerId)"/>
     </div>
 
     <button class="btn btn-danger" type="reset">Reset</button>
@@ -56,8 +56,8 @@
 
 
 @code {
-    private Bier _bier = new Bier();
-    private List<Brouwer> _brouwers = null!;
+    private Beer _beer = new Beer();
+    private List<Brewer> _brouwers = null!;
 
     protected override void OnInitialized()
     {
@@ -67,10 +67,10 @@
 
     private void AddBierToDb()
     {
-        new BierRepository().Add(_bier);
-        _bier = new Bier();
-        _bier.Brouwcode = -1;
-        NavigationManager.NavigateTo("/BierPage");
+        new BierRepository().Add(_beer);
+        _beer = new Beer();
+        _beer.BrewerId = -1;
+        NavigationManager.NavigateTo("/Bier");
     }
 
 }

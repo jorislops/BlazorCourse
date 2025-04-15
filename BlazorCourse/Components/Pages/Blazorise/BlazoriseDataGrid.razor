@@ -3,12 +3,13 @@
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @using global::Blazorise.DataGrid
 @using global::Blazorise
+
 @* @using globalBlazorise.DataGrid *@
 <h3>blazorise_datagrid</h3>
 
 @* <Badge Color="Color.Primary">Hello</Badge> *@
 
-<DataGrid TItem="Bier"
+<DataGrid TItem="Beer"
           Data="@_bieren"
           ReadData="args => OnReadData(args)"
           TotalItems="@_totalItems"
@@ -18,16 +19,16 @@
           Responsive
           SortMode="DataGridSortMode.Single">
     <DataGridCommandColumn/>
-    <DataGridColumn Field="@nameof(Bier.Naam)" Caption="Naam"/>
-    <DataGridColumn Field="@nameof(Bier.Alcohol)" Caption="Alcohol"/>
-    <DataGridColumn Field="@nameof(Bier.Stijl)" Caption="Stijl"/>
+    <DataGridColumn Field="@nameof(Beer.Name)" Caption="Naam"/>
+    <DataGridColumn Field="@nameof(Beer.Alcohol)" Caption="Alcohol"/>
+    <DataGridColumn Field="@nameof(Beer.Style)" Caption="Stijl"/>
 </DataGrid>
 
 @code {
-    private List<Bier>? _bieren;
+    private List<Beer>? _bieren;
     private int? _totalItems;
 
-    private void OnReadData(DataGridReadDataEventArgs<Bier> e)
+    private void OnReadData(DataGridReadDataEventArgs<Beer> e)
     {
         var pageFilterSorting = new PageFilterSorting
         {

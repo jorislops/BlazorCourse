@@ -16,7 +16,7 @@ https://github.com/jorislops/BlazorCourse/blob/main/Handleiding_virtuele_omgevin
 
 Met `git clone` kan je het project clonen.
 Je zult dan wel de databases moeten aanmaken in MySQL of MariaDb. 
-De SQL-code staat in `/SQL`. Voer deze code uit. 
+De SQL-code staat in `/SQL/BeerDbCreateAndInsertData.sql` en `/SQL/TodoBlazorCourse.sql`. Voer deze code uit. 
 De connection strings staan in `appsettings.json`.
 
 Voer af en toe een git pull uit om de laatste versie te krijgen, mocht je dingen tegenkomen die niet kloppen 
@@ -250,4 +250,4 @@ gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op iede
   - [State management in Blazor - Don Wibier - NDC Porto 2022] (https://www.youtube.com/watch?v=L9p-9dGp-98)
   - [Blazor state management with Fluxor] (https://www.youtube.com/watch?v=yM9F8rxo8L8)
 
-Suggesties en aanvulling zijn welkom. 
+# Suggesties en aanvulling zijn welkom. 

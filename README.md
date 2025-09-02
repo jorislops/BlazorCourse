@@ -1,4 +1,4 @@
-# Welkom
+# Welkom bij BlazorCourse
 
 In dit project (BlazorCourse) vind je de opdrachten en voorbeelden met Blazor.
 TOC:

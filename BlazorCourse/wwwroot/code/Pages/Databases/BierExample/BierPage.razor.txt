@@ -135,7 +135,7 @@
         {
             _pageFilterSorting.BrewerId = BrewerId;
         }
-        else if(CodeFromBrouwer is not null)
+        else if (CodeFromBrouwer is not null)
         {
             _pageFilterSorting.BrewerId = CodeFromBrouwer;
         }

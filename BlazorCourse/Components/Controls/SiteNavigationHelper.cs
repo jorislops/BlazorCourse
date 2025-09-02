@@ -47,9 +47,6 @@ public static class SiteNavigationHelper
             var routeAttributeResults = routings.Where(r =>
                     r.RouteAttributes.Any(w => w.ConstructorArguments.Any(a => 
                         a.Value!.ToString()!.Equals(url, StringComparison.OrdinalIgnoreCase)
-                        ||
-                        a.Value!.ToString()!.StartsWith(url, StringComparison.OrdinalIgnoreCase)
-                        
                         )))
                 .ToList();
 

@@ -1,11 +1,11 @@
 ﻿ARG SDKARC=amd64
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-bookworm-slim-amd64 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.4-bookworm-slim-amd64 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.203-bookworm-slim-arm64v8 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.203-bookworm-slim-arm64v8 AS build
 ARG BUILD_CONFIGURATION=Release
 
 

@@ -251,3 +251,4 @@ gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op iede
   - [Blazor state management with Fluxor] (https://www.youtube.com/watch?v=yM9F8rxo8L8)
 
 # Suggesties en aanvulling zijn alijd welkom!!!!
+# Extra regel toegevoegd

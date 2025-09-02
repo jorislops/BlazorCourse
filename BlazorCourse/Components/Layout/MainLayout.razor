@@ -13,7 +13,9 @@
                 
                 <RadzenSidebarToggle Click="@(() => _sideBarExpanded = !_sideBarExpanded)" />
                 <RadzenLabel Text="Blazor Examples" />
-                
+                @* <RadzenLabel Text="Name"> *@
+                @*      *@
+                @* </RadzenLabel> *@
                 
                 <RadzenLabel Style="margin-left: auto;margin-right: 15px;">Counter by Service: @CounterService.Counter - by Cascade Parameter:  @AppState.Counter</RadzenLabel>
                 
@@ -31,7 +33,8 @@
                 {
                     <RadzenSplitter Orientation="Orientation.Horizontal">
                         <RadzenSplitterPane>
-                            <CodeViewer Uri="@NavigationManager.GetUriWithQueryParameter("presenting", (bool?)null)" BaseUri="@NavigationManager.BaseUri"></CodeViewer>
+                            <CodeViewer Uri="@NavigationManager.GetUriWithQueryParameter("presenting", (bool?)null)" 
+                                        BaseUri="@NavigationManager.BaseUri"></CodeViewer>
                         </RadzenSplitterPane>
                         <RadzenSplitterPane>
                             @Body
@@ -64,7 +67,7 @@
     
     bool _sideBarExpanded = true;
     
-    //make sure that AppState is initialized
+    //!!!make sure that AppState is initialized
     private AppState AppState { get; } = new();
 
 
@@ -78,11 +81,10 @@
 
         //CounterService.CountHasChanged += StateHasChanged; 
         //same as above
-        CounterService.CountHasChanged += () =>
-        {
-            InvokeAsync(StateHasChanged);
-        };
+        CounterService.CountHasChanged += () => { InvokeAsync(StateHasChanged); };
 
+        // another service that notifies the layout to update
         AppState.CountHasChanged += StateHasChanged;
     }
+
 }

@@ -250,4 +250,4 @@ gerelateerde componenten zo aanpassen dat je onbeperkt diep kunt gaan en op iede
   - [State management in Blazor - Don Wibier - NDC Porto 2022] (https://www.youtube.com/watch?v=L9p-9dGp-98)
   - [Blazor state management with Fluxor] (https://www.youtube.com/watch?v=yM9F8rxo8L8)
 
-# Suggesties en aanvulling zijn welkom. 
+# Suggesties en aanvulling zijn alijd welkom. 

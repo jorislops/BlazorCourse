@@ -1,5 +1,6 @@
 @page "/todo-details-db/{TodoId:int}"
 @using BlazorCourse.Components.Pages.Databases.Repositories
+@using BlazorCourse.Components.Pages.Databases.TodoExample.Repositories
 
 @if (_item is null)
 {

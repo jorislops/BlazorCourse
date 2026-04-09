@@ -1,7 +1,9 @@
+using AutoMapper;
 using BlazorCourse.Components.Pages.Databases.BierExample.Model;
 using BlazorCourse.Services;
 using Dapper;
 using MySqlConnector;
+using SqlKata.Execution;
 
 namespace BlazorCourse.Components.Pages.Databases.BierExample.Repository;
 
@@ -9,50 +11,68 @@ public class BierRepository
 {
     public PagedResult<Beer> Get(PageFilterSorting pageFilterSorting)
     {
-        if (!string.IsNullOrWhiteSpace(pageFilterSorting.BeerName))
-            pageFilterSorting.BeerName = $"%{pageFilterSorting.BeerName}%";
-        else
-            pageFilterSorting.BeerName = null;
+        var beerNameFilter = string.IsNullOrWhiteSpace(pageFilterSorting.BeerName)
+            ? null
+            : $"%{pageFilterSorting.BeerName}%";
 
-        //To prevent SQL Injection, we only allow certain columns to be sorted on
-        var allowedColumns = new[] { "BeerId", "Name", "Type", "Style", "Alcohol", "BrewerId" };
-        if (!allowedColumns.Contains(pageFilterSorting.OrderBy)) pageFilterSorting.OrderBy = "Name";
-        if (!pageFilterSorting.Dir.Equals("ASC", StringComparison.OrdinalIgnoreCase) 
-            && !pageFilterSorting.Dir.Equals("DESC", StringComparison.OrdinalIgnoreCase)) pageFilterSorting.Dir = "ASC";
+        using var queryFactory = DbHelper.CreateQueryFactory();
 
-        var sql = $"""
-                     SELECT BeerId, Name, Type, Style, Alcohol, BrewerId
-                     FROM Beer
-                     WHERE
-                         (@BrewerId IS NULL OR BrewerId = @BrewerId)
-                         AND
-                             (@BrewerName IS NULL OR
-                             BrewerId = (SELECT DISTINCT BrewerId FROM Brewer
-                                 WHERE Name = @BrewerName
-                                     AND (@Country IS NULL OR Country = @Country)))
-                         AND
-                             (@BeerName IS NULL OR Name LIKE @BeerName)
-                     -- Be aware of SQL Injection, but this is a simple example!!!!
-                     -- To solve this problem, check the valid values for the parameters
-                     
-                      ORDER BY {pageFilterSorting.OrderBy} {pageFilterSorting.Dir}
-                      LIMIT @PageSize OFFSET @Offset
-                   """;
+        // To prevent SQL injection, only allow sorting on known columns.
+        // var allowedColumns = new[] { "BeerId", "Name", "Type", "Style", "Alcohol", "BrewerId" };
+        // var orderBy = allowedColumns.Contains(pageFilterSorting.OrderBy) ? pageFilterSorting.OrderBy : "Name";
+        
 
-        using var connection = new MySqlConnection(GetConnectionString());
-        var bieren = connection
-            .Query<Beer>(sql, pageFilterSorting)
+        var filteredQuery = queryFactory.Query("Beer")
+            .Select("BeerId", "Name", "Type", "Style", "Alcohol", "BrewerId");
+
+        if (pageFilterSorting.BrewerId.HasValue)
+            filteredQuery.Where("BrewerId", pageFilterSorting.BrewerId.Value);
+
+        if (!string.IsNullOrWhiteSpace(pageFilterSorting.BrewerName))
+        {
+            filteredQuery.WhereIn("BrewerId", brewerQuery =>
+            {
+                brewerQuery.From("Brewer")
+                    .Select("BrewerId")
+                    .Where("Name", pageFilterSorting.BrewerName);
+
+                if (!string.IsNullOrWhiteSpace(pageFilterSorting.Country))
+                    brewerQuery.Where("Country", pageFilterSorting.Country);
+
+                return brewerQuery;
+            });
+        }
+
+        if (!string.IsNullOrWhiteSpace(beerNameFilter))
+            filteredQuery.WhereLike("Name", beerNameFilter);
+
+        var bierCount = filteredQuery.Clone().Count<int>();
+
+        var orderedQuery = pageFilterSorting.OrderDirection.ToUpper() switch
+        {
+            "DESC" => filteredQuery.OrderByDesc(pageFilterSorting.OrderBy),
+            "ASC" => filteredQuery.OrderBy(pageFilterSorting.OrderBy),
+            _ => filteredQuery
+        };
+        
+        var brewerQuery = queryFactory
+            .Query("Brewer");
+        
+        var bierenDynamic = orderedQuery
+            .Include("Brewer",  brewerQuery, "BrewerId", "BrewerId")
+            .Limit(pageFilterSorting.PageSize)
+            .Offset(pageFilterSorting.Offset)
+            .Get()
             .ToList();
 
-        // Not the nicest way to get the total count, but it works!!
-        // An sql query builder would be better, but that's out of scope for this course. 
-        var bierCountSQL = sql.Remove(sql.IndexOf("LIMIT") - 1);
-        var bierCount = connection.ExecuteScalar<int>(
-            $"SELECT COUNT(1) FROM ({bierCountSQL}) as B", pageFilterSorting);
-
+        //truc om te converteren naar geneste objecten
+        var configuration = new MapperConfiguration(cfg => { }, new LoggerFactory());
+        var mapper = configuration.CreateMapper();
+        var bierenAsList = mapper.Map<List<Beer>>(bierenDynamic);
+        
         return new PagedResult<Beer>
         {
-            Items = bieren,
+            Items = bierenAsList,
             TotalItems = bierCount,
             Page = pageFilterSorting.CurrentPage,
             PageSize = pageFilterSorting.PageSize
@@ -61,21 +81,54 @@ public class BierRepository
 
     public List<Beer> GetIncludeBrouwer()
     {
-        var sql = """
-                     SELECT b.BeerId, b.Name, b.Type, b.Style, b.Alcohol, b.BrewerId, 
-                            '' as brewerSplit, 
-                            br.Name, br.Country
-                     FROM Beer b
-                         JOIN Brewer br ON b.BrewerId = br.BrewerId
-                     ORDER BY br.Name, b.Name
-                  """;
+        using var queryFactory = DbHelper.CreateQueryFactory();
 
-        var connection = new MySqlConnection(GetConnectionString());
-        return connection.Query<Beer, Brewer, Beer>(sql, (bier, brouwer) =>
+        var rows = queryFactory
+            .Query("Beer as b")
+            .Join("Brewer as br", "b.BrewerId", "br.BrewerId")
+            .Select(
+                "b.BeerId",
+                "b.Name",
+                "b.Type",
+                "b.Style",
+                "b.Alcohol",
+                "b.BrewerId",
+                "br.BrewerId as Brewer_BrewerId",
+                "br.Name as Brewer_Name",
+                "br.Country as Brewer_Country")
+            .OrderBy("br.Name")
+            .OrderBy("b.Name")
+            .Get<BeerWithBrewerRow>()
+            .ToList();
+
+        return rows.Select(row => new Beer
         {
-            bier.Brewer = brouwer;
-            return bier;
-        }, splitOn: "brewerSplit").ToList();
+            BeerId = row.BeerId,
+            Name = row.Name,
+            Type = row.Type,
+            Style = row.Style,
+            Alcohol = row.Alcohol,
+            BrewerId = row.BrewerId,
+            Brewer = new Brewer
+            {
+                BrewerId = row.Brewer_BrewerId,
+                Name = row.Brewer_Name,
+                Country = row.Brewer_Country
+            }
+        }).ToList();
+    }
+
+    private sealed class BeerWithBrewerRow
+    {
+        public int BeerId { get; init; }
+        public string Name { get; init; } = null!;
+        public string Type { get; init; } = null!;
+        public string Style { get; init; } = null!;
+        public double? Alcohol { get; init; }
+        public int? BrewerId { get; init; }
+        public int Brewer_BrewerId { get; init; }
+        public string Brewer_Name { get; init; } = null!;
+        public string Brewer_Country { get; init; } = null!;
     }
 
     private string GetConnectionString()
@@ -88,26 +141,24 @@ public class BierRepository
 
     public void Add(Beer beer)
     {
-        using var connection = new MySqlConnection(GetConnectionString());
-        var sql = "INSERT INTO Beer (Name, Type, Style, Alcohol, BrewerId) " +
-                  "VALUES (@Name, @Type, @Style, @Alcohol, @BrewerId)";
-        connection.Execute(sql, beer);
+        DbHelper.CreateQueryFactory()
+            .Query("Beer")
+            .Insert(beer);
     }
 
     public Beer? GetByCode(int beerId)
     {
-        using var connection = new MySqlConnection(GetConnectionString());
-        var sql = """
-                    SELECT BeerId, Name, Type, Style, Alcohol, BrewerId
-                    FROM Beer WHERE BeerId = @BeerId
-                  """;
-        return connection.QueryFirstOrDefault<Beer>(sql, new { BeerId = beerId });
+        return DbHelper.CreateQueryFactory()
+            .Query("Beer")
+            .Where("BeerId", beerId)
+            .FirstOrDefault<Beer>();
     }
 
     public void Delete(int beerId)
     {
-        using var connection = new MySqlConnection(GetConnectionString());
-        var sql = "DELETE FROM Beer WHERE BeerId = @beerId";
-        connection.Execute(sql, new { BeerId = beerId });
+        DbHelper.CreateQueryFactory()
+            .Query("Beer")
+            .Where("BeerId", beerId)
+            .Delete();
     }
 }

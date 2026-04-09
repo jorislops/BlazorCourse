@@ -48,13 +48,13 @@
 
         if (orderBy == null)
         {
-            pageFilterSorting.OrderBy = "Naam";
-            pageFilterSorting.Dir = "asc";
+            pageFilterSorting.OrderBy = "Name";
+            pageFilterSorting.OrderDirection = "ASC";
         }
         else
         {
             pageFilterSorting.OrderBy = orderBy.Field;
-            pageFilterSorting.Dir = orderBy.SortDirection;
+            pageFilterSorting.OrderDirection = orderBy.SortDirection;
         }
 
         var pagedResult = new BierRepository().Get(pageFilterSorting);

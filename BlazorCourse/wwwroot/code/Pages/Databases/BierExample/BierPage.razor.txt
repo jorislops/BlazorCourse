@@ -115,7 +115,7 @@
         var queryString = url.Query; // returns "?BrewerId=someInt"
         var queryParameters = HttpUtility.ParseQueryString(queryString);
         
-        //Query parameters are always strings and the key (Brouwcode) is case sensitive!!
+        //Query parameters are always strings and the key (BrouwerId) is case sensitive!!
         var brouwcodeAsString = queryParameters["BrewerId"]; // returns "someInt"
         if (int.TryParse(brouwcodeAsString, out var brouwcode))
         {
@@ -166,20 +166,20 @@
 
     private void SortBy(string columnName)
     {
-        if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "asc")
+        if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.OrderDirection == "asc")
         {
             _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.Dir = "desc";
+            _pageFilterSorting.OrderDirection = "desc";
         }
-        else if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.Dir == "desc")
+        else if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.OrderDirection == "desc")
         {
             _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.Dir = "asc";
+            _pageFilterSorting.OrderDirection = "asc";
         }
         else
         {
             _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.Dir = "asc";
+            _pageFilterSorting.OrderDirection = "asc";
         }
 
         _pageFilterSorting.CurrentPage = 1;
@@ -197,7 +197,7 @@
         _pageFilterSorting.BeerName = beerNameFilter;
         _pageFilterSorting.CurrentPage = 1;
         _pageFilterSorting.OrderBy = "naam";
-        _pageFilterSorting.Dir = "asc";
+        _pageFilterSorting.OrderDirection = "asc";
         LoadData();
     }
 

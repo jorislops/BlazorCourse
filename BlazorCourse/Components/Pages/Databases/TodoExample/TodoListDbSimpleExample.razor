@@ -1,0 +1,29 @@
+@page "/TodoListDbSimpleExample"
+@using BlazorCourse.Components.Pages.Databases.Repositories
+@using BlazorCourse.Components.Pages.Databases.TodoExample.Repositories
+<h3>Simple Todo Example</h3>
+
+@if (_todos is null)
+{
+    <p>Loading Todos</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var todo in _todos)
+        {
+            <li class="list-group-item">@todo.Title</li>
+        }
+    </ul>    
+}
+
+
+@code {
+    List<TodoItem>? _todos = null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _todos = new TodoRepository().Get();
+    }
+}

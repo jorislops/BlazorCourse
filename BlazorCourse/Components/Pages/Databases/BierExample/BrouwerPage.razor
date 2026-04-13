@@ -11,8 +11,6 @@
     {
         <li>
             <span @onclick="@(() => GoToBeerPage(brouwer.BrewerCode))">@brouwer.Name (@brouwer.NumberOfBeers) (@brouwer.NumberOfBrewersWithSameName)</span>
-
-            
             
             @{
                 var link = brouwer.Name;
@@ -24,7 +22,6 @@
 
             <a href="/Bier/@link">Show Beers</a>
             <a class="btn btn-primary" @onclick="@(() => GoToBeerPage(brouwer))">Show Beers</a>
-            
         </li>
     }
 </ul>

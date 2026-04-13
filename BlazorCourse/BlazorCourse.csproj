@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <AdditionalFiles Include="Components\Pages\AnswersToExercises\TicTacToe.razor" />
-      <AdditionalFiles Include="Components\Pages\Databases\BierExample\BrouwerPage.razor" />
     </ItemGroup>
 
     <ItemGroup>

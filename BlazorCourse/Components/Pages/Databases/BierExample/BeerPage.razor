@@ -2,9 +2,9 @@
 @page "/bier/{BrewerId:int}"
 @page "/bier/{BrewerName}/{Country}"
 @page "/bier/{BrewerName}"
+@using System.Web
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
-@using System.Web
 @inject NavigationManager NavigationManager
 
 @* create a beer grid with a filter and a pager *@
@@ -17,7 +17,7 @@
 
 <div class="row input-group">
     <div class="col">
-        <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput="@(args => FilterByNaam(args.Value?.ToString()))">
+        <input id="searchBier" type="search" class="form-control" placeholder="Zoek op biernaam" @oninput="@(args => FilterByName(args.Value?.ToString()))">
     </div>
 </div>
 
@@ -26,7 +26,7 @@
     <thead>
     <tr>
         <td>
-            <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Name)))">Sort by naam</button>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Name)))">Sort by Name</button>
         </td>
         <td>
             <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Alcohol)))">Sort by Alcohol</button>
@@ -37,13 +37,13 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var bier in _pagedResult.Items)
+    @foreach (var beer in _pagedResult.Items)
     {
         <tr>
-            <td>@bier.Name</td>
-            <td>@bier.Alcohol</td>
+            <td>@beer.Name</td>
+            <td>@beer.Alcohol</td>
             <td>
-                <a class="btn btn-danger" href="/BierDelete/@bier.BeerId">Delete</a>
+                <a class="btn btn-danger" href="/BeerDelete/@beer.BeerId">Delete</a>
             </td>
         </tr>
     }
@@ -52,31 +52,24 @@
 <div>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-            @if (_pagedResult.Page > 1)
+            @if (_pagedResult.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" @onclick="Previous">Previous</a>
+                    <a class="page-link" @onclick="@(() => GoToPage(_pagedResult.Page-1))">Previous</a>
                 </li>
             }
 
             @foreach (var pageNumber in Enumerable.Range(1, Math.Min(10, _pagedResult.TotalPages)))
             {
                 <li class="page-item">
-                    <a class="page-link" @onclick="@(() => GoToPage(pageNumber))">@pageNumber</a>
+                    <a class="page-link @(pageNumber == _pagedResult.Page ? "active" : "")" @onclick="@(() => GoToPage(pageNumber))">@pageNumber</a>
                 </li>
             }
-            
-            @* @if (_pagedResult.TotalPages > 10) *@
-            @* { *@
-            @*     <li class="page-item"> *@
-            @*         <a class="page-link" @onclick="@(() => GoToPage(_pagedResult.TotalPages))">Last</a> *@
-            @*     </li> *@
-            @* } *@
 
-            @if (_pagedResult.Page < _pagedResult.TotalPages)
+            @if (_pagedResult.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" @onclick="Next">Next</a>
+                    <a class="page-link" @onclick="@(() => GoToPage(_pagedResult.Page+1))">Next</a>
                 </li>
             }
         </ul>
@@ -89,9 +82,8 @@
 @code {
     private PagedResult<Beer> _pagedResult = null!;
 
-    private readonly PageFilterSorting _pageFilterSorting = new()
+    private readonly PageFilterSorting _filterAndSorting = new()
     {
-        CurrentPage = 1,
         OrderBy = "Name"
     };
 
@@ -126,79 +118,66 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        LoadData();
+        LoadData(_filterAndSorting, 1, 10);
     }
 
-    private void LoadData()
+    private void ApplyRouteParameters(PageFilterSorting pageFilterSorting)
     {
         if (BrewerId is not null)
         {
-            _pageFilterSorting.BrewerId = BrewerId;
+            pageFilterSorting.BrewerId = BrewerId;
         }
         else if (CodeFromBrouwer is not null)
         {
-            _pageFilterSorting.BrewerId = CodeFromBrouwer;
+            pageFilterSorting.BrewerId = CodeFromBrouwer;
         }
         else if (BrewerName is not null)
         {
-            _pageFilterSorting.BrewerName = BrewerName;
+            pageFilterSorting.BrewerName = BrewerName;
             if (Country is not null)
             {
-                _pageFilterSorting.Country = Country;
+                pageFilterSorting.Country = Country;
             }
         }
-
-        _pagedResult = new BierRepository().Get(_pageFilterSorting);
     }
 
-    private void Next()
+    private void LoadData(PageFilterSorting pageFilterSorting, int pageIndex, int pageSize)
     {
-        _pageFilterSorting.CurrentPage += 1;
-        LoadData();
+        ApplyRouteParameters(pageFilterSorting);
+        _pagedResult = new BeerRepository().Get(pageFilterSorting, pageIndex, pageSize);
     }
-
-    private void Previous()
-    {
-        _pageFilterSorting.CurrentPage -= 1;
-        LoadData();
-    }
-
-
+    
     private void SortBy(string columnName)
     {
-        if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.OrderDirection == "asc")
+        if (_filterAndSorting.OrderBy == columnName && _filterAndSorting.OrderDirection == "asc")
         {
-            _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.OrderDirection = "desc";
+            _filterAndSorting.OrderBy = columnName;
+            _filterAndSorting.OrderDirection = "desc";
         }
-        else if (_pageFilterSorting.OrderBy == columnName && _pageFilterSorting.OrderDirection == "desc")
+        else if (_filterAndSorting.OrderBy == columnName && _filterAndSorting.OrderDirection == "desc")
         {
-            _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.OrderDirection = "asc";
+            _filterAndSorting.OrderBy = columnName;
+            _filterAndSorting.OrderDirection = "asc";
         }
         else
         {
-            _pageFilterSorting.OrderBy = columnName;
-            _pageFilterSorting.OrderDirection = "asc";
+            _filterAndSorting.OrderBy = columnName;
+            _filterAndSorting.OrderDirection = "asc";
         }
-
-        _pageFilterSorting.CurrentPage = 1;
-        LoadData();
+        
+        LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
     }
 
     private void GoToPage(int page)
     {
-        _pageFilterSorting.CurrentPage = page;
-        LoadData();
+        LoadData(_filterAndSorting, page, _pagedResult.PageSize);
     }
 
-    private void FilterByNaam(string? beerNameFilter)
+    private void FilterByName(string? beerNameFilter)
     {
-        _pageFilterSorting.BeerName = beerNameFilter;
-        _pageFilterSorting.CurrentPage = 1;
-        _pageFilterSorting.OrderBy = "naam";
-        _pageFilterSorting.OrderDirection = "asc";
-        LoadData();
+        _filterAndSorting.BeerName = beerNameFilter;
+        _filterAndSorting.OrderBy = "name";
+        _filterAndSorting.OrderDirection = "asc";
+        LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
     }
-
 }

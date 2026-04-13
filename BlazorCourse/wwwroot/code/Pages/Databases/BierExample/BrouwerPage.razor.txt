@@ -1,6 +1,6 @@
 @page "/brouwer"
-@using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+@using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
@@ -37,7 +37,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _brewerVms = new BrouwerRepository().GetBrouwersVm();
+        _brewerVms = new BrewerRepository().GetBrouwersVm();
     }
 
     private void GoToBeerPage(int brouwcode)

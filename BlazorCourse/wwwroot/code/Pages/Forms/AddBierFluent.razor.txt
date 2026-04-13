@@ -62,12 +62,12 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _brouwers = new BrouwerRepository().Get();
+        _brouwers = new BrewerRepository().Get();
     }
 
     private void AddBierToDb()
     {
-        new BierRepository().Add(_beer);
+        new BeerRepository().Add(_beer);
         _beer = new Beer();
         _beer.BrewerId = -1;
         NavigationManager.NavigateTo("/BierPage");

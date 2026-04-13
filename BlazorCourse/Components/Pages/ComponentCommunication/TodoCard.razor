@@ -24,11 +24,14 @@
 </div>
 
 @code {
-    [Parameter] [EditorRequired] public TodoItem Item { get; set; } = null!;
+    [Parameter, EditorRequired] 
+    public TodoItem Item { get; set; } = null!;
 
-    [Parameter] [EditorRequired] public EventCallback<TodoItem> OnDeleteItem { get; set; }
+    [Parameter, EditorRequired] 
+    public EventCallback<TodoItem> OnDeleteItem { get; set; }
 
-    [Parameter] public RenderFragment<TodoItem>? TitleContent { get; set; }
+    [Parameter] 
+    public RenderFragment<TodoItem>? TitleContent { get; set; }
 
     private void DeleteItem(TodoItem item)
     {

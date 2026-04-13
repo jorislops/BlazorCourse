@@ -175,29 +175,29 @@ public static class NavigationTreeData
             Expanded = false,
             Child =
             [
-                new TreeItem { NodeId = "4-01", NodeText = "Form + Validation", Url = "forms/add-bier", Icon = "html" },
+                new TreeItem 
+                    { NodeId = "4-01", NodeText = "Form + Validation", Url = "forms/add-beer", Icon = "html" },
                 new TreeItem
-                    { NodeId = "4-02", NodeText = "Fluent Validation", Url = "forms/add-bier-fluent", Icon = "html" },
+                    { NodeId = "4-02", NodeText = "Fluent Validation", Url = "forms/add-beer-fluent", Icon = "html" },
                 new TreeItem
                     { NodeId = "4-03", NodeText = "Render Fragments", Url = "/render-fragments", Icon = "html" },
                 new TreeItem
-                    { NodeId = "4-04", NodeText = "Generic Data table", Url = "/generic-data-table", Icon = "html" }
+                    { NodeId = "4-04", NodeText = "Generic Data table", Url = "/generic-data-table", Icon = "html" },
+                new TreeItem
+                    { NodeId = "4-05", NodeText = "Advanced Datagrid", Url = "/advanced-datatable-example", Icon = "html" }
             ]
         });
 
         navigationTree.Add(new TreeItem
         {
             NodeId = "5",
-            NodeText = "5 UI Library - Blazorise",
+            NodeText = "5 Blazor Bootstrap",
             Icon = "folder",
             Expanded = false,
             Child =
             [
-                new TreeItem { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazorise-datagrid", Icon = "html" },
                 new TreeItem
-                {
-                    NodeId = "5-02", NodeText = "Advanced Datagrid", Url = "/advanced-datatable-example", Icon = "html"
-                }
+                    { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazor-bootstrap-datagrid", Icon = "html" },
             ]
         });
 

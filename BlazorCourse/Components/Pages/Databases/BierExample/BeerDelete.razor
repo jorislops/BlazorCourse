@@ -1,5 +1,5 @@
-@page "/bier-delete/{BeerId:int}"
-@page "/BierDelete/{BeerId:int}"
+@page "/beer-delete/{BeerId:int}"
+@page "/BeerDelete/{BeerId:int}"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @inject NavigationManager NavigationManager
@@ -33,13 +33,13 @@ else
     {
         base.OnInitialized();
 
-        _bier = new BierRepository().GetByCode(BeerId);
+        _bier = new BeerRepository().GetByCode(BeerId);
     }
 
 
     private void Delete(int beerId)
     {
-        new BierRepository().Delete(beerId);
+        new BeerRepository().Delete(beerId);
         NavigationManager.NavigateTo("/Bier");
     }
 

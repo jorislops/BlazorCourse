@@ -1,6 +1,7 @@
 @page "/todo-without-repository"
-@using Dapper
 @using MySqlConnector
+@using SqlKata.Compilers
+@using SqlKata.Execution
 <h3>Todo Without Repository</h3>
 
 @foreach (var todo in _todos)
@@ -10,14 +11,17 @@
 
 @code {
     private List<TodoItem> _todos = null!;
-
+    
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        var connectionString = ConfigurationHelper.Configuration.GetConnectionString("todo");
-        using var connection = new MySqlConnection(connectionString);
-        _todos = connection.Query<TodoItem>("SELECT * FROM TodoItem").ToList();
-    }
+        var connectionString = ConfigurationHelper.Configuration.GetConnectionString("todo")!;
+        var queryFactory =  new QueryFactory(new MySqlConnection(connectionString), new MySqlCompiler());
+        
+        var query = queryFactory
+            .Query("TodoItem");
 
+        _todos = query.Get<TodoItem>().ToList();
+    }
 }

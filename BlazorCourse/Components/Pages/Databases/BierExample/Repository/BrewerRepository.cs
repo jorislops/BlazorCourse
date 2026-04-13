@@ -1,15 +1,38 @@
+using System.Data;
 using BlazorCourse.Components.Pages.Databases.BierExample.Model;
 using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel;
-using Radzen;
+using BlazorCourse.Services;
+using MySqlConnector;
+using SqlKata.Compilers;
 using SqlKata.Execution;
 
 namespace BlazorCourse.Components.Pages.Databases.BierExample.Repository;
 
-public class BrouwerRepository
+public class BrewerRepository
 {
+    private static string GetConnectionString()
+    {
+        var bierenConnectionString = ConfigurationHelper.Configuration.GetConnectionString("bieren");
+        return bierenConnectionString!;
+    }
+    
+    private static IDbConnection GetConnection()
+    {
+        return new MySqlConnection(GetConnectionString());
+    }
+
+    public static QueryFactory CreateQueryFactory()
+    {
+        var compiler = new MySqlCompiler();
+        var db = new QueryFactory(GetConnection(), compiler);
+        db.Logger = Console.WriteLine;
+        return db;
+    }
+    
+    
     public List<Brewer> Get()
     {
-        return DbHelper.CreateQueryFactory()
+        return CreateQueryFactory()
             .Query("Brewer")
             .Select("BrewerId", "Name", "Country")
             .OrderBy("Name")
@@ -19,7 +42,7 @@ public class BrouwerRepository
 
     public List<BrewerVm> GetBrouwersVm()
     {
-        using var queryFactory = DbHelper.CreateQueryFactory();
+        using var queryFactory = CreateQueryFactory();
 
         var countQuery = queryFactory.Query("Brewer as bb")
             .WhereColumns("bb.Name", "=", "br.Name").AsCount();

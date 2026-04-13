@@ -1,21 +1,43 @@
+using System.Data;
 using AutoMapper;
 using BlazorCourse.Components.Pages.Databases.BierExample.Model;
 using BlazorCourse.Services;
-using Dapper;
 using MySqlConnector;
+using SqlKata.Compilers;
 using SqlKata.Execution;
 
 namespace BlazorCourse.Components.Pages.Databases.BierExample.Repository;
 
-public class BierRepository
+public class BeerRepository
 {
-    public PagedResult<Beer> Get(PageFilterSorting pageFilterSorting)
+    private static string GetConnectionString()
+    {
+        var bierenConnectionString = ConfigurationHelper.Configuration.GetConnectionString("bieren");
+        // Console.WriteLine("ConnectionString bieren: " +bierenConnectionString);
+        return bierenConnectionString!;
+        // return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
+    }
+
+    private static IDbConnection GetConnection()
+    {
+        return new MySqlConnection(GetConnectionString());
+    }
+
+    public static QueryFactory CreateQueryFactory()
+    {
+        var compiler = new MySqlCompiler();
+        var db = new QueryFactory(GetConnection(), compiler);
+        db.Logger = Console.WriteLine;
+        return db;
+    }
+    
+    public PagedResult<Beer> Get(PageFilterSorting pageFilterSorting, int pageIndex, int pageSize)
     {
         var beerNameFilter = string.IsNullOrWhiteSpace(pageFilterSorting.BeerName)
             ? null
             : $"%{pageFilterSorting.BeerName}%";
 
-        using var queryFactory = DbHelper.CreateQueryFactory();
+        using var queryFactory = CreateQueryFactory();
 
         // To prevent SQL injection, only allow sorting on known columns.
         // var allowedColumns = new[] { "BeerId", "Name", "Type", "Style", "Alcohol", "BrewerId" };
@@ -58,14 +80,15 @@ public class BierRepository
         var brewerQuery = queryFactory
             .Query("Brewer");
         
+        //Normally we can use Paginate<Beer>(), this is not possible with nested objects 
         var bierenDynamic = orderedQuery
             .Include("Brewer",  brewerQuery, "BrewerId", "BrewerId")
-            .Limit(pageFilterSorting.PageSize)
-            .Offset(pageFilterSorting.Offset)
+            .Limit(pageSize)
+            .Offset((pageIndex - 1) * pageSize)// -1 to fix the offset
             .Get()
             .ToList();
 
-        //truc om te converteren naar geneste objecten
+        //trick to convert to nested objects with the help of AutoMapper
         var configuration = new MapperConfiguration(cfg => { }, new LoggerFactory());
         var mapper = configuration.CreateMapper();
         var bierenAsList = mapper.Map<List<Beer>>(bierenDynamic);
@@ -74,14 +97,14 @@ public class BierRepository
         {
             Items = bierenAsList,
             TotalItems = bierCount,
-            Page = pageFilterSorting.CurrentPage,
-            PageSize = pageFilterSorting.PageSize
+            Page = pageIndex,
+            PageSize = pageSize
         };
     }
 
     public List<Beer> GetIncludeBrouwer()
     {
-        using var queryFactory = DbHelper.CreateQueryFactory();
+        using var queryFactory = CreateQueryFactory();
 
         var rows = queryFactory
             .Query("Beer as b")
@@ -131,24 +154,18 @@ public class BierRepository
         public string Brewer_Country { get; init; } = null!;
     }
 
-    private string GetConnectionString()
-    {
-        var bierenConnectionString = ConfigurationHelper.Configuration.GetConnectionString("bieren");
-        // Console.WriteLine("ConnectionString bieren: " +bierenConnectionString);
-        return bierenConnectionString!;
-        // return "Server=localhost;Database=bieren;Uid=root;Pwd=Test@1234!;";
-    }
+
 
     public void Add(Beer beer)
     {
-        DbHelper.CreateQueryFactory()
+        CreateQueryFactory()
             .Query("Beer")
             .Insert(beer);
     }
 
     public Beer? GetByCode(int beerId)
     {
-        return DbHelper.CreateQueryFactory()
+        return CreateQueryFactory()
             .Query("Beer")
             .Where("BeerId", beerId)
             .FirstOrDefault<Beer>();
@@ -156,7 +173,7 @@ public class BierRepository
 
     public void Delete(int beerId)
     {
-        DbHelper.CreateQueryFactory()
+        CreateQueryFactory()
             .Query("Beer")
             .Where("BeerId", beerId)
             .Delete();

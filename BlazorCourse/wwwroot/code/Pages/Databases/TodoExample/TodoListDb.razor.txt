@@ -1,6 +1,5 @@
 @page "/todo-list-db"
 @using BlazorCourse.Components.Pages.ComponentCommunication
-@using BlazorCourse.Components.Pages.Databases.Repositories
 @using BlazorCourse.Components.Pages.Databases.TodoExample.Repositories
 <h3>Todo List with Database</h3>
 

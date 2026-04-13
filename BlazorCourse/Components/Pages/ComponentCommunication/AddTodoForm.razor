@@ -23,7 +23,8 @@
         Title = ""
     };
 
-    [Parameter] [EditorRequired] public EventCallback<TodoItem> OnAdd { get; set; }
+    [Parameter, EditorRequired] 
+    public EventCallback<TodoItem> OnAdd { get; set; }
 
     private void Add()
     {

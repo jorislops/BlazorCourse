@@ -2,9 +2,6 @@ using BlazorCourse;
 using BlazorCourse.Components;
 using BlazorCourse.Components.Pages.Components.ParentChildServiceExample;
 using BlazorCourse.Services;
-using Blazorise;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,11 +15,6 @@ builder.Services.AddScoped<CounterService>();
 builder.Services.AddScoped<MessageService>();
 
 builder.Services.AddRadzenComponents();
-
-builder.Services
-    .AddBlazorise(options => { options.Immediate = true; })
-    .AddBootstrap5Providers()
-    .AddFontAwesomeIcons();
 
 builder.Services.AddAntiforgery(options => { options.SuppressXFrameOptionsHeader = true; });
 

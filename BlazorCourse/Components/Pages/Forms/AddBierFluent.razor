@@ -1,5 +1,5 @@
-@page "/Forms/add-bier-fluent"
-@page "/Forms/AddBierFluent"
+@page "/Forms/add-beer-fluent"
+@page "/Forms/AddBeerFluent"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @using Blazored.FluentValidation
@@ -13,7 +13,7 @@
     <FluentValidationValidator/>
     <ValidationSummary></ValidationSummary>
     <div class="mb-3">
-        <label for="naam" class="form-label">Naam</label>
+        <label for="naam" class="form-label">Name</label>
         <InputText class="form-control" id="naam" @bind-Value="_beer.Name"/>
         <ValidationMessage For="@(() => _beer.Name)"/>
     </div>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="stijl" class="form-label">Stijl</label>
+        <label for="stijl" class="form-label">Style</label>
         <InputText class="form-control" id="stijl" @bind-Value="_beer.Style"/>
         <ValidationMessage For="@(() => _beer.Style)"/>
     </div>
@@ -37,32 +37,32 @@
     </div>
 
     <div class="mb-3">
-        <label for="brouwer" class="form-label">Brouwer</label>
+        <label for="brouwer" class="form-label">Brewer</label>
 
         <InputSelect class="form-control" id="brouwer" @bind-Value="_beer.BrewerId">
             <option value="">
-                Selecteer een brouwer
+                Select a brewer
             </option>
-            @foreach (var brouwer in _brouwers)
+            @foreach (var brewer in _brewers)
             {
-                <option value="@brouwer.BrewerId">@brouwer.Name</option>
+                <option value="@brewer.BrewerId">@brewer.Name</option>
             }
         </InputSelect>
         <ValidationMessage For="@(() => _beer.BrewerId)"/>
     </div>
 
     <button class="btn btn-danger" type="reset">Reset</button>
-    <button class="btn btn-primary" type="submit">Add Bier</button>
+    <button class="btn btn-primary" type="submit">Add Beer</button>
 </EditForm>
 
 @code {
     private Beer _beer = new();
-    private List<Brewer> _brouwers = null!;
+    private List<Brewer> _brewers = null!;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _brouwers = new BrewerRepository().Get();
+        _brewers = new BrewerRepository().Get();
     }
 
     private void AddBierToDb()
@@ -70,7 +70,7 @@
         new BeerRepository().Add(_beer);
         _beer = new Beer();
         _beer.BrewerId = -1;
-        NavigationManager.NavigateTo("/BierPage");
+        NavigationManager.NavigateTo("/BeerPage");
     }
 
 }

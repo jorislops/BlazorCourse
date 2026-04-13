@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BlazorCourse.Components.Pages.Forms;
 
-public class BierValidator : AbstractValidator<Beer>
+public class BeerValidator : AbstractValidator<Beer>
 {
-    public BierValidator()
+    public BeerValidator()
     {
         RuleFor(b => b.Name).NotEmpty()
             .WithMessage("Error message From BierValidator.cs")

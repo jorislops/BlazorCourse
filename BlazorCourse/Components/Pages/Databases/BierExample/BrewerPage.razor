@@ -1,10 +1,10 @@
-@page "/brouwer"
+@page "/brewer"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
-<h3>Brouwer Page</h3>
+<h3>Brewer Page</h3>
 
 <ul>
     @foreach (var brouwer in _brewerVms)
@@ -20,7 +20,7 @@
                 }
             }
 
-            <a href="/Bier/@link">Show Beers</a>
+            <a href="/Beer/@link">Show Beers</a>
             <a class="btn btn-primary" @onclick="@(() => GoToBeerPage(brouwer))">Show Beers</a>
         </li>
     }
@@ -39,7 +39,7 @@
 
     private void GoToBeerPage(int brouwcode)
     {
-        NavigationManager.NavigateTo($"/Bier/{brouwcode}");
+        NavigationManager.NavigateTo($"/Beer/{brouwcode}");
     }
 
     private void GoToBeerPage(BrewerVm brewer)
@@ -49,7 +49,7 @@
         {
             link += $"/{brewer.Country}";
         }   
-        NavigationManager.NavigateTo($"/Bier/{link}");
+        NavigationManager.NavigateTo($"/Beer/{link}");
     }
 
 }

@@ -26,7 +26,7 @@
     <thead>
     <tr>
         <td>
-            <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Name)))">Sort by naam</button>
+            <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Name)))">Sort by Name</button>
         </td>
         <td>
             <button class="btn btn-outline-primary" @onclick="@(() => SortBy(nameof(Beer.Alcohol)))">Sort by Alcohol</button>
@@ -86,8 +86,7 @@
     {
         OrderBy = "Name"
     };
-
-
+    
     //from querystring bier?brouwcode=682
     [Parameter] public int? BrewerId { get; set; }
     
@@ -118,7 +117,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        LoadData(_filterAndSorting, 1, 10);
+        _pagedResult = LoadData(_filterAndSorting, 1, 10);
     }
 
     private void ApplyRouteParameters(PageFilterSorting pageFilterSorting)
@@ -141,10 +140,10 @@
         }
     }
 
-    private void LoadData(PageFilterSorting pageFilterSorting, int pageIndex, int pageSize)
+    private PagedResult<Beer> LoadData(PageFilterSorting pageFilterSorting, int pageIndex, int pageSize)
     {
         ApplyRouteParameters(pageFilterSorting);
-        _pagedResult = new BeerRepository().Get(pageFilterSorting, pageIndex, pageSize);
+        return new BeerRepository().Get(pageFilterSorting, pageIndex, pageSize);
     }
     
     private void SortBy(string columnName)
@@ -165,12 +164,12 @@
             _filterAndSorting.OrderDirection = "asc";
         }
         
-        LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
+        _pagedResult = LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
     }
 
     private void GoToPage(int page)
     {
-        LoadData(_filterAndSorting, page, _pagedResult.PageSize);
+        _pagedResult = LoadData(_filterAndSorting, page, _pagedResult.PageSize);
     }
 
     private void FilterByName(string? beerNameFilter)
@@ -178,6 +177,6 @@
         _filterAndSorting.BeerName = beerNameFilter;
         _filterAndSorting.OrderBy = "name";
         _filterAndSorting.OrderDirection = "asc";
-        LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
+        _pagedResult = LoadData(_filterAndSorting, _pagedResult.Page, _pagedResult.PageSize);
     }
 }

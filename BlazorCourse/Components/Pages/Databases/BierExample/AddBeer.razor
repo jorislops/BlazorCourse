@@ -5,8 +5,7 @@
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
 @inject NavigationManager NavigationManager
-<h3>Bier Toevoegen</h3>
-
+<h3>Add Beer</h3>
 
 <EditForm Model="_beer" OnValidSubmit="AddBierToDb">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -42,7 +41,7 @@
             <option value="">
                 Selecteer een brouwer
             </option>
-            @foreach (var brouwer in _brouwers)
+            @foreach (var brouwer in _brewers)
             {
                 <option value="@brouwer.BrewerId">@brouwer.Name</option>
             }
@@ -57,12 +56,12 @@
 
 @code {
     private Beer _beer = new Beer();
-    private List<Brewer> _brouwers = null!;
+    private List<Brewer> _brewers = null!;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _brouwers = new BrewerRepository().Get();
+        _brewers = new BrewerRepository().Get();
     }
 
     private void AddBierToDb()
@@ -70,7 +69,7 @@
         new BeerRepository().Add(_beer);
         _beer = new Beer();
         _beer.BrewerId = -1;
-        NavigationManager.NavigateTo("/Bier");
+        NavigationManager.NavigateTo("/Beer");
     }
 
 }

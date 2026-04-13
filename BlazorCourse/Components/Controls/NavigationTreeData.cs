@@ -162,8 +162,8 @@ public static class NavigationTreeData
                     NodeId = "3-01", NodeText = "Todo db (no repo)", Url = "/todo-without-repository", Icon = "html"
                 },
                 new TreeItem { NodeId = "3-02", NodeText = "Todo list db", Url = "/todo-list-db", Icon = "html" },
-                new TreeItem { NodeId = "3-03", NodeText = "Bier", Url = "/bier", Icon = "html" },
-                new TreeItem { NodeId = "3-04", NodeText = "Brouwer", Url = "/brouwer", Icon = "html" }
+                new TreeItem { NodeId = "3-03", NodeText = "Beer", Url = "/beer", Icon = "html" },
+                new TreeItem { NodeId = "3-04", NodeText = "Brewer", Url = "/brewer", Icon = "html" }
             ]
         });
 

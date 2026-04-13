@@ -7,7 +7,7 @@
 @if (_bier == null)
 {
     <h1>No bier found</h1>
-    <a href="Bier">Go back to bieren</a>
+    <a href="Beer">Go back to bieren</a>
 }
 else
 {
@@ -20,7 +20,7 @@ else
     <h3>Are you sure to delete?</h3>
     <div>
         <button class="btn btn-danger" @onclick="@(() => Delete(_bier.BeerId))">Delete</button>
-        <a class="btn btn-success" href="/BierPage">No</a>
+        <a class="btn btn-success" href="/BeerPage">No</a>
     </div>
 }
 
@@ -40,7 +40,7 @@ else
     private void Delete(int beerId)
     {
         new BeerRepository().Delete(beerId);
-        NavigationManager.NavigateTo("/Bier");
+        NavigationManager.NavigateTo("/Beer");
     }
 
 }

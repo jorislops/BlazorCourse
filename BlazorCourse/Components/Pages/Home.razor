@@ -1,23 +1,17 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
 <p>Welcome</p>
+<p>Today it is @_day</p>
 
 @code{
+    private DayOfWeek _day;
+
+    protected override void OnInitialized()
+    {
+        _day = @DateTime.UtcNow.DayOfWeek;
+    }
 
 }
-
-<style>
-    /* Sample specific styles */
-    .control_wrapper {
-        max-width: 500px;
-        margin: auto;
-        border: 1px solid #dddddd;
-        border-radius: 3px;
-        max-height: 470px;
-        overflow: auto;
-    }
-</style>

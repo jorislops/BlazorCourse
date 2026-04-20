@@ -1,19 +1,17 @@
-@page "/Forms/add-beer-fluent"
-@page "/Forms/AddBeerFluent"
+@page "/add-beer"
+@page "/AddBeer"
+@page "/Forms/add-beer"
+@page "/Forms/AddBeer"
 @using BlazorCourse.Components.Pages.Databases.BierExample.Model
 @using BlazorCourse.Components.Pages.Databases.BierExample.Repository
-@using Blazored.FluentValidation
 @inject NavigationManager NavigationManager
-<h3>Bier Toevoegen M.b.v. Fluent Validation</h3>
-<h4>Om fluent Validation in Blazor te gebruiken: <a href="https://github.com/Blazored/FluentValidation">Blazored FluentValidation</a></h4>
-<h4>Documentation van Fluent Validation: <a href="https://docs.fluentvalidation.net/en/latest/">Fluent Validation</a></h4>
-
+<h3>Add Beer</h3>
 
 <EditForm Model="_beer" OnValidSubmit="AddBierToDb">
-    <FluentValidationValidator/>
+    <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
     <div class="mb-3">
-        <label for="naam" class="form-label">Name</label>
+        <label for="naam" class="form-label">Naam</label>
         <InputText class="form-control" id="naam" @bind-Value="_beer.Name"/>
         <ValidationMessage For="@(() => _beer.Name)"/>
     </div>
@@ -25,7 +23,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="stijl" class="form-label">Style</label>
+        <label for="stijl" class="form-label">Stijl</label>
         <InputText class="form-control" id="stijl" @bind-Value="_beer.Style"/>
         <ValidationMessage For="@(() => _beer.Style)"/>
     </div>
@@ -37,26 +35,27 @@
     </div>
 
     <div class="mb-3">
-        <label for="brouwer" class="form-label">Brewer</label>
+        <label for="brouwer" class="form-label">Brouwer</label>
 
         <InputSelect class="form-control" id="brouwer" @bind-Value="_beer.BrewerId">
             <option value="">
-                Select a brewer
+                Selecteer een brouwer
             </option>
-            @foreach (var brewer in _brewers)
+            @foreach (var brouwer in _brewers)
             {
-                <option value="@brewer.BrewerId">@brewer.Name</option>
+                <option value="@brouwer.BrewerId">@brouwer.Name</option>
             }
         </InputSelect>
         <ValidationMessage For="@(() => _beer.BrewerId)"/>
     </div>
 
     <button class="btn btn-danger" type="reset">Reset</button>
-    <button class="btn btn-primary" type="submit">Add Beer</button>
+    <button class="btn btn-primary" type="submit">Add Bier</button>
 </EditForm>
 
+
 @code {
-    private Beer _beer = new();
+    private Beer _beer = new Beer();
     private List<Brewer> _brewers = null!;
 
     protected override void OnInitialized()
@@ -70,7 +69,7 @@
         new BeerRepository().Add(_beer);
         _beer = new Beer();
         _beer.BrewerId = -1;
-        NavigationManager.NavigateTo("/BeerPage");
+        NavigationManager.NavigateTo("/Beer");
     }
 
 }

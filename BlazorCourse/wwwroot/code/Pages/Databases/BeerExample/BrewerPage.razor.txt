@@ -1,0 +1,55 @@
+@page "/brewer"
+@using BlazorCourse.Components.Pages.Databases.BierExample.Repository
+@using BlazorCourse.Components.Pages.Databases.BierExample.ViewModel
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h3>Brewer Page</h3>
+
+<ul>
+    @foreach (var brouwer in _brewerVms)
+    {
+        <li>
+            <span @onclick="@(() => GoToBeerPage(brouwer.BrewerCode))">@brouwer.Name (@brouwer.NumberOfBeers) (@brouwer.NumberOfBrewersWithSameName)</span>
+            
+            @{
+                var link = brouwer.Name;
+                if (brouwer.NumberOfBrewersWithSameName > 1)
+                {
+                    link += $"/{brouwer.Country}";
+                }
+            }
+
+            <a href="/Beer/@link">Show Beers</a>
+            <a class="btn btn-primary" @onclick="@(() => GoToBeerPage(brouwer))">Show Beers</a>
+        </li>
+    }
+</ul>
+
+@code {
+
+
+    private List<BrewerVm> _brewerVms = null!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _brewerVms = new BrewerRepository().GetBrouwersVm();
+    }
+
+    private void GoToBeerPage(int brouwcode)
+    {
+        NavigationManager.NavigateTo($"/Beer/{brouwcode}");
+    }
+
+    private void GoToBeerPage(BrewerVm brewer)
+    {
+        var link = brewer.Name;
+        if (brewer.NumberOfBrewersWithSameName > 1)
+        {
+            link += $"/{brewer.Country}";
+        }   
+        NavigationManager.NavigateTo($"/Beer/{link}");
+    }
+
+}

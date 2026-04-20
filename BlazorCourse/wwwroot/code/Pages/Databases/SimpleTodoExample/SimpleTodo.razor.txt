@@ -1,0 +1,193 @@
+@page "/SimpleTodo"
+@using MySqlConnector
+@using SqlKata.Compilers
+@using SqlKata.Execution
+<div class="container py-4">
+    <h3 class="mb-4">SimpleTodo</h3>
+
+    <div class="card mb-4">
+        <div class="card-header">Todo items</div>
+        <ul class="list-group list-group-flush">
+            @foreach (var todo in _todos)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                    <span>@todo.Title</span>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="@(() => Edit(todo))">Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="@(() => Delete(todo))">Delete</button>
+                </li>
+            }
+        </ul>
+    </div>
+
+    @if (_todoToEdit is not null)
+    {
+        <div class="card mb-4">
+            <div class="card-header">Update</div>
+            <div class="card-body">
+                <EditForm Model="_todoToEdit" OnValidSubmit="UpdateTodo">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-title">Title</label>
+                        <InputText id="edit-title" class="form-control" @bind-Value="_todoToEdit.Title"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-description">Description</label>
+                        <InputTextArea id="edit-description" class="form-control" @bind-Value="_todoToEdit.Description"/>
+                    </div>
+                    <div class="form-check mb-3">
+                        <InputCheckbox id="edit-isdone" class="form-check-input" @bind-Value="_todoToEdit.IsDone"/>
+                        <label class="form-check-label" for="edit-isdone">Done</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </EditForm>
+            </div>
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">Add</div>
+        <div class="card-body">
+            <EditForm Model="_newTodo" OnValidSubmit="AddTodo">
+                <DataAnnotationsValidator/>
+                <div class="mb-3">
+                    <label class="form-label" for="new-title">Title</label>
+                    <InputText id="new-title" class="form-control" @bind-Value="_newTodo.Title"/>
+                    <ValidationMessage For="() => _newTodo.Title" class="text-danger"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="new-description">Description</label>
+                    <InputTextArea id="new-description" class="form-control" @bind-Value="_newTodo.Description"/>
+                </div>
+                <div class="form-check mb-3">
+                    <InputCheckbox id="new-isdone" class="form-check-input" @bind-Value="_newTodo.IsDone"/>
+                    <label class="form-check-label" for="new-isdone">Done</label>
+                </div>
+                <button type="submit" class="btn btn-success">Add</button>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Filter</div>
+        <div class="card-body">
+            <EditForm Model="_filterModel" OnValidSubmit="FilterData">
+                <div class="mb-3">
+                    <label class="form-label" for="filter-search">Search</label>
+                    <InputText id="filter-search" class="form-control" @bind-Value="@_filterModel.Search"/>
+                </div>
+                <div class="form-check mb-3">
+                    <InputCheckbox id="filter-isdone" class="form-check-input" @bind-Value="_filterModel.IsDone"/>
+                    <label class="form-check-label" for="filter-isdone">Only done</label>
+                </div>
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    class FilterModel
+    {
+        public string? Search { get; set; } = null;
+        public bool IsDone { get; set; } = false;
+    }
+    
+    private IEnumerable<TodoItem> _todos = [];
+    private FilterModel _filterModel = new FilterModel();
+    private TodoItem? _todoToEdit = null;
+    private TodoItem _newTodo = new TodoItem
+    {
+        Title = ""
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _todos = LoadData(_filterModel);
+    }
+
+    private IEnumerable<TodoItem> LoadData(FilterModel? filterModel)
+    {
+        using var queryFactory = GetQueryFactory();
+
+        var query = queryFactory.Query("TodoItem")
+            .Where("ParentId", null);
+
+        if (!string.IsNullOrWhiteSpace(_filterModel.Search))
+        {
+            query.WhereLike("Title", $"%{filterModel?.Search}%");
+        }
+
+        if (_filterModel.IsDone)
+        {
+            query.Where("IsDone", _filterModel.IsDone);
+        }
+
+        IEnumerable<TodoItem> todos = query.Get<TodoItem>();
+        return query.Get<TodoItem>();
+    }
+    
+    private void FilterData(EditContext editContext)
+    {
+        _todos = LoadData(_filterModel);
+    }
+
+    private void Edit(TodoItem todo)
+    {
+        _todoToEdit = todo;
+    }
+
+    private void UpdateTodo(EditContext editContext)
+    {
+        using var queryFactory = GetQueryFactory();
+        queryFactory.Query("TodoItem")
+            .Where("Id", _todoToEdit.Id)
+            .Update(new
+            {
+                Title = _todoToEdit.Title,
+                Description = _todoToEdit.Description,
+                IsDone = _todoToEdit.IsDone
+            });
+
+        _todos = LoadData(_filterModel);
+    }
+    
+    private void AddTodo(EditContext obj)
+    {
+        using var queryFactory = GetQueryFactory();
+        queryFactory.Query("TodoItem")
+            .Insert(new
+            {
+                ParentId = _newTodo.ParentId,
+                Title = _newTodo.Title,
+                Description = _newTodo.Description,
+                IsDone = _newTodo.IsDone,
+                CompletedAt = _newTodo.IsDone ? (DateTime?)DateTime.UtcNow : null
+            });
+
+        _todos = LoadData(_filterModel);
+    }
+
+    private void Delete(TodoItem todo)
+    {
+        using var queryFactory = GetQueryFactory();
+        queryFactory.Query("TodoItem")
+            .Where("Id", todo.Id)
+            .Delete();
+
+        _todos = LoadData(_filterModel);
+    }
+    
+    private static QueryFactory GetQueryFactory()
+    {
+        var connectionString = ConfigurationHelper.Configuration.GetConnectionString("todo")!;
+        var connection = new MySqlConnection(connectionString);
+        QueryFactory queryFactory = new QueryFactory(connection, new MySqlCompiler());
+        queryFactory.Logger = Console.WriteLine;
+        return queryFactory;
+    }
+
+
+    
+
+}

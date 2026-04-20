@@ -56,44 +56,79 @@ public static class NavigationTreeData
                 new() { NodeId = "1-04", NodeText = "Simple Todo Example", Url = "/todo", Icon = "html" }
             }
         });
+        
         navigationTree.Add(new TreeItem
         {
             NodeId = "2",
-            NodeText = "2 - Components Basics",
+            NodeText = "2 - Form, Validation & Databases",
+            Icon = "folder",
+            Expanded = false,
+            Child =
+            [
+
+                
+                new TreeItem()
+                {
+                    NodeId = "2-01", NodeText = "Form + Validation", Icon = "folder", Child = [
+                        new TreeItem 
+                            { NodeId = "2-01-01", NodeText = "Form + Validation", Url = "forms/add-beer", Icon = "html" },
+                        new TreeItem
+                            { NodeId = "2-01-02", NodeText = "Fluent Validation", Url = "forms/add-beer-fluent", Icon = "html" },
+                    ]
+                },
+                new TreeItem()
+                {
+                    NodeId = "2-02", NodeText = "Databases (SQLKata)", Icon = "folder", Child = [
+                        new TreeItem
+                        {
+                            NodeId = "2-01", NodeText = "Todo db (no repo)", Url = "/todo-without-repository", Icon = "html"
+                        },
+                        new TreeItem { NodeId = "2-02", NodeText = "Todo list db", Url = "/todo-list-db", Icon = "html" },
+                        new TreeItem { NodeId = "2-03", NodeText = "Beer", Url = "/beer", Icon = "html" },
+                        new TreeItem { NodeId = "2-04", NodeText = "Brewer", Url = "/brewer", Icon = "html" }
+                    ]
+                }
+            ]
+        });
+        
+        navigationTree.Add(new TreeItem
+        {
+            NodeId = "3",
+            NodeText = "3 - Components",
             Icon = "folder",
             Expanded = false,
             Child = new List<TreeItem>
             {
                 new()
                 {
-                    NodeId = "2-01", NodeText = "Construction", Icon = "folder",
+                    NodeId = "3-01", NodeText = "Construction", Icon = "folder",
                     Child = new List<TreeItem>
                     {
                         new()
                         {
-                            NodeId = "2-01-01", NodeText = "Simple Component", Url = "/simple-component-example",
+                            NodeId = "3-01-01", NodeText = "Simple Component", Url = "/simple-component-example",
                             Icon = "html"
                         },
                         new()
                         {
-                            NodeId = "2-01-02", NodeText = "Partial Component",
+                            NodeId = "3-01-02", NodeText = "Partial Component",
                             Url = "/simple-component-example-partial", Icon = "html"
                         },
                         new()
                         {
-                            NodeId = "2-01-03", NodeText = "Inheritance Component",
+                            NodeId = "3-01-03", NodeText = "Inheritance Component",
                             Url = "/simple-component-example-inheritance", Icon = "html"
                         }
                     }
                 },
                 new()
                 {
-                    NodeId = "2-02", NodeText = "Parameters", Icon = "folder",
+                    NodeId = "3-02", NodeText = "Parameters", Icon = "folder",
                     Child = new List<TreeItem>
                     {
                         new()
                         {
-                            NodeId = "2-02-01", NodeText = "Component Parameter", Url = "/component-parameter",
+                            NodeId = "3-02-01", NodeText = "Component Parameter", Url = "/component-parameter",
                             Icon = "html",
                             RelatedFiles = new List<RelatedCodeFile>
                             {
@@ -106,33 +141,33 @@ public static class NavigationTreeData
                         },
                         new()
                         {
-                            NodeId = "2-02-02", NodeText = "Component Chained Binding",
+                            NodeId = "3-02-02", NodeText = "Component Chained Binding",
                             Url = "/component-with-chained-binding", Icon = "html"
                         }
                     }
                 },
                 new()
                 {
-                    NodeId = "2-03", NodeText = "Event Callback", Url = "/component-events", Icon = "html"
+                    NodeId = "3-03", NodeText = "Event Callback", Url = "/component-events", Icon = "html"
                 },
                 new()
                 {
-                    NodeId = "2-04", NodeText = "State management", Icon = "folder",
+                    NodeId = "3-04", NodeText = "State management", Icon = "folder",
                     Child = new List<TreeItem>
                     {
                         new()
                         {
-                            NodeId = "2-04-1", NodeText = "Component State", Url = "counter-component-state",
+                            NodeId = "3-04-1", NodeText = "Component State", Url = "counter-component-state",
                             Icon = "html"
                         },
                         new()
                         {
-                            NodeId = "2-04-2", NodeText = "Counter State Static (don't)",
+                            NodeId = "3-04-2", NodeText = "Counter State Static (don't)",
                             Url = "/counter-state-static-variable", Icon = "html"
                         },
                         new()
                         {
-                            NodeId = "2-04-3", NodeText = "Cascade Parameters", Url = "/counter-cascade-state",
+                            NodeId = "3-04-3", NodeText = "Cascade Parameters", Url = "/counter-cascade-state",
                             Icon = "html"
                         }
                     }
@@ -140,83 +175,59 @@ public static class NavigationTreeData
 
                 new()
                 {
-                    NodeId = "2-07", NodeText = "Parent Child And Service Example",
+                    NodeId = "3-07", NodeText = "Parent Child And Service Example",
                     Url = "/parent-child-and-service-example", Icon = "html"
                 },
 
-                new() { NodeId = "2-06", NodeText = "Counter Les Demo", Url = "/counter-example-les", Icon = "html" },
-                new() { NodeId = "2-05", NodeText = "Todo Example", Url = "/todo-list", Icon = "html" }
+                new() { NodeId = "3-06", NodeText = "Counter Les Demo", Url = "/counter-example-les", Icon = "html" },
+                new() { NodeId = "3-05", NodeText = "Todo Example", Url = "/todo-list", Icon = "html" }
             }
         });
 
         navigationTree.Add(new TreeItem
         {
-            NodeId = "3",
-            NodeText = "3 - Databases",
-            Icon = "folder",
-            Expanded = false,
-            Child =
-            [
-                new TreeItem
-                {
-                    NodeId = "3-01", NodeText = "Todo db (no repo)", Url = "/todo-without-repository", Icon = "html"
-                },
-                new TreeItem { NodeId = "3-02", NodeText = "Todo list db", Url = "/todo-list-db", Icon = "html" },
-                new TreeItem { NodeId = "3-03", NodeText = "Beer", Url = "/beer", Icon = "html" },
-                new TreeItem { NodeId = "3-04", NodeText = "Brewer", Url = "/brewer", Icon = "html" }
-            ]
-        });
-
-        navigationTree.Add(new TreeItem
-        {
             NodeId = "4",
-            NodeText = "4 - Forms & Generic Components",
+            NodeText = "4 - UI Library (Blazor Bootstrap)",
             Icon = "folder",
             Expanded = false,
             Child =
             [
-                new TreeItem 
-                    { NodeId = "4-01", NodeText = "Form + Validation", Url = "forms/add-beer", Icon = "html" },
                 new TreeItem
-                    { NodeId = "4-02", NodeText = "Fluent Validation", Url = "forms/add-beer-fluent", Icon = "html" },
-                new TreeItem
-                    { NodeId = "4-03", NodeText = "Render Fragments", Url = "/render-fragments", Icon = "html" },
-                new TreeItem
-                    { NodeId = "4-04", NodeText = "Generic Data table", Url = "/generic-data-table", Icon = "html" },
-                new TreeItem
-                    { NodeId = "4-05", NodeText = "Advanced Datagrid", Url = "/advanced-datatable-example", Icon = "html" }
+                    { NodeId = "4-01", NodeText = "Datagrid", Url = "/blazor-bootstrap-datagrid", Icon = "html" },
             ]
         });
 
         navigationTree.Add(new TreeItem
         {
             NodeId = "5",
-            NodeText = "5 Blazor Bootstrap",
-            Icon = "folder",
-            Expanded = false,
-            Child =
-            [
-                new TreeItem
-                    { NodeId = "5-01", NodeText = "Datagrid", Url = "/blazor-bootstrap-datagrid", Icon = "html" },
-            ]
-        });
-
-        navigationTree.Add(new TreeItem
-        {
-            NodeId = "6",
-            NodeText = "Service for State Management (advanced)",
+            NodeText = "5 - State Management (Services)",
             Icon = "folder",
             Expanded = false,
             Child =
             [
                 new TreeItem
                 {
-                    NodeId = "6-01", NodeText = "State Management Service with Notification",
+                    NodeId = "5-01", NodeText = "State Management Service with Notification",
                     Url = "/counter-state-service", Icon = "html"
                 }
                 // new SiteNavigation.TreeItem() { NodeId = "6-02", NodeText = "State Management Service multiple components (Todo)", Url = "/todo-state-service", Icon = "html" },
                 // new SiteNavigation.TreeItem() { NodeId = "6-03", NodeText = "State Management Service with Fluxor (Todo)", Url = "/todo-state-fluxor", Icon = "html" }
             ]
+        });
+        
+        
+        navigationTree.Add(new TreeItem()
+        {
+            NodeId = "6",
+            NodeText = "Out of scope", Icon = "folder",
+            Child = [
+                new TreeItem
+                    { NodeId = "6-03", NodeText = "Render Fragments", Url = "/render-fragments", Icon = "html" },
+                new TreeItem
+                    { NodeId = "6-04", NodeText = "Generic Data table", Url = "/generic-data-table", Icon = "html" },
+                new TreeItem
+                    { NodeId = "6-05", NodeText = "Advanced Datagrid", Url = "/advanced-datatable-example", Icon = "html" }
+            ]   
         });
 
 

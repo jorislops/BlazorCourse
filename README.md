@@ -12,7 +12,7 @@ Hier vind je de handleiding met betrekking tot the virtuele servers voor webdepl
 https://github.com/jorislops/BlazorCourse/blob/main/Handleiding_virtuele_omgevingen.md
 
 
-# Instalatie 
+# Installatie 
 
 Met `git clone` kan je het project clonen.
 Je zult dan wel de databases moeten aanmaken in MySQL of MariaDb. 

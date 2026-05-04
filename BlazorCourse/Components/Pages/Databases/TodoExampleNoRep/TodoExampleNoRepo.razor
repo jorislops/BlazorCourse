@@ -1,4 +1,6 @@
-@page "/SimpleTodo"
+@page "/SimpleTodo" 
+@page "/todo-example-no-repository"
+@* A Better route (name) is /todo-example-with-repository *@
 @using MySqlConnector
 @using SqlKata.Compilers
 @using SqlKata.Execution
@@ -186,8 +188,4 @@
         queryFactory.Logger = Console.WriteLine;
         return queryFactory;
     }
-
-
-    
-
 }

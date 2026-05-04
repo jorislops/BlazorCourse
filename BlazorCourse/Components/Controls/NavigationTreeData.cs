@@ -83,7 +83,7 @@ public static class NavigationTreeData
                         {
                             NodeId = "2-01", NodeText = "Todo db (no repo)", Url = "/todo-without-repository", Icon = "html"
                         },
-                        new TreeItem { NodeId = "2-02", NodeText = "Todo list db", Url = "/todo-list-db", Icon = "html" },
+                        new TreeItem { NodeId = "2-02", NodeText = "Todo db (with repo)", Url = "/SimpleTodo", Icon = "html" },
                         new TreeItem { NodeId = "2-03", NodeText = "Beer", Url = "/beer", Icon = "html" },
                         new TreeItem { NodeId = "2-04", NodeText = "Brewer", Url = "/brewer", Icon = "html" }
                     ]

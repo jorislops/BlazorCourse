@@ -16,17 +16,23 @@ public class TodoRepository
         return new QueryFactory(new MySqlConnection(_connectionString), new MySqlCompiler());
     }
 
-    public List<TodoItem> Get()
+    public List<TodoItem> Get(string? search = null, bool onlyDone = false)
     {
         using var queryFactory = CreateQueryFactory();
 
-        return queryFactory
+        var query = queryFactory
             .Query("TodoItem")
             .Select("Id", "ParentId", "Title", "Description", "IsDone", "CreatedAt", "CompletedAt")
             .Where("ParentId", null)
-            .OrderBy("Id")
-            .Get<TodoItem>()
-            .ToList();
+            .OrderBy("Id");
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query.WhereLike("Title", $"%{search}%");
+
+        if (onlyDone)
+            query.Where("IsDone", true);
+
+        return query.Get<TodoItem>().ToList();
     }
 
     public List<TodoItem> GetByParentId(int parentId)

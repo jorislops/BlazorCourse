@@ -106,7 +106,7 @@ public class BeerRepository
     {
         using var queryFactory = CreateQueryFactory();
 
-        var rows = queryFactory
+        var beerWithBrewerRows = queryFactory
             .Query("Beer as b")
             .Join("Brewer as br", "b.BrewerId", "br.BrewerId")
             .Select(
@@ -123,8 +123,8 @@ public class BeerRepository
             .OrderBy("b.Name")
             .Get<BeerWithBrewerRow>()
             .ToList();
-
-        return rows.Select(row => new Beer
+        
+        return beerWithBrewerRows.Select(row => new Beer
         {
             BeerId = row.BeerId,
             Name = row.Name,

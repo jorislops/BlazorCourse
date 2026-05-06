@@ -1,0 +1,142 @@
+@page "/todo-with-repository"
+
+@using BlazorCourse.Components.Pages.Databases.TodoExample.Repositories
+<div class="container py-4">
+    <h3 class="mb-4">SimpleTodo</h3>
+
+    <div class="card mb-4">
+        <div class="card-header">Todo items</div>
+        <ul class="list-group list-group-flush">
+            @foreach (var todo in _todos)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                    <span>@todo.Title</span>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="@(() => Edit(todo))">Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Delete(todo))">Delete</button>
+                </li>
+            }
+        </ul>
+    </div>
+
+    @if (_todoToEdit is not null)
+    {
+        <div class="card mb-4">
+            <div class="card-header">Update</div>
+            <div class="card-body">
+                <EditForm Model="_todoToEdit" OnValidSubmit="UpdateTodo">
+                    <DataAnnotationsValidator/>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-title">Title</label>
+                        <InputText id="edit-title" class="form-control" @bind-Value="_todoToEdit.Title"/>
+                        <ValidationMessage For="() => _todoToEdit.Title" class="text-danger"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-description">Description</label>
+                        <InputTextArea id="edit-description" class="form-control" @bind-Value="_todoToEdit.Description"/>
+                    </div>
+                    <div class="form-check mb-3">
+                        <InputCheckbox id="edit-isdone" class="form-check-input" @bind-Value="_todoToEdit.IsDone"/>
+                        <label class="form-check-label" for="edit-isdone">Done</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary ms-2" @onclick="() => _todoToEdit = null">Cancel</button>
+                </EditForm>
+            </div>
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">Add</div>
+        <div class="card-body">
+            <EditForm Model="_newTodo" OnValidSubmit="AddTodo">
+                <DataAnnotationsValidator/>
+                <div class="mb-3">
+                    <label class="form-label" for="new-title">Title</label>
+                    <InputText id="new-title" class="form-control" @bind-Value="_newTodo.Title"/>
+                    <ValidationMessage For="() => _newTodo.Title" class="text-danger"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="new-description">Description</label>
+                    <InputTextArea id="new-description" class="form-control" @bind-Value="_newTodo.Description"/>
+                </div>
+                <div class="form-check mb-3">
+                    <InputCheckbox id="new-isdone" class="form-check-input" @bind-Value="_newTodo.IsDone"/>
+                    <label class="form-check-label" for="new-isdone">Done</label>
+                </div>
+                <button type="submit" class="btn btn-success">Add</button>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Filter</div>
+        <div class="card-body">
+            <EditForm Model="_filterModel" OnValidSubmit="FilterData">
+                <div class="mb-3">
+                    <label class="form-label" for="filter-search">Search</label>
+                    <InputText id="filter-search" class="form-control" @bind-Value="@_filterModel.Search"/>
+                </div>
+                <div class="form-check mb-3">
+                    <InputCheckbox id="filter-isdone" class="form-check-input" @bind-Value="_filterModel.IsDone"/>
+                    <label class="form-check-label" for="filter-isdone">Only done</label>
+                </div>
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    class FilterModel
+    {
+        public string? Search { get; set; } = null;
+        public bool IsDone { get; set; } = false;
+    }
+    
+    private readonly TodoRepository _repository = new();
+    private IEnumerable<TodoItem> _todos = [];
+    private FilterModel _filterModel = new FilterModel();
+    private TodoItem? _todoToEdit = null;
+    private TodoItem _newTodo = new TodoItem { Title = "" };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _todos = LoadData(_filterModel);
+    }
+
+    private IEnumerable<TodoItem> LoadData(FilterModel filterModel)
+    {
+        return _repository.Get(filterModel.Search, filterModel.IsDone);
+    }
+
+    private void FilterData(EditContext editContext)
+    {
+        _todos = LoadData(_filterModel);
+    }
+
+    private void Edit(TodoItem todo)
+    {
+        _todoToEdit = todo;
+    }
+
+    private void UpdateTodo(EditContext editContext)
+    {
+        _repository.Update(_todoToEdit!);
+        _todoToEdit = null;
+        _todos = LoadData(_filterModel);
+    }
+
+    private void AddTodo(EditContext obj)
+    {
+        _repository.Add(_newTodo);
+        _newTodo = new TodoItem { Title = "" };
+        _todos = LoadData(_filterModel);
+    }
+
+    private void Delete(TodoItem todo)
+    {
+        _repository.Remove(todo.Id);
+        _todos = LoadData(_filterModel);
+    }
+}

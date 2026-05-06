@@ -65,8 +65,6 @@ public static class NavigationTreeData
             Expanded = false,
             Child =
             [
-
-                
                 new TreeItem()
                 {
                     NodeId = "2-01", NodeText = "Form + Validation", Icon = "folder", Child = [
@@ -83,7 +81,8 @@ public static class NavigationTreeData
                         {
                             NodeId = "2-01", NodeText = "Todo db (no repo)", Url = "/todo-without-repository", Icon = "html"
                         },
-                        new TreeItem { NodeId = "2-02", NodeText = "Todo db (with repo)", Url = "/SimpleTodo", Icon = "html" },
+                        new TreeItem { NodeId = "2-02", NodeText = "Todo db (no repo)", Url = "/todo-no-repository", Icon = "html" },
+                        new TreeItem { NodeId = "2-02", NodeText = "Todo db (with repo)", Url = "/todo-with-repository", Icon = "html" },
                         new TreeItem { NodeId = "2-03", NodeText = "Beer", Url = "/beer", Icon = "html" },
                         new TreeItem { NodeId = "2-04", NodeText = "Brewer", Url = "/brewer", Icon = "html" }
                     ]

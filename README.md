@@ -39,7 +39,16 @@ of onduidelijk zijn schroom om te vragen zodat wij het kunnen verbeteren. Alvast
 
 - Filmpjes van Frank Lui 
 
-## Les 2 Componenten
+## Les 2 Forms and Validation & Databases
+- EditForm
+  - Validatie
+  - Fluent Validation
+- Gebruik van [SQLKata](https://sqlkata.com/)
+- Simpele CRUD voorbeeld
+- Navigatie tussen pages, Route Parameters, Query string parameters
+- Repository Pattern gebruiken
+
+## Les 3 Componenten
 - SPA-framework (zie filmpje van Frank Lui over SPA en componenten)
 - Structuur van Blazor Project (nogmaals herhaling om te kijken of het is blijven hangen en omdat het belangrijk is ivm componenten)
   - Componenten idee
@@ -50,26 +59,17 @@ of onduidelijk zijn schroom om te vragen zodat wij het kunnen verbeteren. Alvast
   - Components as custom elements
   - Identifying components (screenshot)
 
-State-management in components
+State management in components
 - Components with Parameters
 - Components & events
-- Parent / child components
+- Parent/child components
 - Cascade Parameters
 
-## Les 3 Verbinden met database 
+## Les 4 Using a UI Component Library (Blazorbootstrap)
 
-- Dapper herhaling
-- Simpele CRUD voorbeeld
-- Navigatie tussen pages, Route Parameters, Query string parameters
-- Repository Pattern gebruiken
-
-## Les 4 Forms & Validatie & Routes & Layout
-- EditForm
-  - Validatie
-  - Fluent Validation
 - Generic Components
 - RenderFragment 
-- Using a component library Blazorise (https://blazorise.com/)
+- Using a component library ([Blazorbootstrap](https://demos.blazorbootstrap.com/))
 - Layouts
 
 ## Les 5 Advanced Subjects ** #Todo **
@@ -81,6 +81,10 @@ State-management in components
 
 ## Les 6 Uitloop
 
+
+# Let op de opdrachten zijn vervangen door de sprints die op Blackboard staan. 
+
+Je mag natuurlijk de opdrachten doen om mee te oefenen. 
 
 # 1. Opdrachten les 1
 

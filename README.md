@@ -43,7 +43,7 @@ of onduidelijk zijn schroom om te vragen zodat wij het kunnen verbeteren. Alvast
 - EditForm
   - Validatie
   - Fluent Validation
-- Gebruik van SQLKata (https://sqlkata.com/)
+- Gebruik van [SQLKata](https://sqlkata.com/)
 - Simpele CRUD voorbeeld
 - Navigatie tussen pages, Route Parameters, Query string parameters
 - Repository Pattern gebruiken

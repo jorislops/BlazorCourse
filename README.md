@@ -69,7 +69,7 @@ State management in components
 
 - Generic Components
 - RenderFragment 
-- Using a component library Blazorbootstrap ([https://blazorise.com/](https://demos.blazorbootstrap.com/))
+- Using a component library ([Blazorbootstrap](https://demos.blazorbootstrap.com/))
 - Layouts
 
 ## Les 5 Advanced Subjects ** #Todo **

@@ -1,6 +1,10 @@
 @page "/todo-with-repository"
+@inject NavigationManager Nav
 
 @using BlazorCourse.Components.Pages.Databases.TodoExample.Repositories
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+
 <div class="container py-4">
     <h3 class="mb-4">SimpleTodo</h3>
 
@@ -99,10 +103,16 @@
     private TodoItem? _todoToEdit = null;
     private TodoItem _newTodo = new TodoItem { Title = "" };
 
+
+    
     protected override void OnInitialized()
     {
+        
+        
         base.OnInitialized();
         _todos = LoadData(_filterModel);
+        
+        
     }
 
     private IEnumerable<TodoItem> LoadData(FilterModel filterModel)

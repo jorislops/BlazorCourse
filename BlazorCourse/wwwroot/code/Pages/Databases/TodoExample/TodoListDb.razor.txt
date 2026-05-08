@@ -41,22 +41,25 @@
     {
         base.OnInitialized();
 
+        LoadData();
+    }
+
+    private void LoadData()
+    {
         _todos = new TodoRepository().Get();
     }
+    
 
     private void DeleteTodoItem(TodoItem todoItem)
     {
         new TodoRepository().Remove(todoItem.Id);
-        _todos.Remove(todoItem);
+        LoadData();
     }
 
     private void AddNewTodo(TodoItem newTodoItem)
     {
         var addedTodoItem = new TodoRepository().Add(newTodoItem);
-        _todos.Add(addedTodoItem);
-
-        // newTodoItem.Id = _todos.Max(x => x.Id) + 1;
-        // _todos.Add(newTodoItem);
+        LoadData();
     }
 
 }
